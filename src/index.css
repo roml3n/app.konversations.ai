@@ -36,6 +36,19 @@
       --tw-ring-offset-width: 0px;
       --tw-ring-offset-color: #fff;
       --tw-ring-offset-shadow: 0 0 #0000;
+      --tw-blur: initial;
+      --tw-brightness: initial;
+      --tw-contrast: initial;
+      --tw-grayscale: initial;
+      --tw-hue-rotate: initial;
+      --tw-invert: initial;
+      --tw-opacity: initial;
+      --tw-saturate: initial;
+      --tw-sepia: initial;
+      --tw-drop-shadow: initial;
+      --tw-drop-shadow-color: initial;
+      --tw-drop-shadow-alpha: 100%;
+      --tw-drop-shadow-size: initial;
       --tw-duration: initial;
     }
   }
@@ -45,8 +58,10 @@
   :root, :host {
     --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --color-gray-50: oklch(.985 .002 247.839);
     --color-gray-100: oklch(.967 .003 264.542);
     --color-gray-200: oklch(.928 .006 264.531);
+    --color-gray-400: oklch(.707 .022 261.325);
     --color-white: #fff;
     --spacing: .25rem;
     --text-xs: .75rem;
@@ -522,6 +537,10 @@
     display: block;
   }
 
+  .contents {
+    display: contents;
+  }
+
   .flex {
     display: flex;
   }
@@ -569,9 +588,19 @@
     height: 16px;
   }
 
+  .size-\[18px\] {
+    width: 18px;
+    height: 18px;
+  }
+
   .size-\[20px\] {
     width: 20px;
     height: 20px;
+  }
+
+  .size-\[24px\] {
+    width: 24px;
+    height: 24px;
   }
 
   .size-\[32px\] {
@@ -673,6 +702,10 @@
     max-height: var(--radix-select-content-available-height);
   }
 
+  .max-h-\[200px\] {
+    max-height: 200px;
+  }
+
   .min-h-\[200px\] {
     min-height: 200px;
   }
@@ -719,6 +752,10 @@
 
   .w-\[122\.027px\] {
     width: 122.027px;
+  }
+
+  .w-\[280px\] {
+    width: 280px;
   }
 
   .w-\[640px\] {
@@ -785,8 +822,18 @@
     transform-origin: var(--radix-select-content-transform-origin);
   }
 
+  .-translate-x-1\/2 {
+    --tw-translate-x: calc(calc(1 / 2 * 100%) * -1);
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
   .translate-x-\[-50\%\] {
     --tw-translate-x: -50%;
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
+  .-translate-y-1\/2 {
+    --tw-translate-y: calc(calc(1 / 2 * 100%) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
   }
 
@@ -985,6 +1032,12 @@
     border-color: var(--border);
   }
 
+  .truncate {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
   .overflow-auto {
     overflow: auto;
   }
@@ -1094,6 +1147,11 @@
     border-width: 1px;
   }
 
+  .border-2 {
+    border-style: var(--tw-border-style);
+    border-width: 2px;
+  }
+
   .border-\[0px_0px_1px\] {
     border-style: var(--tw-border-style);
     border-width: 0 0 1px;
@@ -1112,6 +1170,10 @@
   .border-solid {
     --tw-border-style: solid;
     border-style: solid;
+  }
+
+  .border-\[\#6a7282\] {
+    border-color: #6a7282;
   }
 
   .border-\[\#45b273\] {
@@ -1375,6 +1437,10 @@
     padding-inline: 4px;
   }
 
+  .px-\[6px\] {
+    padding-inline: 6px;
+  }
+
   .px-\[8px\] {
     padding-inline: 8px;
   }
@@ -1425,6 +1491,10 @@
 
   .py-\[4px\] {
     padding-block: 4px;
+  }
+
+  .py-\[6px\] {
+    padding-block: 6px;
   }
 
   .py-\[8px\] {
@@ -1523,6 +1593,10 @@
     line-height: var(--tw-leading, var(--text-xs--line-height));
   }
 
+  .text-\[10px\] {
+    font-size: 10px;
+  }
+
   .text-\[12px\] {
     font-size: 12px;
   }
@@ -1547,6 +1621,11 @@
   .leading-\[1\.2\] {
     --tw-leading: 1.2;
     line-height: 1.2;
+  }
+
+  .leading-none {
+    --tw-leading: 1;
+    line-height: 1;
   }
 
   .font-bold {
@@ -1618,7 +1697,7 @@
     color: #5e6060;
   }
 
-  .text-\[\#6a7282\] {
+  .text-\[\#6A7282\], .text-\[\#6a7282\] {
     color: #6a7282;
   }
 
@@ -1664,6 +1743,10 @@
     }
   }
 
+  .text-gray-400 {
+    color: var(--color-gray-400);
+  }
+
   .text-muted-foreground {
     color: var(--muted-foreground);
   }
@@ -1700,6 +1783,10 @@
     color: var(--color-white);
   }
 
+  .italic {
+    font-style: italic;
+  }
+
   .opacity-30 {
     opacity: .3;
   }
@@ -1718,6 +1805,10 @@
 
   .opacity-\[0\.56\] {
     opacity: .56;
+  }
+
+  .mix-blend-color-burn {
+    mix-blend-mode: color-burn;
   }
 
   .shadow-\[0px_1px_0px_0px_inset_rgba\(255\,255\,255\,0\.25\)\] {
@@ -1760,6 +1851,10 @@
       outline-offset: 2px;
       outline: 2px solid #0000;
     }
+  }
+
+  .filter {
+    filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
   }
 
   .transition {
@@ -1807,6 +1902,16 @@
     user-select: none;
   }
 
+  @media (hover: hover) {
+    .group-hover\:border-\[\#0320f5\]:is(:where(.group):hover *) {
+      border-color: #0320f5;
+    }
+  }
+
+  .placeholder\:text-\[\#364153\]\/60::placeholder {
+    color: oklab(37.3062% -.00585862 -.03381 / .6);
+  }
+
   .first\:rounded-l-\[4px\]:first-child {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
@@ -1826,6 +1931,12 @@
   @media (hover: hover) {
     .hover\:bg-\[rgba\(255\,255\,255\,0\.1\)\]:hover {
       background-color: #ffffff1a;
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-gray-50:hover {
+      background-color: var(--color-gray-50);
     }
   }
 
@@ -2396,6 +2507,72 @@ html {
   syntax: "*";
   inherits: false;
   initial-value: 0 0 #0000;
+}
+
+@property --tw-blur {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-brightness {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-contrast {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-grayscale {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-hue-rotate {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-invert {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-opacity {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-saturate {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-sepia {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-drop-shadow {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-drop-shadow-color {
+  syntax: "*";
+  inherits: false
+}
+
+@property --tw-drop-shadow-alpha {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 100%;
+}
+
+@property --tw-drop-shadow-size {
+  syntax: "*";
+  inherits: false
 }
 
 @property --tw-duration {

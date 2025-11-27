@@ -7,6 +7,8 @@ import {
   PopoverTrigger,
 } from "./ui/popover";
 import { DateFilterContent, type DateRange } from "./figma/DateFilterContent";
+import { TopicFilterContent } from "./figma/TopicFilterContent";
+import { AgentFilterContent } from "./figma/AgentFilterContent";
 
 function SearchIcon() {
   return (
@@ -119,19 +121,43 @@ function TopicsIcon() {
 }
 
 function TopicsFilter() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+
+  const handleApply = () => {
+    setIsOpen(false);
+  };
+
+  const getButtonText = () => {
+    if (selectedTopics.length === 0) return "All topics";
+    if (selectedTopics.length === 1) return selectedTopics[0];
+    return `${selectedTopics.length} topics`;
+  };
+
   return (
-    <button className="bg-card box-border content-stretch flex gap-[8px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 border border-border hover:bg-muted/50 transition-colors">
-      <div className="content-stretch flex gap-[4px] items-center opacity-60 relative shrink-0">
-        <TopicsIcon />
-        <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
-          Topics
-        </p>
-      </div>
-      <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
-        All topics
-      </p>
-      <CaretDownIcon />
-    </button>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <button className="bg-card box-border content-stretch flex gap-[8px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 border border-border hover:bg-muted/50 transition-colors">
+          <div className="content-stretch flex gap-[4px] items-center opacity-60 relative shrink-0">
+            <TopicsIcon />
+            <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+              Topics
+            </p>
+          </div>
+          <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+            {getButtonText()}
+          </p>
+          <CaretDownIcon />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="p-0 w-auto border-none bg-transparent shadow-none" align="start">
+        <TopicFilterContent 
+          selectedTopics={selectedTopics} 
+          onTopicsChange={setSelectedTopics} 
+          onApply={handleApply}
+        />
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -148,19 +174,49 @@ function AgentIcon() {
 }
 
 function AgentFilter() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
+
+  const handleApply = () => {
+    setIsOpen(false);
+  };
+
+  const getButtonText = () => {
+    if (selectedAgents.length === 0) return "All agents";
+    if (selectedAgents.length === 1) {
+      // Just for demo, in real app we'd look up the name
+      return selectedAgents[0] === 'custom' ? 'Custom' : 
+             selectedAgents[0] === 'john' ? 'John Makacha' : 
+             selectedAgents[0] === 'sarah' ? 'Sarah Smith' : 
+             selectedAgents[0] === 'mike' ? 'Mike Johnson' : '1 agent';
+    }
+    return `${selectedAgents.length} agents`;
+  };
+
   return (
-    <button className="bg-card box-border content-stretch flex gap-[8px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 border border-border hover:bg-muted/50 transition-colors">
-      <div className="content-stretch flex gap-[4px] items-center opacity-60 relative shrink-0">
-        <AgentIcon />
-        <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
-          Agent
-        </p>
-      </div>
-      <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
-        All agents
-      </p>
-      <CaretDownIcon />
-    </button>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <button className="bg-card box-border content-stretch flex gap-[8px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 border border-border hover:bg-muted/50 transition-colors">
+          <div className="content-stretch flex gap-[4px] items-center opacity-60 relative shrink-0">
+            <AgentIcon />
+            <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+              Agent
+            </p>
+          </div>
+          <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+            {getButtonText()}
+          </p>
+          <CaretDownIcon />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="p-0 w-auto border-none bg-transparent shadow-none" align="start">
+        <AgentFilterContent 
+          selectedAgents={selectedAgents} 
+          onAgentsChange={setSelectedAgents} 
+          onApply={handleApply}
+        />
+      </PopoverContent>
+    </Popover>
   );
 }
 
