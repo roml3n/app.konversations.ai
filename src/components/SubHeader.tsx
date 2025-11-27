@@ -1,0 +1,162 @@
+import svgPaths from '../imports/svg-qweb8b8w3s';
+
+function SearchIcon() {
+  return (
+    <div className="relative shrink-0 size-[16px]">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+        <g id="search">
+          <path d={svgPaths.pba9f400} fill="currentColor" className="text-foreground" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function SearchBar() {
+  return (
+    <div className="basis-0 bg-muted grow max-w-[32px] min-h-px min-w-[32px] rounded-lg shrink-0">
+      <div className="flex flex-row items-center max-w-inherit min-w-inherit size-full">
+        <div className="box-border content-stretch flex gap-[8px] items-center max-w-inherit min-w-inherit p-[8px] relative w-full">
+          <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
+            <SearchIcon />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <div className="relative shrink-0 size-[16px]">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+        <g id="calendar" opacity="0.6">
+          <path d={svgPaths.p10e710c0} fill="currentColor" className="text-muted-foreground" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function CaretDownIcon() {
+  return (
+    <div className="relative shrink-0 size-[16px]">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+        <g id="caret-down">
+          <path d={svgPaths.p3faa2700} fill="currentColor" className="text-muted-foreground/60" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function DateFilter() {
+  return (
+    <button className="bg-card box-border content-stretch flex gap-[8px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 border border-border hover:bg-muted/50 transition-colors">
+      <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
+        <CalendarIcon />
+        <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+          Jul 31, 2024 - Today
+        </p>
+      </div>
+      <CaretDownIcon />
+    </button>
+  );
+}
+
+function TopicsIcon() {
+  return (
+    <div className="relative shrink-0 size-[16px]">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+        <g id="square-poll-horizontal">
+          <path d={svgPaths.p3b41c400} fill="currentColor" className="text-muted-foreground" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function TopicsFilter() {
+  return (
+    <button className="bg-card box-border content-stretch flex gap-[8px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 border border-border hover:bg-muted/50 transition-colors">
+      <div className="content-stretch flex gap-[4px] items-center opacity-60 relative shrink-0">
+        <TopicsIcon />
+        <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+          Topics
+        </p>
+      </div>
+      <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+        All topics
+      </p>
+      <CaretDownIcon />
+    </button>
+  );
+}
+
+function AgentIcon() {
+  return (
+    <div className="relative shrink-0 size-[16px]">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
+        <g id="profile">
+          <path d={svgPaths.p314d5100} fill="currentColor" className="text-muted-foreground" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function AgentFilter() {
+  return (
+    <button className="bg-card box-border content-stretch flex gap-[8px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 border border-border hover:bg-muted/50 transition-colors">
+      <div className="content-stretch flex gap-[4px] items-center opacity-60 relative shrink-0">
+        <AgentIcon />
+        <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+          Agent
+        </p>
+      </div>
+      <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+        All agents
+      </p>
+      <CaretDownIcon />
+    </button>
+  );
+}
+
+function ExportIcon() {
+  return (
+    <div className="relative shrink-0 size-[14px]">
+      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 14 14">
+        <g id="arrow-right-to-file">
+          <path d={svgPaths.p2c9f8300} fill="currentColor" className="text-muted-foreground" />
+        </g>
+      </svg>
+    </div>
+  );
+}
+
+function ExportButton() {
+  return (
+    <button className="bg-gradient-to-b box-border content-stretch flex from-white gap-[3px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 to-muted border border-border hover:shadow-md transition-all">
+      <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
+        <ExportIcon />
+        <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+          Export Report
+        </p>
+      </div>
+    </button>
+  );
+}
+
+export function SubHeader() {
+  return (
+    <div className="content-stretch flex items-center justify-between relative w-full bg-background px-6 py-3">
+      <div className="basis-0 content-stretch flex gap-[6px] grow items-center min-h-px min-w-px relative shrink-0">
+        <SearchBar />
+        <DateFilter />
+        <TopicsFilter />
+        <AgentFilter />
+      </div>
+      <ExportButton />
+    </div>
+  );
+}
