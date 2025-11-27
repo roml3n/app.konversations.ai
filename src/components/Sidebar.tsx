@@ -99,9 +99,13 @@ const menuItems = [
   { id: 'settings', label: 'Settings', icon: SettingsIcon },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  activeItem?: string;
+  onItemClick?: (id: string) => void;
+}
+
+export function Sidebar({ activeItem = 'insights', onItemClick }: SidebarProps) {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [activeItem, setActiveItem] = useState('insights');
 
   return (
     <div 
@@ -175,7 +179,7 @@ export function Sidebar() {
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveItem(item.id)}
+                    onClick={() => onItemClick?.(item.id)}
                     className={`relative rounded-[8px] shrink-0 w-full transition-colors ${
                       isActive 
                         ? 'bg-[rgba(255,255,255,0.1)]' 

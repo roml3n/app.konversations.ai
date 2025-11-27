@@ -1,7 +1,7 @@
 
-  # Konversations Insights UI Design
+  # Konversations Make Prototype
 
-  This is a code bundle for Konversations Insights UI Design. The original project is available at https://www.figma.com/design/VG4cywiU1tFRoOOIzUI4eK/Konversations-Insights-UI-Design.
+  This is a code bundle for Konversations Make Prototype. The original project is available at https://www.figma.com/design/VG4cywiU1tFRoOOIzUI4eK/Konversations-Make-Prototype.
 
   ## Running the code
 
