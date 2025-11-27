@@ -120,11 +120,11 @@ function LabelItem({ label, color, bgColor }: LabelItemProps) {
 }
 
 interface InboxSidebarProps {
-  activeChannel?: string | null;
-  onChannelSelect?: (channel: string | null) => void;
+  activeView?: string;
+  onViewSelect?: (view: string) => void;
 }
 
-export function InboxSidebar({ activeChannel, onChannelSelect }: InboxSidebarProps) {
+export function InboxSidebar({ activeView = 'messages', onViewSelect }: InboxSidebarProps) {
   const [isChannelsOpen, setIsChannelsOpen] = useState(true);
   const [isLabelsOpen, setIsLabelsOpen] = useState(true);
 
@@ -141,18 +141,22 @@ export function InboxSidebar({ activeChannel, onChannelSelect }: InboxSidebarPro
           icon={<InboxIcon />} 
           label="Messages" 
           count={23} 
-          isActive={activeChannel === null}
-          onClick={() => onChannelSelect?.(null)}
+          isActive={activeView === 'messages'}
+          onClick={() => onViewSelect?.('messages')}
         />
         <SidebarItem 
           icon={<MentionsIcon />} 
           label="Mentions" 
           count={4} 
+          isActive={activeView === 'mentions'}
+          onClick={() => onViewSelect?.('mentions')}
         />
         <SidebarItem 
           icon={<AssignedIcon />} 
           label="Assigned to me" 
           count={2} 
+          isActive={activeView === 'assigned'}
+          onClick={() => onViewSelect?.('assigned')}
         />
       </div>
 
@@ -179,44 +183,44 @@ export function InboxSidebar({ activeChannel, onChannelSelect }: InboxSidebarPro
             <ChannelItem 
               icon={<EmailIcon />} 
               label="Email" 
-              isActive={activeChannel === 'email'}
-              onClick={() => onChannelSelect?.('email')}
+              isActive={activeView === 'email'}
+              onClick={() => onViewSelect?.('email')}
             />
             <ChannelItem 
               icon={<WebChatIcon />} 
               label="Web Chat" 
-              isActive={activeChannel === 'webchat'}
-              onClick={() => onChannelSelect?.('webchat')}
+              isActive={activeView === 'webchat'}
+              onClick={() => onViewSelect?.('webchat')}
             />
             <ChannelItem 
               icon={<CallIcon />} 
               label="Calls" 
-              isActive={activeChannel === 'call'}
-              onClick={() => onChannelSelect?.('call')}
+              isActive={activeView === 'call'}
+              onClick={() => onViewSelect?.('call')}
             />
             <ChannelItem 
               icon={<WhatsAppIcon />} 
               label="WhatsApp" 
-              isActive={activeChannel === 'whatsapp'}
-              onClick={() => onChannelSelect?.('whatsapp')}
+              isActive={activeView === 'whatsapp'}
+              onClick={() => onViewSelect?.('whatsapp')}
             />
             <ChannelItem 
               icon={<InstagramIcon />} 
               label="Instagram" 
-              isActive={activeChannel === 'instagram'}
-              onClick={() => onChannelSelect?.('instagram')}
+              isActive={activeView === 'instagram'}
+              onClick={() => onViewSelect?.('instagram')}
             />
             <ChannelItem 
               icon={<MessengerIcon />} 
               label="Messenger" 
-              isActive={activeChannel === 'messenger'}
-              onClick={() => onChannelSelect?.('messenger')}
+              isActive={activeView === 'messenger'}
+              onClick={() => onViewSelect?.('messenger')}
             />
             <ChannelItem 
               icon={<JiraIcon />} 
               label="Jira" 
-              isActive={activeChannel === 'jira'}
-              onClick={() => onChannelSelect?.('jira')}
+              isActive={activeView === 'jira'}
+              onClick={() => onViewSelect?.('jira')}
             />
           </CollapsibleContent>
         </Collapsible>

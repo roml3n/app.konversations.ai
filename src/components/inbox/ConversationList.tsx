@@ -5,7 +5,9 @@ import {
   WhatsAppIcon, 
   MessengerIcon, 
   CallIcon,
-  EmailIcon
+  EmailIcon,
+  WebChatIcon,
+  JiraIcon
 } from './icons';
 import { cn } from '../../lib/utils';
 
@@ -14,23 +16,27 @@ interface Conversation {
   name: string;
   preview: string;
   time: string;
-  channel: 'instagram' | 'whatsapp' | 'messenger' | 'call' | 'email';
+  channel: 'instagram' | 'whatsapp' | 'messenger' | 'call' | 'email' | 'webchat' | 'jira';
   avatarColor: string;
   avatarText: string;
   avatarImage?: string;
   isActive?: boolean;
+  hasMention?: boolean;
+  isAssigned?: boolean;
 }
 
 const conversations: Conversation[] = [
   {
     id: '1',
     name: 'Chat with @leeroyjenkins',
-    preview: 'Hi, I have an issue with my internet, it keeps going off...',
+    preview: 'Hi @Support, I have an issue with my internet, it keeps going off...',
     time: 'now',
     channel: 'instagram',
     avatarColor: '#a3b5f0',
     avatarText: '+',
-    isActive: true
+    isActive: true,
+    hasMention: true,
+    isAssigned: true
   },
   {
     id: '2',
@@ -39,7 +45,8 @@ const conversations: Conversation[] = [
     time: '20m',
     channel: 'whatsapp',
     avatarColor: '#f1b2b2',
-    avatarText: 'S'
+    avatarText: 'S',
+    isAssigned: true
   },
   {
     id: '3',
@@ -62,11 +69,12 @@ const conversations: Conversation[] = [
   {
     id: '5',
     name: 'Internet problems',
-    preview: 'Hi, I have an issue with my internet, it keeps going off...',
+    preview: 'Can you help me @Support? I really need this fixed ASAP.',
     time: '1d',
     channel: 'call',
     avatarColor: '#f0efa3',
-    avatarText: 'W'
+    avatarText: 'W',
+    hasMention: true
   },
   {
     id: '6',
@@ -76,28 +84,74 @@ const conversations: Conversation[] = [
     channel: 'email',
     avatarColor: '#bce5f3',
     avatarText: 'S'
+  },
+  {
+    id: '7',
+    name: 'Jira Ticket #123',
+    preview: '@Support Please look into this bug report regarding the dashboard.',
+    time: '2h',
+    channel: 'jira',
+    avatarColor: '#87CEEB',
+    avatarText: 'J',
+    hasMention: true,
+    isAssigned: true
+  },
+  {
+    id: '8',
+    name: 'Web Visitor 204',
+    preview: 'Hello, is anyone available to chat?',
+    time: '5m',
+    channel: 'webchat',
+    avatarColor: '#98FB98',
+    avatarText: 'V'
   }
 ];
 
 function ChannelIcon({ type }: { type: Conversation['channel'] }) {
   switch (type) {
     case 'instagram': return <InstagramIcon className="w-4 h-4 text-[#364153]" />;
-    case 'whatsapp': return <WhatsAppIcon className="w-3 h-3 text-[#364153]" />; // WhatsApp icon is smaller in path
+    case 'whatsapp': return <WhatsAppIcon className="w-3 h-3 text-[#364153]" />;
     case 'messenger': return <MessengerIcon className="w-4 h-4 text-[#364153]" />;
     case 'call': return <CallIcon className="w-4 h-4 text-[#364153]" />;
     case 'email': return <EmailIcon className="w-4 h-4 text-[#364153]" />;
+    case 'webchat': return <WebChatIcon className="w-4 h-4 text-[#364153]" />;
+    case 'jira': return <JiraIcon className="w-4 h-4 text-[#364153]" />;
     default: return null;
   }
 }
 
-interface ConversationListProps {
-  filter?: string | null;
+// Helper to render preview text with highlighted mentions
+function renderPreview(text: string) {
+  // Simple regex to find words starting with @
+  // We split the text and check each part
+  const parts = text.split(/(@\w+)/g);
+  
+  return parts.map((part, index) => {
+    if (part.startsWith('@')) {
+      return (
+        <span key={index} className="text-[#0055FF] font-medium">
+          {part}
+        </span>
+      );
+    }
+    return <span key={index}>{part}</span>;
+  });
 }
 
-export function ConversationList({ filter }: ConversationListProps) {
-  const filteredConversations = filter 
-    ? conversations.filter(c => c.channel === filter)
-    : conversations;
+interface ConversationListProps {
+  currentView?: string;
+}
+
+export function ConversationList({ currentView = 'messages' }: ConversationListProps) {
+  // Filter logic
+  const filteredConversations = conversations.filter(c => {
+    if (currentView === 'messages') return true; // Show all
+    if (currentView === 'mentions') return c.hasMention;
+    if (currentView === 'assigned') return c.isAssigned;
+    
+    // Assume it's a channel filter
+    return c.channel === currentView;
+  });
 
   return (
     <div className="w-[240px] h-full bg-white border-r border-[#e3e3e4] flex flex-col min-w-[240px]">
@@ -133,7 +187,7 @@ export function ConversationList({ filter }: ConversationListProps) {
               key={conv.id}
               className={cn(
                 "p-2 rounded-lg flex gap-2 cursor-pointer transition-colors",
-                conv.isActive ? "bg-white" : "bg-white hover:bg-[#f2f3f3]"
+                conv.isActive ? "bg-white shadow-sm border border-[#e3e3e4]" : "bg-white hover:bg-[#f2f3f3]"
               )}
             >
               {/* Avatar */}
@@ -152,7 +206,7 @@ export function ConversationList({ filter }: ConversationListProps) {
                   </span>
                 </div>
                 <p className="text-[12px] font-['Instrument_Sans'] text-[#7a7d7d] line-clamp-2 leading-tight">
-                  {conv.preview}
+                  {renderPreview(conv.preview)}
                 </p>
               </div>
 
