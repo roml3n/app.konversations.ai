@@ -1,4 +1,12 @@
+import { useState } from 'react';
+import { format } from 'date-fns';
 import svgPaths from '../imports/svg-qweb8b8w3s';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "./ui/popover";
+import { DateFilterContent, type DateRange } from "./figma/DateFilterContent";
 
 function SearchIcon() {
   return (
@@ -51,16 +59,50 @@ function CaretDownIcon() {
 }
 
 function DateFilter() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [dateRange, setDateRange] = useState<DateRange>({
+    from: new Date(2024, 6, 31), // Jul 31, 2024
+    to: new Date(), // Today
+    label: 'Custom'
+  });
+
+  const handleApply = () => {
+    setIsOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsOpen(false);
+  };
+
+  const getButtonText = () => {
+    if (dateRange.from && dateRange.to) {
+      return `${format(dateRange.from, 'MMM d, yyyy')} - ${format(dateRange.to, 'MMM d, yyyy')}`;
+    }
+    return 'Select dates';
+  };
+
   return (
-    <button className="bg-card box-border content-stretch flex gap-[8px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 border border-border hover:bg-muted/50 transition-colors">
-      <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
-        <CalendarIcon />
-        <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
-          Jul 31, 2024 - Today
-        </p>
-      </div>
-      <CaretDownIcon />
-    </button>
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <button className="bg-card box-border content-stretch flex gap-2 items-center px-[10px] py-2 relative rounded-lg shrink-0 border border-border hover:bg-muted/50 transition-colors">
+          <div className="content-stretch flex gap-x-1 items-center relative shrink-0">
+            <CalendarIcon />
+            <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
+              {getButtonText()}
+            </p>
+          </div>
+          <CaretDownIcon />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="p-0 w-auto border-none bg-transparent shadow-none" align="start">
+        <DateFilterContent 
+          range={dateRange} 
+          onRangeChange={setDateRange} 
+          onApply={handleApply} 
+          onCancel={handleCancel} className="rounded-[4px]"
+        />
+      </PopoverContent>
+    </Popover>
   );
 }
 
