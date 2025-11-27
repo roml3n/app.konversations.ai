@@ -1,19 +1,17 @@
 import { motion } from 'motion/react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { useFilters } from '../contexts/FilterContext';
+import { useMemo } from 'react';
 
 const CHART_COLORS = {
-  whatsapp: '#7B7BD7',
-  call: '#6AC18F',
-  webChat: '#FDC463',
-  freshdesk: '#85D6EC'
+  WhatsApp: '#7B7BD7',
+  Call: '#6AC18F',
+  WebChat: '#FDC463', // Mapping to Messenger or similar if needed
+  Freshdesk: '#85D6EC',
+  Email: '#EA4335',
+  Jira: '#394EF2',
+  Other: '#cccccc'
 };
-
-const data = [
-  { name: 'WhatsApp', value: 45, color: CHART_COLORS.whatsapp },
-  { name: 'Call', value: 25, color: CHART_COLORS.call },
-  { name: 'Web Chat', value: 18, color: CHART_COLORS.webChat },
-  { name: 'Freshdesk', value: 12, color: CHART_COLORS.freshdesk },
-];
 
 function LegendItem({ color, label }: { color: string; label: string }) {
   return (
@@ -30,6 +28,27 @@ function LegendItem({ color, label }: { color: string; label: string }) {
 }
 
 export function ConversationSources() {
+  const { filteredInsights } = useFilters();
+
+  const data = useMemo(() => {
+    const stats: Record<string, number> = {};
+    
+    filteredInsights.forEach(insight => {
+      const ch = insight.channel;
+      stats[ch] = (stats[ch] || 0) + 1;
+    });
+
+    const total = filteredInsights.length || 1;
+    
+    return Object.entries(stats).map(([name, value]) => ({
+      name,
+      value: Math.round((value / total) * 100),
+      // @ts-ignore
+      color: CHART_COLORS[name] || CHART_COLORS.Other
+    })).sort((a, b) => b.value - a.value);
+
+  }, [filteredInsights]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

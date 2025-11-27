@@ -13,6 +13,8 @@ export interface Topic {
   name: string;
 }
 
+export type ChannelType = 'WhatsApp' | 'Email' | 'Call' | 'Instagram' | 'Messenger' | 'Jira' | 'Freshdesk';
+
 export interface Insight {
   id: string;
   title: string;
@@ -20,7 +22,13 @@ export interface Insight {
   agentId: string;
   topicIds: string[];
   sentiment: 'positive' | 'neutral' | 'negative';
-  score: number;
+  score: number; // 0-100, can be used for Quality
+  channel: ChannelType;
+  resolutionStatus: 'resolved' | 'partially_resolved' | 'unresolved';
+  complexity: number; // 1-10
+  handleTime: number; // minutes
+  clientSentiment: number; // 1-5
+  agentSentiment: number; // 1-5
 }
 
 export const MOCK_AGENTS: Agent[] = [
@@ -70,34 +78,48 @@ export const MOCK_TOPICS: Topic[] = [
   { id: 'onboarding', name: 'Onboarding Support' },
   { id: 'integration', name: 'Integrations' },
   { id: 'security', name: 'Security Compliance' },
+  { id: 'google-workspace', name: 'Google Workspace' },
+  { id: 'google-cloud', name: 'Google Cloud' },
+  { id: 'licensing', name: 'Licensing' },
 ];
 
+export const CHANNELS: ChannelType[] = ['WhatsApp', 'Email', 'Call', 'Instagram', 'Messenger', 'Jira', 'Freshdesk'];
+
 // Generate some random insights
-export const generateMockInsights = (count: number = 50): Insight[] => {
+export const generateMockInsights = (count: number = 200): Insight[] => {
   const insights: Insight[] = [];
   const sentiments: Insight['sentiment'][] = ['positive', 'neutral', 'negative'];
+  const resolutions: Insight['resolutionStatus'][] = ['resolved', 'partially_resolved', 'unresolved'];
 
   for (let i = 0; i < count; i++) {
     const agent = MOCK_AGENTS[Math.floor(Math.random() * MOCK_AGENTS.length)];
-    const topicCount = Math.floor(Math.random() * 3) + 1;
+    const topicCount = Math.floor(Math.random() * 2) + 1;
     const conversationTopics = [];
     for(let j=0; j<topicCount; j++) {
         conversationTopics.push(MOCK_TOPICS[Math.floor(Math.random() * MOCK_TOPICS.length)].id);
     }
     // Deduplicate
     const uniqueTopics = Array.from(new Set(conversationTopics));
+    const channel = CHANNELS[Math.floor(Math.random() * CHANNELS.length)];
+    const score = Math.floor(Math.random() * 40) + 60; // 60-100
 
     insights.push({
       id: `insight-${i}`,
       title: `Conversation with Customer ${i + 100}`,
-      date: subHours(new Date(), Math.floor(Math.random() * 24 * 30)), // Last 30 days
+      date: subHours(new Date(), Math.floor(Math.random() * 24 * 60)), // Last 60 days
       agentId: agent.id,
       topicIds: uniqueTopics,
       sentiment: sentiments[Math.floor(Math.random() * sentiments.length)],
-      score: Math.floor(Math.random() * 100),
+      score: score,
+      channel: channel,
+      resolutionStatus: resolutions[Math.floor(Math.random() * resolutions.length)],
+      complexity: Math.floor(Math.random() * 10) + 1, // 1-10
+      handleTime: Math.floor(Math.random() * 60) + 5, // 5-65 mins
+      clientSentiment: Number((Math.random() * 2 + 3).toFixed(1)), // 3.0 - 5.0
+      agentSentiment: Number((Math.random() * 2 + 3).toFixed(1)), // 3.0 - 5.0
     });
   }
   return insights.sort((a, b) => b.date.getTime() - a.date.getTime());
 };
 
-export const MOCK_INSIGHTS = generateMockInsights(100);
+export const MOCK_INSIGHTS = generateMockInsights(500);

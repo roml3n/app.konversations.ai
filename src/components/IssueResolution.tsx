@@ -1,4 +1,6 @@
 import { motion } from 'motion/react';
+import { useFilters } from '../contexts/FilterContext';
+import { useMemo } from 'react';
 
 const ArrowUpIcon = () => (
   <svg className="block size-[12px] shrink-0" fill="none" viewBox="0 0 12 12">
@@ -6,28 +8,45 @@ const ArrowUpIcon = () => (
   </svg>
 );
 
-const items = [
-  {
-    value: '90%',
-    label: 'Resolution rate',
-    trend: '22%',
-    trendLabel: 'vs last week'
-  },
-  {
-    value: '3min',
-    label: 'Average handle time',
-    trend: '22%',
-    trendLabel: 'vs last week'
-  },
-  {
-    value: '34%',
-    label: '% of calls resolved on first contact',
-    trend: '22%',
-    trendLabel: 'vs last week'
-  }
-];
-
 export function IssueResolution() {
+  const { filteredInsights } = useFilters();
+
+  const stats = useMemo(() => {
+    const total = filteredInsights.length || 1;
+    const resolved = filteredInsights.filter(i => i.resolutionStatus === 'resolved').length;
+    const totalHandleTime = filteredInsights.reduce((acc, i) => acc + i.handleTime, 0);
+    
+    // Mock first contact resolution: resolved and handle time < 15 min
+    const fcr = filteredInsights.filter(i => i.resolutionStatus === 'resolved' && i.handleTime < 15).length;
+
+    return {
+      resolutionRate: Math.round((resolved / total) * 100),
+      avgHandleTime: Math.round(totalHandleTime / total),
+      fcrRate: Math.round((fcr / total) * 100)
+    };
+  }, [filteredInsights]);
+
+  const items = [
+    {
+      value: `${stats.resolutionRate}%`,
+      label: 'Resolution rate',
+      trend: '22%',
+      trendLabel: 'vs last week'
+    },
+    {
+      value: `${stats.avgHandleTime}min`,
+      label: 'Average handle time',
+      trend: '12%',
+      trendLabel: 'vs last week'
+    },
+    {
+      value: `${stats.fcrRate}%`,
+      label: '% of calls resolved on first contact',
+      trend: '5%',
+      trendLabel: 'vs last week'
+    }
+  ];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

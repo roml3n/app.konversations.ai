@@ -6,9 +6,9 @@ export function ConversationsCount() {
   const { filteredInsights } = useFilters();
 
   const data = useMemo(() => {
-    const resolved = filteredInsights.filter(i => i.sentiment === 'positive').length;
-    const partial = filteredInsights.filter(i => i.sentiment === 'neutral').length;
-    const unresolved = filteredInsights.filter(i => i.sentiment === 'negative').length;
+    const resolved = filteredInsights.filter(i => i.resolutionStatus === 'resolved').length;
+    const partial = filteredInsights.filter(i => i.resolutionStatus === 'partially_resolved').length;
+    const unresolved = filteredInsights.filter(i => i.resolutionStatus === 'unresolved').length;
     const total = resolved + partial + unresolved || 1; // Avoid div by 0
 
     return [

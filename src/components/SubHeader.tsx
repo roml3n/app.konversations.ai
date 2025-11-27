@@ -234,12 +234,30 @@ function ExportIcon() {
 }
 
 function ExportButton() {
+  const { setDateRange, setSelectedTopics, setSelectedAgents, setSearchQuery } = useFilters();
+
   return (
-    <button className="bg-gradient-to-b box-border content-stretch flex from-white gap-[3px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 to-muted border border-border hover:shadow-md transition-all">
+    <button 
+      onClick={() => {
+        setDateRange({
+          from: new Date(new Date().setDate(new Date().getDate() - 30)),
+          to: new Date(),
+          label: 'Last 30 days'
+        });
+        setSelectedTopics([]);
+        setSelectedAgents([]);
+        setSearchQuery("");
+      }}
+      className="bg-gradient-to-b box-border content-stretch flex from-white gap-[3px] items-center px-[10px] py-[8px] relative rounded-lg shrink-0 to-muted border border-border hover:shadow-md transition-all"
+    >
       <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
-        <ExportIcon />
+        <div className="relative shrink-0 size-[14px]">
+          <svg className="block size-full" fill="none" viewBox="0 0 14 14">
+            <path d="M10.5 3.5L3.5 10.5M3.5 3.5L10.5 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground" />
+          </svg>
+        </div>
         <p className="font-['Instrument_Sans',sans-serif] font-normal leading-[1.2] relative shrink-0 text-xs text-nowrap text-foreground tracking-[0.06px]">
-          Export Report
+          Clear filters
         </p>
       </div>
     </button>

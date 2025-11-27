@@ -22,35 +22,45 @@ export function PredictionScores() {
   const { filteredInsights } = useFilters();
 
   const scores = useMemo(() => {
-    const totalScore = filteredInsights.reduce((sum, i) => sum + i.score, 0);
-    const avgScore = filteredInsights.length ? totalScore / filteredInsights.length : 0;
+    const total = filteredInsights.length || 1;
+    const totalClientSentiment = filteredInsights.reduce((acc, i) => acc + i.clientSentiment, 0);
+    const avgSentiment = totalClientSentiment / total; // 1-5
+
+    // CSAT: Normalized to 0-1
+    const csat = (avgSentiment / 5).toFixed(2);
     
-    // Derived metrics
-    const csat = (avgScore / 100).toFixed(1);
-    const nps = ((avgScore * 0.8 + 10) / 100).toFixed(1); // Mock logic
-    const repeat = ((100 - avgScore) / 200).toFixed(1); // Mock logic
+    // NPS: Promoters (4-5) - Detractors (1-3)
+    const promoters = filteredInsights.filter(i => i.clientSentiment >= 4).length;
+    const detractors = filteredInsights.filter(i => i.clientSentiment <= 3).length;
+    const npsRaw = ((promoters - detractors) / total); // -1 to 1
+    // Map -1..1 to 0..1 for visualization roughly
+    const nps = Math.max(0, (npsRaw + 1) / 2).toFixed(2);
+    
+    // Repeat Contact Prob: Higher if unresolved
+    const unresolved = filteredInsights.filter(i => i.resolutionStatus !== 'resolved').length;
+    const repeatProb = (unresolved / total).toFixed(2);
 
     return [
       {
         label: 'CSAT prediction',
         value: `${csat}/1.0`,
-        percentage: `${Math.round(Math.random() * 30)}%`, // Mock trend
+        percentage: '12%', // Mock trend
         color: 'bg-[var(--chart-3)]', // Green
-        height: Math.max(10, parseFloat(csat) * 100),
+        height: parseFloat(csat) * 100,
       },
       {
         label: 'NPS likelihood',
         value: `${nps}/1.0`,
-        percentage: `${Math.round(Math.random() * 30)}%`,
+        percentage: '8%',
         color: 'bg-[var(--chart-2)]', // Blue
-        height: Math.max(10, parseFloat(nps) * 100),
+        height: parseFloat(nps) * 100,
       },
       {
         label: 'Repeat contact prob.',
-        value: `${repeat}/1.0`,
-        percentage: `${Math.round(Math.random() * 30)}%`,
+        value: `${repeatProb}/1.0`,
+        percentage: '5%',
         color: 'bg-[var(--chart-4)]', // Orange
-        height: Math.max(10, parseFloat(repeat) * 100),
+        height: parseFloat(repeatProb) * 100,
       }
     ];
   }, [filteredInsights]);
@@ -76,7 +86,7 @@ export function PredictionScores() {
              <div className="relative w-full bg-muted/50 rounded flex h-[150px] items-end overflow-hidden">
                 <motion.div 
                     initial={{ height: 0 }}
-                    animate={{ height: item.height }} 
+                    animate={{ height: `${Math.max(5, item.height)}%` }} 
                     className={`w-full rounded-sm ${item.color}`}
                     transition={{ duration: 0.6, delay: index * 0.1, ease: "easeOut" }}
                 />
