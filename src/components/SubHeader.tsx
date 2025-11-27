@@ -9,6 +9,8 @@ import {
 import { DateFilterContent, type DateRange } from "./figma/DateFilterContent";
 import { TopicFilterContent } from "./figma/TopicFilterContent";
 import { AgentFilterContent } from "./figma/AgentFilterContent";
+import { MOCK_AGENTS, MOCK_TOPICS } from "../lib/mockData";
+import { useFilters } from "../contexts/FilterContext";
 
 function SearchIcon() {
   return (
@@ -62,11 +64,7 @@ function CaretDownIcon() {
 
 function DateFilter() {
   const [isOpen, setIsOpen] = useState(false);
-  const [dateRange, setDateRange] = useState<DateRange>({
-    from: new Date(2024, 6, 31), // Jul 31, 2024
-    to: new Date(), // Today
-    label: 'Custom'
-  });
+  const { dateRange, setDateRange } = useFilters();
 
   const handleApply = () => {
     setIsOpen(false);
@@ -79,6 +77,9 @@ function DateFilter() {
   const getButtonText = () => {
     if (dateRange.from && dateRange.to) {
       return `${format(dateRange.from, 'MMM d, yyyy')} - ${format(dateRange.to, 'MMM d, yyyy')}`;
+    }
+    if (dateRange.label && dateRange.label !== 'Custom') {
+      return dateRange.label;
     }
     return 'Select dates';
   };
@@ -122,7 +123,7 @@ function TopicsIcon() {
 
 function TopicsFilter() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
+  const { selectedTopics, setSelectedTopics } = useFilters();
 
   const handleApply = () => {
     setIsOpen(false);
@@ -130,7 +131,10 @@ function TopicsFilter() {
 
   const getButtonText = () => {
     if (selectedTopics.length === 0) return "All topics";
-    if (selectedTopics.length === 1) return selectedTopics[0];
+    if (selectedTopics.length === 1) {
+      const topic = MOCK_TOPICS.find(t => t.id === selectedTopics[0]);
+      return topic ? topic.name : "Unknown Topic";
+    }
     return `${selectedTopics.length} topics`;
   };
 
@@ -175,7 +179,7 @@ function AgentIcon() {
 
 function AgentFilter() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
+  const { selectedAgents, setSelectedAgents } = useFilters();
 
   const handleApply = () => {
     setIsOpen(false);
@@ -184,11 +188,8 @@ function AgentFilter() {
   const getButtonText = () => {
     if (selectedAgents.length === 0) return "All agents";
     if (selectedAgents.length === 1) {
-      // Just for demo, in real app we'd look up the name
-      return selectedAgents[0] === 'custom' ? 'Custom' : 
-             selectedAgents[0] === 'john' ? 'John Makacha' : 
-             selectedAgents[0] === 'sarah' ? 'Sarah Smith' : 
-             selectedAgents[0] === 'mike' ? 'Mike Johnson' : '1 agent';
+       const agent = MOCK_AGENTS.find(a => a.id === selectedAgents[0]);
+       return agent ? agent.name : "Unknown Agent";
     }
     return `${selectedAgents.length} agents`;
   };

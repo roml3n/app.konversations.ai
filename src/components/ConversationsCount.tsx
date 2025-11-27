@@ -1,14 +1,25 @@
 import { motion } from 'motion/react';
-
-const data = [
-  { label: 'Resolved', count: 68, percent: 32, color: 'var(--chart-3)' },
-  { label: 'Partially Resolved', count: 86, percent: 41, color: 'var(--chart-2)' },
-  { label: 'Unresolved', count: 57, percent: 27, color: 'var(--destructive)' },
-];
-
-const total = data.reduce((sum, item) => sum + item.count, 0);
+import { useFilters } from '../contexts/FilterContext';
+import { useMemo } from 'react';
 
 export function ConversationsCount() {
+  const { filteredInsights } = useFilters();
+
+  const data = useMemo(() => {
+    const resolved = filteredInsights.filter(i => i.sentiment === 'positive').length;
+    const partial = filteredInsights.filter(i => i.sentiment === 'neutral').length;
+    const unresolved = filteredInsights.filter(i => i.sentiment === 'negative').length;
+    const total = resolved + partial + unresolved || 1; // Avoid div by 0
+
+    return [
+      { label: 'Resolved', count: resolved, percent: Math.round((resolved / total) * 100), color: 'var(--chart-3)' },
+      { label: 'Partially Resolved', count: partial, percent: Math.round((partial / total) * 100), color: 'var(--chart-2)' },
+      { label: 'Unresolved', count: unresolved, percent: Math.round((unresolved / total) * 100), color: 'var(--destructive)' },
+    ];
+  }, [filteredInsights]);
+
+  const total = filteredInsights.length;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}

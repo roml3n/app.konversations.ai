@@ -1,4 +1,6 @@
 import { motion } from 'motion/react';
+import { useFilters } from '../contexts/FilterContext';
+import { useMemo } from 'react';
 
 const InfoIcon = () => (
   <svg className="block size-[12px] shrink-0" fill="none" viewBox="0 0 12 12">
@@ -16,31 +18,43 @@ const TrendIcon = () => (
   </svg>
 );
 
-const scores = [
-  {
-    label: 'CSAT prediction',
-    value: '0.2/1.0',
-    percentage: '22%',
-    color: 'bg-[var(--chart-3)]', // Green
-    height: 48,
-  },
-  {
-    label: 'NPS likelihood',
-    value: '0.6/1.0',
-    percentage: '22%',
-    color: 'bg-[var(--chart-2)]', // Blue
-    height: 91,
-  },
-  {
-    label: 'Repeat contact prob.',
-    value: '0.4/1.0',
-    percentage: '22%',
-    color: 'bg-[var(--chart-4)]', // Orange
-    height: 72,
-  }
-];
-
 export function PredictionScores() {
+  const { filteredInsights } = useFilters();
+
+  const scores = useMemo(() => {
+    const totalScore = filteredInsights.reduce((sum, i) => sum + i.score, 0);
+    const avgScore = filteredInsights.length ? totalScore / filteredInsights.length : 0;
+    
+    // Derived metrics
+    const csat = (avgScore / 100).toFixed(1);
+    const nps = ((avgScore * 0.8 + 10) / 100).toFixed(1); // Mock logic
+    const repeat = ((100 - avgScore) / 200).toFixed(1); // Mock logic
+
+    return [
+      {
+        label: 'CSAT prediction',
+        value: `${csat}/1.0`,
+        percentage: `${Math.round(Math.random() * 30)}%`, // Mock trend
+        color: 'bg-[var(--chart-3)]', // Green
+        height: Math.max(10, parseFloat(csat) * 100),
+      },
+      {
+        label: 'NPS likelihood',
+        value: `${nps}/1.0`,
+        percentage: `${Math.round(Math.random() * 30)}%`,
+        color: 'bg-[var(--chart-2)]', // Blue
+        height: Math.max(10, parseFloat(nps) * 100),
+      },
+      {
+        label: 'Repeat contact prob.',
+        value: `${repeat}/1.0`,
+        percentage: `${Math.round(Math.random() * 30)}%`,
+        color: 'bg-[var(--chart-4)]', // Orange
+        height: Math.max(10, parseFloat(repeat) * 100),
+      }
+    ];
+  }, [filteredInsights]);
+
   return (
     <div className="flex h-full w-full flex-col gap-6 rounded-lg border border-border bg-card p-4">
       <p className="text-sm text-muted-foreground tracking-[0.07px]">AI prediction scores</p>

@@ -1,5 +1,8 @@
 import { motion } from 'motion/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { useFilters } from '../contexts/FilterContext';
+import { useMemo } from 'react';
+import { format, startOfDay, endOfDay, eachDayOfInterval, getDay } from 'date-fns';
 
 const svgPaths = {
   p1c08e580: "M10 18C12.1217 18 14.1566 17.1571 15.6569 15.6569C17.1571 14.1566 18 12.1217 18 10C18 7.87827 17.1571 5.84344 15.6569 4.34315C14.1566 2.84285 12.1217 2 10 2C7.87827 2 5.84344 2.84285 4.34315 4.34315C2.84285 5.84344 2 7.87827 2 10C2 12.1217 2.84285 14.1566 4.34315 15.6569C5.84344 17.1571 7.87827 18 10 18ZM7.5125 7.5C7.77772 7.5 8.03207 7.60536 8.21961 7.79289C8.40714 7.98043 8.5125 8.23478 8.5125 8.5C8.5125 8.76522 8.40714 9.01957 8.21961 9.20711C8.03207 9.39464 7.77772 9.5 7.5125 9.5C7.24728 9.5 6.99293 9.39464 6.80539 9.20711C6.61786 9.01957 6.5125 8.76522 6.5125 8.5C6.5125 8.23478 6.61786 7.98043 6.80539 7.79289C6.99293 7.60536 7.24728 7.5 7.5125 7.5ZM11.5125 8.5C11.5125 8.23478 11.6179 7.98043 11.8054 7.79289C11.9929 7.60536 12.2473 7.5 12.5125 7.5C12.7777 7.5 13.0321 7.60536 13.2196 7.79289C13.4071 7.98043 13.5125 8.23478 13.5125 8.5C13.5125 8.76522 13.4071 9.01957 13.2196 9.20711C13.0321 9.39464 12.7777 9.5 12.5125 9.5C12.2473 9.5 11.9929 9.39464 11.8054 9.20711C11.6179 9.01957 11.5125 8.76522 11.5125 8.5ZM7.7 13.9531C7.3125 14.1156 6.87187 13.825 7.04062 13.4406C7.54062 12.2969 8.67812 11.5 10.0031 11.5C11.3281 11.5 12.4656 12.3 12.9656 13.4406C13.1344 13.825 12.6937 14.1156 12.3062 13.9531C11.6062 13.6562 10.825 13.4906 10.0031 13.4906C9.18125 13.4906 8.4 13.6562 7.7 13.9531Z",
@@ -26,25 +29,6 @@ function FaceFrownOpen({ color }: { color: string }) {
   );
 }
 
-const weekData = [
-  { day: 'Mon', positive: 4, neutral: 3, negative: 3 },
-  { day: 'Tue', positive: 3, neutral: 6, negative: 2 },
-  { day: 'Wed', positive: 6, neutral: 6, negative: 5 },
-  { day: 'Thu', positive: 4, neutral: 6, negative: 3 },
-  { day: 'Fri', positive: 8, neutral: 4, negative: 3 },
-  { day: 'Sat', positive: 4, neutral: 6, negative: 3 },
-];
-
-const trendData = [
-  { day: 'Mo', positive: 0.2, neutral: 0.05, negative: 0.0 },
-  { day: 'Tu', positive: -0.1, neutral: 0.1, negative: 0.01 },
-  { day: 'We', positive: -0.03, neutral: 0.28, negative: 0.03 },
-  { day: 'Th', positive: -0.18, neutral: -0.15, negative: 0.4 },
-  { day: 'Fr', positive: 0.13, neutral: 0.28, negative: 0.35 },
-  { day: 'Sa', positive: 0.1, neutral: -0.05, negative: 0.02 },
-  { day: 'Su', positive: 0.35, neutral: 0.22, negative: 0.32 },
-];
-
 const CHART_COLORS = {
   positive: '#45b273',
   neutral: '#67cce8',
@@ -52,6 +36,73 @@ const CHART_COLORS = {
 };
 
 export function SentimentDistribution() {
+  const { filteredInsights, dateRange } = useFilters();
+
+  const { weekData, trendData, stats } = useMemo(() => {
+    const positiveCount = filteredInsights.filter(i => i.sentiment === 'positive').length;
+    const negativeCount = filteredInsights.filter(i => i.sentiment === 'negative').length;
+    const total = filteredInsights.length || 1;
+
+    const stats = {
+      positivePercent: Math.round((positiveCount / total) * 100),
+      negativePercent: Math.round((negativeCount / total) * 100),
+      clientSentiment: positiveCount > negativeCount ? "Positive" : negativeCount > positiveCount ? "Negative" : "Neutral",
+      // Mock agent sentiment based on client sentiment but slightly better
+      agentSentiment: positiveCount >= negativeCount ? "Positive" : "Neutral"
+    };
+
+    // Week Data
+    const dayMap = new Map<number, { day: string, positive: number, neutral: number, negative: number }>();
+    // Initialize days
+    ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach((d, i) => {
+        dayMap.set(i, { day: d, positive: 0, neutral: 0, negative: 0 });
+    });
+
+    filteredInsights.forEach(insight => {
+        const d = new Date(insight.date);
+        const dayIndex = getDay(d);
+        const entry = dayMap.get(dayIndex)!;
+        if (insight.sentiment === 'positive') entry.positive++;
+        else if (insight.sentiment === 'neutral') entry.neutral++;
+        else entry.negative++;
+    });
+
+    const weekData = Array.from(dayMap.values());
+    // Shift to start Mon if needed, but Sun-Sat is fine.
+    // Let's match the original order Mon-Sat (maybe Sun too).
+    const weekDataSorted = [...weekData.slice(1), weekData[0]]; 
+
+    // Trend Data - simplified to use daily counts but normalized? 
+    // Or just map daily counts directly for area chart.
+    // If date range is small, show days. If large, show something else?
+    // Let's stick to daily counts over the selected range.
+    
+    let trendDays: any[] = [];
+    if (dateRange.from && dateRange.to) {
+         trendDays = eachDayOfInterval({ start: dateRange.from, end: dateRange.to }).map(day => {
+             const dayStart = startOfDay(day);
+             const dayEnd = endOfDay(day);
+             const daily = filteredInsights.filter(i => {
+                 const d = new Date(i.date);
+                 return d >= dayStart && d <= dayEnd;
+             });
+             
+             const pos = daily.filter(i => i.sentiment === 'positive').length;
+             const neu = daily.filter(i => i.sentiment === 'neutral').length;
+             const neg = daily.filter(i => i.sentiment === 'negative').length;
+             
+             return {
+                 day: format(day, 'dd'), // Just date number for compactness
+                 positive: pos,
+                 neutral: neu,
+                 negative: neg
+             };
+         });
+    }
+
+    return { weekData: weekDataSorted, trendData: trendDays, stats };
+  }, [filteredInsights, dateRange]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -68,28 +119,28 @@ export function SentimentDistribution() {
         <SentimentCard
           icon={<FaceSmileBeam />}
           iconBg="bg-[#e9f4ec]"
-          value="78%"
+          value={`${stats.positivePercent}%`}
           label="% positive conversations"
           bottomBorderColor="border-[#45b273]"
         />
         <SentimentCard
           icon={<FaceFrownOpen color="#DA3B3B" />}
           iconBg="bg-[#fae8e8]"
-          value="32%"
+          value={`${stats.negativePercent}%`}
           label="% negative conversations"
           bottomBorderColor="border-[#da3b3b]"
         />
         <SentimentCard
           icon={<FaceFrownOpen color="#45B273" />}
           iconBg="bg-[#e9f4ec]"
-          value="Positive"
+          value={stats.clientSentiment}
           label="Average client sentiment"
           bottomBorderColor="border-[#45b273]"
         />
         <SentimentCard
           icon={<FaceFrownOpen color="#62C3DD" />}
           iconBg="bg-[#d5eef7]"
-          value="Neutral"
+          value={stats.agentSentiment}
           label="Average agent sentiment"
           bottomBorderColor="border-[#62c3dd]"
         />
@@ -122,6 +173,7 @@ export function SentimentDistribution() {
                   stroke="transparent"
                   tick={{ fill: 'rgba(0,0,0,0.7)', fontSize: 12 }}
                   tickLine={false}
+                  allowDecimals={false}
                 />
                 <Tooltip
                   contentStyle={{
@@ -174,11 +226,14 @@ export function SentimentDistribution() {
                   tick={{ fill: 'rgba(0,0,0,0.7)', fontSize: 12 }}
                   tickLine={false}
                   dy={10}
+                  interval="preserveStartEnd"
+                  minTickGap={20}
                 />
                 <YAxis
                   stroke="transparent"
                   tick={{ fill: 'rgba(0,0,0,0.7)', fontSize: 12 }}
                   tickLine={false}
+                  allowDecimals={false}
                 />
                 <Tooltip
                   contentStyle={{
@@ -194,6 +249,7 @@ export function SentimentDistribution() {
                   stroke={CHART_COLORS.positive}
                   fill="url(#positiveArea)"
                   strokeWidth={2}
+                  stackId="1"
                 />
                 <Area
                   type="linear"
@@ -201,6 +257,7 @@ export function SentimentDistribution() {
                   stroke={CHART_COLORS.neutral}
                   fill="url(#neutralArea)"
                   strokeWidth={2}
+                  stackId="1"
                 />
                 <Area
                   type="linear"
@@ -208,6 +265,7 @@ export function SentimentDistribution() {
                   stroke={CHART_COLORS.negative}
                   fill="url(#negativeArea)"
                   strokeWidth={2}
+                  stackId="1"
                 />
               </AreaChart>
             </ResponsiveContainer>

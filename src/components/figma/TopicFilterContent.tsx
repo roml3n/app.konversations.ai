@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { cn } from '../../lib/utils';
 import svgPaths from '../../imports/svg-qtxf81v505';
+import { MOCK_TOPICS } from '../../lib/mockData';
 
 // --- Icons ---
 
@@ -34,17 +35,6 @@ interface TopicFilterContentProps {
   className?: string;
 }
 
-const ALL_TOPICS = [
-  "Topic 1",
-  "Topic 2",
-  "Topic 3",
-  "Topic 4",
-  "Topic 5",
-  "Topic 6",
-  "Topic 7",
-  "Topic 8",
-];
-
 export function TopicFilterContent({ 
   selectedTopics, 
   onTopicsChange, 
@@ -53,37 +43,18 @@ export function TopicFilterContent({
 }: TopicFilterContentProps) {
   const [searchQuery, setSearchQuery] = useState("");
   
-  // Internal state for the current selection before applying
-  // But usually filter contents receive the current state. 
-  // If we want "Apply" to confirm, we should probably keep local state.
-  // The DateFilterContent did independent view states but `onRangeChange` updated parent state immediately? 
-  // Let's check DateFilterContent again. 
-  // It calls `onRangeChange` immediately on click. 
-  // So "Apply" just closes the popover in the parent.
-  // I will follow that pattern: assume `selectedTopics` is passed from parent and updating it updates parent state.
-  // Or, strictly, "Apply" implies we commit changes then. 
-  // But for now I'll mirror the DateFilter pattern where we update the state passed in.
-  
-  // Wait, DateFilterContent called `onRangeChange` on click. 
-  // But typically "Apply" buttons mean "Commit these changes".
-  // However, let's stick to the prop callback pattern.
-  
-  // Actually, to support "Cancel" or just clicking outside without applying, we usually need local state. 
-  // But `DateFilterContent` seemed to update `range` prop directly via `onRangeChange`. 
-  // I will do the same: direct update. 
-  
   const filteredTopics = useMemo(() => {
-    if (!searchQuery) return ALL_TOPICS;
-    return ALL_TOPICS.filter(topic => 
-      topic.toLowerCase().includes(searchQuery.toLowerCase())
+    if (!searchQuery) return MOCK_TOPICS;
+    return MOCK_TOPICS.filter(topic => 
+      topic.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery]);
 
-  const toggleTopic = (topic: string) => {
-    if (selectedTopics.includes(topic)) {
-      onTopicsChange(selectedTopics.filter(t => t !== topic));
+  const toggleTopic = (topicId: string) => {
+    if (selectedTopics.includes(topicId)) {
+      onTopicsChange(selectedTopics.filter(t => t !== topicId));
     } else {
-      onTopicsChange([...selectedTopics, topic]);
+      onTopicsChange([...selectedTopics, topicId]);
     }
   };
 
@@ -111,11 +82,11 @@ export function TopicFilterContent({
         </p>
         <div className="flex flex-col gap-[4px] w-full max-h-[200px] overflow-y-auto">
           {filteredTopics.map(topic => {
-            const isSelected = selectedTopics.includes(topic);
+            const isSelected = selectedTopics.includes(topic.id);
             return (
               <button
-                key={topic}
-                onClick={() => toggleTopic(topic)}
+                key={topic.id}
+                onClick={() => toggleTopic(topic.id)}
                 className="flex items-center gap-[8px] w-full hover:bg-gray-50 p-1 rounded cursor-pointer group"
               >
                 {/* Checkbox */}
@@ -128,7 +99,7 @@ export function TopicFilterContent({
                 
                 {/* Label */}
                 <span className="text-[14px] text-[#364153] font-['Instrument_Sans'] leading-[1.2] truncate">
-                  {topic}
+                  {topic.name}
                 </span>
               </button>
             );

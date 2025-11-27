@@ -1,6 +1,9 @@
 import { useState, useMemo } from 'react';
 import { cn } from '../../lib/utils';
 import svgPaths from '../../imports/svg-o0tf84h1yh';
+import { MOCK_AGENTS } from '../../lib/mockData';
+
+import { ImageWithFallback } from '../../components/figma/ImageWithFallback';
 
 // --- Icons ---
 
@@ -26,26 +29,12 @@ function CheckSmallIcon() {
 
 // --- Types ---
 
-interface Agent {
-  id: string;
-  name: string;
-  initial: string;
-  color: string;
-}
-
 interface AgentFilterContentProps {
   selectedAgents: string[]; // IDs of selected agents
   onAgentsChange: (agentIds: string[]) => void;
   onApply: () => void;
   className?: string;
 }
-
-const ALL_AGENTS: Agent[] = [
-  { id: 'custom', name: 'Custom', initial: 'P', color: '#aaacff' },
-  { id: 'john', name: 'John Makacha', initial: 'J', color: '#f5e4b5' },
-  { id: 'sarah', name: 'Sarah Smith', initial: 'S', color: '#ffc8c8' },
-  { id: 'mike', name: 'Mike Johnson', initial: 'M', color: '#c8ffc8' },
-];
 
 export function AgentFilterContent({ 
   selectedAgents, 
@@ -56,8 +45,8 @@ export function AgentFilterContent({
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredAgents = useMemo(() => {
-    if (!searchQuery) return ALL_AGENTS;
-    return ALL_AGENTS.filter(agent => 
+    if (!searchQuery) return MOCK_AGENTS;
+    return MOCK_AGENTS.filter(agent => 
       agent.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery]);
@@ -110,14 +99,24 @@ export function AgentFilterContent({
                 </div>
 
                 {/* Avatar */}
-                <div 
-                  className="rounded-full size-[20px] flex items-center justify-center shrink-0"
-                  style={{ backgroundColor: agent.color }}
-                >
-                   <span className="text-[10px] font-['Instrument_Sans'] text-[#1e2939] mix-blend-color-burn leading-none">
-                     {agent.initial}
-                   </span>
-                </div>
+                {agent.avatarUrl ? (
+                  <div className="rounded-full size-[20px] overflow-hidden shrink-0">
+                     <ImageWithFallback 
+                       src={agent.avatarUrl} 
+                       alt={agent.name} 
+                       className="size-full object-cover"
+                     />
+                  </div>
+                ) : (
+                  <div 
+                    className="rounded-full size-[20px] flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: agent.color }}
+                  >
+                     <span className="text-[10px] font-['Instrument_Sans'] text-[#1e2939] mix-blend-color-burn leading-none">
+                       {agent.initial}
+                     </span>
+                  </div>
+                )}
                 
                 {/* Name */}
                 <span className="text-[14px] text-[#364153] font-['Instrument_Sans'] leading-[1.2] truncate">

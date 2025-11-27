@@ -1,17 +1,8 @@
 import { motion } from 'motion/react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-
-const data = [
-  { date: 'Aug 21', resolved: 8, partial: 10, unresolved: 4 },
-  { date: 'Aug 22', resolved: 6, partial: 8, unresolved: 6 },
-  { date: 'Aug 23', resolved: 12, partial: 6, unresolved: 3 },
-  { date: 'Aug 24', resolved: 9, partial: 9, unresolved: 4 },
-  { date: 'Aug 25', resolved: 13, partial: 5, unresolved: 2 },
-  { date: 'Aug 26', resolved: 10, partial: 7, unresolved: 5 },
-  { date: 'Aug 27', resolved: 14, partial: 6, unresolved: 3 },
-  { date: 'Aug 28', resolved: 8, partial: 9, unresolved: 6 },
-  { date: 'Aug 29', resolved: 7, partial: 8, unresolved: 8 },
-];
+import { useFilters } from '../contexts/FilterContext';
+import { useMemo } from 'react';
+import { format, eachDayOfInterval, startOfDay, endOfDay } from 'date-fns';
 
 const legendItems = [
   { label: 'Resolved', color: 'var(--chart-3)' },
@@ -20,6 +11,31 @@ const legendItems = [
 ];
 
 export function ConversationsChart() {
+  const { filteredInsights, dateRange } = useFilters();
+
+  const data = useMemo(() => {
+    if (!dateRange.from || !dateRange.to) return [];
+
+    const days = eachDayOfInterval({ start: dateRange.from, end: dateRange.to });
+
+    return days.map(day => {
+      const dayStart = startOfDay(day);
+      const dayEnd = endOfDay(day);
+      
+      const dayInsights = filteredInsights.filter(i => {
+        const d = new Date(i.date);
+        return d >= dayStart && d <= dayEnd;
+      });
+
+      return {
+        date: format(day, 'MMM d'),
+        resolved: dayInsights.filter(i => i.sentiment === 'positive').length,
+        partial: dayInsights.filter(i => i.sentiment === 'neutral').length,
+        unresolved: dayInsights.filter(i => i.sentiment === 'negative').length,
+      };
+    });
+  }, [filteredInsights, dateRange]);
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -53,14 +69,15 @@ export function ConversationsChart() {
               tickLine={false}
               axisLine={{ stroke: 'var(--border)', opacity: 0.5 }}
               dy={10}
+              interval="preserveStartEnd"
+              minTickGap={30}
             />
             <YAxis
               stroke="var(--muted-foreground)"
               tick={{ fill: 'var(--muted-foreground)', fontSize: 12, opacity: 0.5 }}
               tickLine={false}
               axisLine={false}
-              domain={[0, 15]}
-              ticks={[0, 5, 10, 15]}
+              allowDecimals={false}
             />
             <Tooltip
               contentStyle={{
