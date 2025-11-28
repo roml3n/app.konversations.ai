@@ -3,9 +3,16 @@ import {
   TagIcon, 
   PlusIcon,
   CaretDownIcon,
-  WhatsAppIcon
+  WhatsAppIcon,
+  InstagramIcon,
+  MessengerIcon,
+  CallIcon,
+  EmailIcon,
+  WebChatIcon,
+  JiraIcon
 } from './icons';
 import { cn } from '../../lib/utils';
+import { conversations, conversationMessages, Message, ChannelType } from './data';
 
 // Icons for this specific component
 const ChartSimpleIcon = () => (
@@ -40,6 +47,19 @@ const FileIcon = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4.2 1.4C3.42781 1.4 2.8 2.02781 2.8 2.8V11.2C2.8 11.9722 3.42781 12.6 4.2 12.6H9.8C10.5722 12.6 11.2 11.9722 11.2 11.2V4.9H8.4C8.01281 4.9 7.7 4.58719 7.7 4.2V1.4H4.2ZM8.4 1.4V4.2H11.2L8.4 1.4ZM4.2 7C4.2 6.81435 4.27375 6.6363 4.40502 6.50502C4.5363 6.37375 4.71435 6.3 4.9 6.3C5.08565 6.3 5.2637 6.37375 5.39497 6.50502C5.52625 6.6363 5.6 6.81435 5.6 7C5.6 7.18565 5.52625 7.3637 5.39497 7.49497C5.2637 7.62625 5.08565 7.7 4.9 7.7C4.71435 7.7 4.5363 7.62625 4.40502 7.49497C4.27375 7.3637 4.2 7.18565 4.2 7ZM7.525 7.7C7.64094 7.7 7.74812 7.75687 7.81375 7.85094L9.73875 10.6509C9.81312 10.7581 9.81969 10.8981 9.76062 11.0119C9.70156 11.1256 9.58125 11.2 9.45 11.2H7.525H6.65H5.6H4.55C4.42312 11.2 4.30719 11.1322 4.24594 11.0228C4.18469 10.9134 4.18469 10.7778 4.25031 10.6706L5.30031 8.92062C5.36375 8.81562 5.4775 8.75 5.6 8.75C5.7225 8.75 5.83625 8.81344 5.89969 8.92062L6.17969 9.38875L7.23625 7.85312C7.30187 7.75906 7.40906 7.70219 7.525 7.70219V7.7Z" fill="#B1B3B4"/></svg>
 );
 
+function ChannelIcon({ type }: { type: ChannelType }) {
+  switch (type) {
+    case 'instagram': return <InstagramIcon className="w-3 h-3 text-[#364153]" />;
+    case 'whatsapp': return <WhatsAppIcon className="w-3 h-3 text-[#364153]" />;
+    case 'messenger': return <MessengerIcon className="w-3 h-3 text-[#364153]" />;
+    case 'call': return <CallIcon className="w-3 h-3 text-[#364153]" />;
+    case 'email': return <EmailIcon className="w-3 h-3 text-[#364153]" />;
+    case 'webchat': return <WebChatIcon className="w-3 h-3 text-[#364153]" />;
+    case 'jira': return <JiraIcon className="w-3 h-3 text-[#364153]" />;
+    default: return null;
+  }
+}
+
 function AssignButton() {
   return (
     <button className="flex items-center bg-[#f2f3f3] rounded-full p-1 border border-[#e3e3e4] gap-1">
@@ -67,7 +87,15 @@ function HeaderAction({ icon, label }: { icon: React.ReactNode, label: string })
   );
 }
 
-export function ChatArea() {
+interface ChatAreaProps {
+  conversationId?: string;
+  onToggleDetails?: () => void;
+}
+
+export function ChatArea({ conversationId = '2', onToggleDetails }: ChatAreaProps) {
+  const conversation = conversations.find(c => c.id === conversationId) || conversations[1];
+  const messages = conversationMessages[conversationId] || [];
+
   return (
     <div className="flex-1 flex flex-col h-full bg-white min-w-0">
       {/* Header */}
@@ -91,8 +119,9 @@ export function ChatArea() {
       <div className="h-[52px] border-b border-[#e3e3e4] flex items-center justify-between px-4">
         <div className="flex items-center gap-4">
           <h2 className="text-[18px] font-['Instrument_Sans'] font-semibold text-[#202121] truncate">
-            Issue with my account
+            {conversation.name}
           </h2>
+          {/* Tag - Just hardcoded as account for now unless we add tags to data */}
           <div className="flex items-center gap-1 bg-[#fcf6e9] px-1.5 py-0.5 rounded-[6px]">
             <div className="w-3 h-3 text-[#E2C148]"><TagIcon /></div>
             <span className="text-[12px] font-['Instrument_Sans'] text-[#404141]">account</span>
@@ -103,151 +132,157 @@ export function ChatArea() {
             <span className="text-[12px] font-['Instrument_Sans'] font-semibold text-[#4f595e]">Log to CRM</span>
             <ArrowUpRightIcon />
           </button>
-          <button className="p-1 bg-white border border-[#edf1f4] rounded-full shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.25)]">
+          <button 
+            onClick={onToggleDetails}
+            className="p-1 bg-white border border-[#edf1f4] rounded-full shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.25)] hover:bg-gray-50"
+          >
             <EllipsisIcon />
           </button>
         </div>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-6 bg-white">
-        
-        {/* Msg 1 - Incoming */}
-        <div className="flex items-start gap-3 max-w-[70%]">
-          <div className="w-8 h-8 rounded-full bg-[#f1b2b2] flex items-center justify-center text-[16px] font-bold text-[#202121] shrink-0">S</div>
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1 text-[12px]">
-              <span className="font-bold text-[#7a7d7d] font-['Instrument_Sans']">Saito Watanashi</span>
-              <span className="text-[#7a7d7d] font-['Instrument_Sans']">via</span>
-              <WhatsAppIcon className="w-3 h-3 text-[#364153]" />
-            </div>
-            <div className="bg-[#f2f3f3] p-3 rounded-[16px] text-[12px] text-[#202121] font-['Instrument_Sans'] leading-relaxed">
-              <p className="mb-4">
-                Hi there, Acme team!<br/><br/>
-                My account freezes everytime I log in, I keep getting some kind of error and the homepage keeps loading indefinitely.
-              </p>
-              <p className="mb-4">See the screenshot attached. I hope you can get it fixed soon because I need to make an important business inquiry.</p>
-              <p className="mb-4">Please ping me when done.</p>
-              <p className="mb-2">Regards,</p>
-              <p>Saito</p>
+      <div className="flex-1 overflow-y-auto p-6 bg-white">
+        <div className="flex flex-col gap-6 w-full max-w-[60%] mx-auto">
+          {messages.length > 0 ? (
+            messages.map((msg) => {
+              // 1. Incoming Message
+              if (msg.type === 'incoming') {
+                return (
+                  <div key={msg.id} className="flex items-start gap-3 max-w-[70%]">
+                    <div 
+                      className="w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold text-[#202121] shrink-0"
+                      style={{ backgroundColor: msg.sender?.avatarColor || '#ccc' }}
+                    >
+                      {msg.sender?.avatarText}
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-1 text-[12px]">
+                        <span className="font-bold text-[#7a7d7d] font-['Instrument_Sans']">{msg.sender?.name}</span>
+                        <span className="text-[#7a7d7d] font-['Instrument_Sans']">via</span>
+                        {msg.channel && <ChannelIcon type={msg.channel} />}
+                      </div>
+                      <div className="bg-[#f2f3f3] p-3 rounded-[16px] text-[12px] text-[#202121] font-['Instrument_Sans'] leading-relaxed">
+                        {msg.html ? (
+                          <div dangerouslySetInnerHTML={{ __html: msg.html }} />
+                        ) : (
+                          <p>{msg.text}</p>
+                        )}
+                        
+                        {/* Attachments */}
+                        {msg.attachments && msg.attachments.map((att, idx) => (
+                          <div key={idx} className="mt-2 bg-white rounded-full border border-[#e3e3e4] px-2 py-1 flex items-center justify-between w-full">
+                            <div className="flex items-center gap-1">
+                              <FileIcon />
+                              <span className="font-semibold text-[#5e6060]">{att.name}</span>
+                            </div>
+                            <span className="text-[#a0a3a4]">{att.size}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              // 2. Outgoing Message (Me)
+              if (msg.type === 'outgoing') {
+                 // Internal notes by ME are also outgoing in structure but styled differently? 
+                 // No, wait, type is 'outgoing' for public replies, 'internal' for internal notes.
+                 return (
+                  <div key={msg.id} className="flex flex-col items-end self-end max-w-[70%] gap-1">
+                    <span className="text-[12px] text-[#7a7d7d] mr-2">You</span>
+                    <div className="bg-[#d6d7ff] p-3 rounded-[16px] text-[12px] text-[#202121] font-['Instrument_Sans'] leading-relaxed">
+                       {msg.html ? (
+                          <div dangerouslySetInnerHTML={{ __html: msg.html }} />
+                        ) : (
+                          msg.text
+                        )}
+                    </div>
+                  </div>
+                 );
+              }
               
-              {/* Attachment */}
-              <div className="mt-2 bg-white rounded-full border border-[#e3e3e4] px-2 py-1 flex items-center justify-between w-full">
-                <div className="flex items-center gap-1">
-                  <FileIcon />
-                  <span className="font-semibold text-[#5e6060]">DSC-20240423092342.png</span>
-                </div>
-                <span className="text-[#a0a3a4]">123KB</span>
-              </div>
-            </div>
-          </div>
-        </div>
+              // 3. Internal Note
+              if (msg.type === 'internal') {
+                // Check if it's me or someone else
+                if (msg.sender?.isMe) {
+                  return (
+                    <div key={msg.id} className="flex flex-col items-end self-end max-w-[70%] gap-1">
+                      <div className="text-[12px] text-[#7a7d7d] mr-2">
+                        <span className="font-bold">You</span> <span className="italic">(internal)</span>
+                      </div>
+                      <div className="bg-[#e9e9ff] p-2 px-3 rounded-full border border-[#8083ff] text-[12px] text-[#202121] font-['Instrument_Sans']">
+                        {msg.html ? (
+                          <div dangerouslySetInnerHTML={{ __html: msg.html }} />
+                        ) : (
+                          msg.text
+                        )}
+                      </div>
+                    </div>
+                  );
+                } else {
+                  // Other agent internal note (like Amanda)
+                  return (
+                    <div key={msg.id} className="flex items-start gap-3 max-w-[70%]">
+                      <div 
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-[12px] font-bold text-[#202121] shrink-0"
+                        style={{ backgroundColor: msg.sender?.avatarColor || '#ccc' }}
+                      >
+                        {msg.sender?.avatarText}
+                      </div>
+                      <div className="flex flex-col gap-1 items-start">
+                        <div className="text-[12px] text-[#7a7d7d]">
+                          <span className="font-bold">{msg.sender?.name}</span> <span className="italic">(internal)</span>
+                        </div>
+                        <div className="bg-[#fcfcfc] p-2 px-3 rounded-full border border-[#e3e3e4] text-[12px] text-[#202121] font-['Instrument_Sans']">
+                           {msg.html ? (
+                            <div dangerouslySetInnerHTML={{ __html: msg.html }} />
+                          ) : (
+                            msg.text
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+              }
 
-        {/* Msg 2 - Outgoing */}
-        <div className="flex flex-col items-end self-end max-w-[70%] gap-1">
-          <span className="text-[12px] text-[#7a7d7d] mr-2">You</span>
-          <div className="bg-[#d6d7ff] p-3 rounded-[16px] text-[12px] text-[#202121] font-['Instrument_Sans'] leading-relaxed">
-            Hey Saito, this is Jane with Acme Support. Kindly allow us some time to look into this matter and we shall get back to you promptly.
-          </div>
-        </div>
+              // 4. System Event
+              if (msg.type === 'system') {
+                 return (
+                  <div key={msg.id} className="flex flex-col items-center gap-2 my-2">
+                    <div className="flex items-center gap-1 text-[12px]">
+                      <span className="font-bold text-[#a0a3a4]">{msg.sender?.name}</span>
+                      <span className="text-[#a0a3a4]">{msg.systemAction}</span>
+                      {msg.systemBadge && (
+                        <div 
+                          className="px-1 py-0.5 rounded-[6px] flex items-center gap-1"
+                          style={{ backgroundColor: msg.systemBadge.color }}
+                        >
+                          {/* Render icon based on string or generic fallback */}
+                          {msg.systemBadge.icon === 'tag' && <div className="w-3 h-3 text-[#8990DF]"><TagIcon /></div>}
+                          <span className="text-[#404141]">{msg.systemBadge.text}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                 );
+              }
 
-        {/* Internal Note */}
-        <div className="flex flex-col items-end self-end max-w-[70%] gap-1">
-          <div className="text-[12px] text-[#7a7d7d] mr-2">
-            <span className="font-bold">You</span> <span className="italic">(internal)</span>
-          </div>
-          <div className="bg-[#e9e9ff] p-2 px-3 rounded-full border border-[#8083ff] text-[12px] text-[#202121] font-['Instrument_Sans']">
-            Hey <span className="text-[#0320f5]">@Amanda Wakio</span>, could you please sort this out?
-          </div>
+              return null;
+            })
+          ) : (
+            <div className="flex items-center justify-center h-full text-[#7a7d7d]">
+              No messages in this conversation
+            </div>
+          )}
         </div>
-
-        {/* System Events */}
-        <div className="flex flex-col items-center gap-2 my-2">
-          <div className="flex items-center gap-1 text-[12px]">
-            <span className="font-bold text-[#a0a3a4]">Jane Muthoni</span>
-            <span className="text-[#a0a3a4]">labelled this conversation</span>
-            <div className="bg-[#fcf6e9] px-1 py-0.5 rounded-[6px] flex items-center gap-1">
-              <div className="w-3 h-3 text-[#EDCA4C]"><TagIcon /></div>
-              <span className="text-[#404141]">account</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 text-[12px]">
-            <span className="font-bold text-[#a0a3a4]">Jane Muthoni</span>
-            <span className="text-[#a0a3a4]">changed priority</span>
-            <div className="bg-[#fcf4f2] px-1 py-0.5 rounded-[6px] flex items-center gap-1">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.8 2.7C4.8 2.20312 5.20312 1.8 5.7 1.8H6.3C6.79687 1.8 7.2 2.20312 7.2 2.7V9.3C7.2 9.79688 6.79687 10.2 6.3 10.2H5.7C5.20312 10.2 4.8 9.79688 4.8 9.3V2.7ZM1.8 6.3C1.8 5.80312 2.20312 5.4 2.7 5.4H3.3C3.79687 5.4 4.2 5.80312 4.2 6.3V9.3C4.2 9.79688 3.79687 10.2 3.3 10.2H2.7C2.20312 10.2 1.8 9.79688 1.8 9.3V6.3ZM8.7 3H9.3C9.79688 3 10.2 3.40312 10.2 3.9V9.3C10.2 9.79688 9.79688 10.2 9.3 10.2H8.7C8.20312 10.2 7.8 9.79688 7.8 9.3V3.9C7.8 3.40312 8.20312 3 8.7 3Z" fill="#E7A188"/></svg>
-              <span className="text-[#404141]">High</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 text-[12px]">
-            <span className="font-bold text-[#a0a3a4]">Jane Muthoni</span>
-            <span className="text-[#a0a3a4]">changed status</span>
-            <div className="bg-[#e9ebfa] px-1 py-0.5 rounded-[6px] flex items-center gap-1">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6.9 2.1C6.9 1.86131 6.80518 1.63239 6.6364 1.4636C6.46762 1.29482 6.2387 1.2 6 1.2C5.76131 1.2 5.53239 1.29482 5.36361 1.4636C5.19482 1.63239 5.1 1.86131 5.1 2.1C5.1 2.3387 5.19482 2.56761 5.36361 2.7364C5.53239 2.90518 5.76131 3 6 3C6.2387 3 6.46762 2.90518 6.6364 2.7364C6.80518 2.56761 6.9 2.3387 6.9 2.1ZM6.9 9.9C6.9 9.66131 6.80518 9.43239 6.6364 9.26361C6.46762 9.09482 6.2387 9 6 9C5.76131 9 5.53239 9.09482 5.36361 9.26361C5.19482 9.43239 5.1 9.66131 5.1 9.9C5.1 10.1387 5.19482 10.3676 5.36361 10.5364C5.53239 10.7052 5.76131 10.8 6 10.8C6.2387 10.8 6.46762 10.7052 6.6364 10.5364C6.80518 10.3676 6.9 10.1387 6.9 9.9ZM2.1 6.9C2.3387 6.9 2.56761 6.80518 2.7364 6.6364C2.90518 6.46762 3 6.2387 3 6C3 5.76131 2.90518 5.53239 2.7364 5.36361C2.56761 5.19482 2.3387 5.1 2.1 5.1C1.86131 5.1 1.63239 5.19482 1.4636 5.36361C1.29482 5.53239 1.2 5.76131 1.2 6C1.2 6.2387 1.29482 6.46762 1.4636 6.6364C1.63239 6.80518 1.86131 6.9 2.1 6.9ZM10.8 6C10.8 5.76131 10.7052 5.53239 10.5364 5.36361C10.3676 5.19482 10.1387 5.1 9.9 5.1C9.66131 5.1 9.43239 5.19482 9.26361 5.36361C9.09482 5.53239 9 5.76131 9 6C9 6.2387 9.09482 6.46762 9.26361 6.6364C9.43239 6.80518 9.66131 6.9 9.9 6.9C10.1387 6.9 10.3676 6.80518 10.5364 6.6364C10.7052 6.46762 10.8 6.2387 10.8 6Z" fill="#8990DF"/></svg>
-              <span className="text-[#404141]">Escalated</span>
-            </div>
-          </div>
-          <div className="text-[12px] text-[#a0a3a4]">
-            <span className="font-bold">Amanda Wakio</span> was added to the conversation
-          </div>
-        </div>
-
-        {/* Internal Note - Amanda */}
-        <div className="flex items-start gap-3 max-w-[70%]">
-          <div className="w-8 h-8 rounded-full bg-[#b4bbee] flex items-center justify-center text-[16px] font-bold text-[#202121] shrink-0">A</div>
-          <div className="flex flex-col gap-1 items-start">
-            <div className="text-[12px] text-[#7a7d7d]">
-              <span className="font-bold">Amanda Wakio</span> <span className="italic">(internal)</span>
-            </div>
-            <div className="bg-[#fcfcfc] p-2 px-3 rounded-full border border-[#e3e3e4] text-[12px] text-[#202121] font-['Instrument_Sans']">
-              Sure thing <span className="text-[#0320f5]">@Jane Muthoni</span>, let me look into it
-            </div>
-          </div>
-        </div>
-
-        {/* Msg 3 - Amanda */}
-        <div className="flex items-start gap-3 max-w-[70%]">
-          <div className="w-8 h-8 rounded-full bg-[#b4bbee] flex items-center justify-center text-[16px] font-bold text-[#202121] shrink-0">A</div>
-          <div className="flex flex-col gap-1">
-            <div className="text-[12px] font-bold text-[#7a7d7d]">Amanda Wakio</div>
-            <div className="bg-[#f2f3f3] p-3 rounded-[16px] text-[12px] text-[#202121] font-['Instrument_Sans'] leading-relaxed">
-              Hi Saito, Amanda from Technical Support here, the issue seems to stem from an incorrect configuration in your settings. Let me sort it out for you.
-            </div>
-          </div>
-        </div>
-
-        {/* System Event */}
-        <div className="flex justify-center my-2">
-          <div className="flex items-center gap-1 text-[12px]">
-            <span className="font-bold text-[#a0a3a4]">Amanda Wakio</span>
-            <span className="text-[#a0a3a4]">labelled this conversation</span>
-            <div className="bg-[#e9ebfa] px-1 py-0.5 rounded-[6px] flex items-center gap-1">
-              <div className="w-3 h-3 text-[#8990DF]"><TagIcon /></div>
-              <span className="text-[#404141]">auth</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Msg 4 - Incoming */}
-        <div className="flex items-start gap-3 max-w-[70%]">
-          <div className="w-8 h-8 rounded-full bg-[#f1b2b2] flex items-center justify-center text-[16px] font-bold text-[#202121] shrink-0">S</div>
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1 text-[12px]">
-              <span className="font-bold text-[#7a7d7d] font-['Instrument_Sans']">Saito Watanashi</span>
-              <span className="text-[#7a7d7d] font-['Instrument_Sans']">via</span>
-              <WhatsAppIcon className="w-3 h-3 text-[#364153]" />
-            </div>
-            <div className="bg-[#f2f3f3] p-2 px-3 rounded-full text-[12px] text-[#202121] font-['Instrument_Sans']">
-              Good to hear!
-            </div>
-          </div>
-        </div>
-
       </div>
 
       {/* Composer */}
       <div className="p-4 border-t border-[#e3e3e4] bg-white">
-        <div className="bg-[#f2f3f3] rounded-[12px] p-2">
+        <div className="bg-[#f2f3f3] rounded-[12px] p-2 w-full max-w-[60%] mx-auto">
           <textarea 
             className="w-full bg-transparent border-none resize-none focus:ring-0 text-[12px] font-['Instrument_Sans'] text-[#202121] placeholder:text-[#a0a3a4] min-h-[40px]"
             placeholder="Type a comment"

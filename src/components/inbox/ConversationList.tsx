@@ -10,104 +10,9 @@ import {
   JiraIcon
 } from './icons';
 import { cn } from '../../lib/utils';
+import { Conversation, conversations, ChannelType } from './data';
 
-interface Conversation {
-  id: string;
-  name: string;
-  preview: string;
-  time: string;
-  channel: 'instagram' | 'whatsapp' | 'messenger' | 'call' | 'email' | 'webchat' | 'jira';
-  avatarColor: string;
-  avatarText: string;
-  avatarImage?: string;
-  isActive?: boolean;
-  hasMention?: boolean;
-  isAssigned?: boolean;
-}
-
-const conversations: Conversation[] = [
-  {
-    id: '1',
-    name: 'Chat with @leeroyjenkins',
-    preview: 'Hi @Support, I have an issue with my internet, it keeps going off...',
-    time: 'now',
-    channel: 'instagram',
-    avatarColor: '#a3b5f0',
-    avatarText: '+',
-    isActive: true,
-    hasMention: true,
-    isAssigned: true
-  },
-  {
-    id: '2',
-    name: 'Issue with my account',
-    preview: 'Hi there, Acme team! My account freezes everytime I log...',
-    time: '20m',
-    channel: 'whatsapp',
-    avatarColor: '#f1b2b2',
-    avatarText: 'S',
-    isAssigned: true
-  },
-  {
-    id: '3',
-    name: 'Name',
-    preview: 'Subject: Lorem ipsum Hi, I have an issue with my internet...',
-    time: '1d',
-    channel: 'messenger',
-    avatarColor: '#f0bfa3',
-    avatarText: 'W'
-  },
-  {
-    id: '4',
-    name: 'Internet problems',
-    preview: 'Hi, I have an issue with my internet, it keeps going off...',
-    time: '1d',
-    channel: 'call',
-    avatarColor: '#c0f0a3',
-    avatarText: 'W'
-  },
-  {
-    id: '5',
-    name: 'Internet problems',
-    preview: 'Can you help me @Support? I really need this fixed ASAP.',
-    time: '1d',
-    channel: 'call',
-    avatarColor: '#f0efa3',
-    avatarText: 'W',
-    hasMention: true
-  },
-  {
-    id: '6',
-    name: 'support@jsmob.ke',
-    preview: 'Refund issued on Purchase #23TY67 for account 223REJ9',
-    time: '1mo',
-    channel: 'email',
-    avatarColor: '#bce5f3',
-    avatarText: 'S'
-  },
-  {
-    id: '7',
-    name: 'Jira Ticket #123',
-    preview: '@Support Please look into this bug report regarding the dashboard.',
-    time: '2h',
-    channel: 'jira',
-    avatarColor: '#87CEEB',
-    avatarText: 'J',
-    hasMention: true,
-    isAssigned: true
-  },
-  {
-    id: '8',
-    name: 'Web Visitor 204',
-    preview: 'Hello, is anyone available to chat?',
-    time: '5m',
-    channel: 'webchat',
-    avatarColor: '#98FB98',
-    avatarText: 'V'
-  }
-];
-
-function ChannelIcon({ type }: { type: Conversation['channel'] }) {
+function ChannelIcon({ type }: { type: ChannelType }) {
   switch (type) {
     case 'instagram': return <InstagramIcon className="w-4 h-4 text-[#364153]" />;
     case 'whatsapp': return <WhatsAppIcon className="w-3 h-3 text-[#364153]" />;
@@ -140,9 +45,11 @@ function renderPreview(text: string) {
 
 interface ConversationListProps {
   currentView?: string;
+  selectedId?: string;
+  onSelect?: (id: string) => void;
 }
 
-export function ConversationList({ currentView = 'messages' }: ConversationListProps) {
+export function ConversationList({ currentView = 'messages', selectedId, onSelect }: ConversationListProps) {
   // Filter logic
   const filteredConversations = conversations.filter(c => {
     if (currentView === 'messages') return true; // Show all
@@ -185,9 +92,13 @@ export function ConversationList({ currentView = 'messages' }: ConversationListP
           filteredConversations.map((conv) => (
             <div 
               key={conv.id}
+              onClick={() => onSelect && onSelect(conv.id)}
               className={cn(
                 "p-2 rounded-lg flex gap-2 cursor-pointer transition-colors",
-                conv.isActive ? "bg-white shadow-sm border border-[#e3e3e4]" : "bg-white hover:bg-[#f2f3f3]"
+                // Use selectedId to determine active state, fallback to conv.isActive for backward compat if needed
+                (selectedId ? selectedId === conv.id : conv.id === '2') 
+                  ? "bg-white shadow-sm border border-[#e3e3e4]" 
+                  : "bg-white hover:bg-[#f2f3f3]"
               )}
             >
               {/* Avatar */}
