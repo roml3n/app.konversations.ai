@@ -208,7 +208,11 @@ export function ContactDetailsDrawer({ isOpen, onClose, conversation }: ContactD
   if (!isOpen) return null;
 
   return (
-    <div className="absolute top-2 right-2 bottom-2 w-[400px] bg-white rounded-lg shadow-2xl border border-[#e3e3e4] z-50 flex flex-col overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-black/60" onClick={onClose}>
+      <div 
+        className="absolute top-[16px] right-[16px] bottom-[16px] w-[400px] bg-white rounded-lg shadow-2xl border border-[#e3e3e4] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
       {/* Header */}
       <div className="h-[52px] shrink-0 border-b border-[#e3e3e4] flex items-center justify-between px-4 bg-white">
         <div className="flex flex-col">
@@ -530,6 +534,7 @@ export function ContactDetailsDrawer({ isOpen, onClose, conversation }: ContactD
            </div>
         </ExpandableSection>
 
+      </div>
       </div>
     </div>
   );

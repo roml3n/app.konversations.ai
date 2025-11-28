@@ -13,6 +13,7 @@ import {
 } from './icons';
 import { cn } from '../../lib/utils';
 import { conversations, conversationMessages, Message, ChannelType } from './data';
+import { LogToCRMDrawer } from './LogToCRMDrawer';
 
 // Icons for this specific component
 const ChartSimpleIcon = () => (
@@ -93,11 +94,12 @@ interface ChatAreaProps {
 }
 
 export function ChatArea({ conversationId = '2', onToggleDetails }: ChatAreaProps) {
+  const [isCRMDrawerOpen, setIsCRMDrawerOpen] = React.useState(false);
   const conversation = conversations.find(c => c.id === conversationId) || conversations[1];
   const messages = conversationMessages[conversationId] || [];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white min-w-0">
+    <div className="flex-1 flex flex-col h-full bg-white min-w-0 relative">
       {/* Header */}
       <div className="h-[52px] border-b border-[#e3e3e4] flex items-center justify-between px-4">
         <div className="flex items-center gap-2">
@@ -128,7 +130,10 @@ export function ChatArea({ conversationId = '2', onToggleDetails }: ChatAreaProp
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex items-center gap-1 px-2 py-1 bg-white border border-[#edf1f4] rounded-full shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.25)]">
+          <button 
+            onClick={() => setIsCRMDrawerOpen(true)}
+            className="flex items-center gap-1 px-2 py-1 bg-white border border-[#edf1f4] rounded-full shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.25)]"
+          >
             <span className="text-[12px] font-['Instrument_Sans'] font-semibold text-[#4f595e]">Log to CRM</span>
             <ArrowUpRightIcon />
           </button>
@@ -299,6 +304,12 @@ export function ChatArea({ conversationId = '2', onToggleDetails }: ChatAreaProp
           </div>
         </div>
       </div>
+
+      <LogToCRMDrawer 
+        isOpen={isCRMDrawerOpen} 
+        onClose={() => setIsCRMDrawerOpen(false)} 
+        conversation={conversation} 
+      />
     </div>
   );
 }
