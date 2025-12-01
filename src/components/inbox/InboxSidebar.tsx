@@ -39,6 +39,7 @@ function SidebarItem({
 }: SidebarItemProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={cn(
         "w-full flex items-center justify-between px-2 py-1 rounded-lg transition-colors group",
@@ -84,6 +85,7 @@ function ChannelItem({
 }: ChannelItemProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
       className={cn(
         "w-full flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors",
@@ -115,7 +117,7 @@ interface LabelItemProps {
 
 function LabelItem({ label, color, bgColor }: LabelItemProps) {
   return (
-    <button className="w-full flex items-center justify-between px-2 py-1 rounded-lg hover:bg-[#e3e3e4]/50 transition-colors group">
+    <button type="button" className="w-full flex items-center justify-between px-2 py-1 rounded-lg hover:bg-[#e3e3e4]/50 transition-colors group">
       <div className="flex items-center gap-2">
         <div
           className="px-1 py-0.5 rounded-[6px] flex items-center gap-1"
@@ -218,7 +220,7 @@ export function InboxSidebar({
                 Channels
               </span>
             </div>
-            <button className="text-[#7A8890] opacity-0 group-hover:opacity-100 transition-opacity">
+            <button type="button" className="text-[#7A8890] opacity-0 group-hover:opacity-100 transition-opacity">
               <div className="w-3.5 h-3.5">
                 <PlusIcon />
               </div>
@@ -295,7 +297,7 @@ export function InboxSidebar({
                 Labels
               </span>
             </div>
-            <button className="text-[#7A8890] opacity-0 group-hover:opacity-100 transition-opacity">
+            <button type="button" className="text-[#7A8890] opacity-0 group-hover:opacity-100 transition-opacity">
               <div className="w-3.5 h-3.5">
                 <PlusIcon />
               </div>

@@ -579,9 +579,7 @@ export function EmailThreadView({
         </div>
       </div>
 
-      <div className="z-10 w-full max-w-[800px] mx-auto">
-        <ChatComposer />
-      </div>
+      <ChatComposer />
 
       <LogToCRMDrawer
         isOpen={isCRMDrawerOpen}

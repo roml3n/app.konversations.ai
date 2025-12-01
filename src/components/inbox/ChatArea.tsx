@@ -190,7 +190,9 @@ export function ChatArea({
   const messages = conversationMessages[conversationId] || [];
 
   if (conversation?.channel === "email") {
-    return <EmailThreadView onToggleDetails={onToggleDetails} />;
+    return (
+      <EmailThreadView onToggleDetails={onToggleDetails} />
+    );
   }
 
   if (conversation?.channel === "call") {
@@ -203,7 +205,7 @@ export function ChatArea({
       <ConversationHeader />
 
       {/* Topic */}
-      <ConversationTopicHeader 
+      <ConversationTopicHeader
         title={conversation.name}
         tags={["account"]}
         onLogToCRM={() => setIsCRMDrawerOpen(true)}
@@ -424,8 +426,8 @@ export function ChatArea({
       </div>
 
       {/* Composer */}
-      <div className="z-10 w-full border-t border-[#e3e3e4]">
-          <ChatComposer />
+      <div className="z-10 w-full">
+        <ChatComposer />
       </div>
 
       <LogToCRMDrawer

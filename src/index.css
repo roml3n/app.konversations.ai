@@ -58,6 +58,7 @@
   :root, :host {
     --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --color-red-500: oklch(.637 .237 25.331);
     --color-blue-700: oklch(.488 .243 264.376);
     --color-indigo-100: oklch(.93 .034 272.788);
     --color-gray-50: oklch(.985 .002 247.839);
@@ -2012,8 +2013,8 @@
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
-  .to-white {
-    --tw-gradient-to: var(--color-white);
+  .to-red-500 {
+    --tw-gradient-to: var(--color-red-500);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
@@ -2213,6 +2214,10 @@
     padding-top: calc(var(--spacing) * 4);
   }
 
+  .pt-\[24px\] {
+    padding-top: 24px;
+  }
+
   .pr-0 {
     padding-right: calc(var(--spacing) * 0);
   }
@@ -2255,6 +2260,10 @@
 
   .pb-10 {
     padding-bottom: calc(var(--spacing) * 10);
+  }
+
+  .pb-\[8px\] {
+    padding-bottom: 8px;
   }
 
   .pb-\[100px\] {

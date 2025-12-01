@@ -25,11 +25,11 @@ export function ChatComposer() {
   const [mode, setMode] = useState<"reply" | "note">("reply");
 
   return (
-    <div className="z-10 w-full bg-gradient-to-b from-transparent to-white p-4">
-      <div className="bg-[#f2f3f3] rounded-[12px] w-full">
-        <div className="flex flex-col gap-[12px] p-[8px] w-full">
+    <div className="z-50 w-full bg-gradient-to-b from-transparent to-red-500 pt-[24px] px-[8px] pb-[8px]">
+      <div className="rounded-[12px] w-full">
+        <div className="flex flex-col gap-3 p-2 w-full">
           {/* Toggle Switch */}
-          <div className="bg-[#e3e3e4] flex gap-[2px] items-center p-[4px] rounded-[400px] w-fit">
+          <div className="bg-[#e3e3e4] flex gap-0.5 items-center p-1 rounded-[400px] w-fit">
             <button
               onClick={() => setMode("reply")}
               className={cn(
@@ -82,7 +82,7 @@ export function ChatComposer() {
               }
             />
 
-            <div className="flex items-center justify-between w-full border-t border-gray-200 pt-2">
+            <div className="flex w-full items-center justify-between">
               <div className="flex gap-[4px] items-center text-[#7A7D7D]">
                 <div className="p-[4px] rounded-[4px] hover:bg-gray-200 cursor-pointer">
                   <Icon16Wrapper className="size-[16px]">
