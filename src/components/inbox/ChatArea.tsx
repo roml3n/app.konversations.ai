@@ -184,6 +184,8 @@ export function ChatArea({
 }: ChatAreaProps) {
   const [isCRMDrawerOpen, setIsCRMDrawerOpen] =
     React.useState(false);
+  const [priority, setPriority] = React.useState("Medium");
+
   const conversation =
     conversations.find((c) => c.id === conversationId) ||
     conversations[1];
@@ -202,7 +204,7 @@ export function ChatArea({
   return (
     <div className="flex-1 flex flex-col h-full bg-white min-w-0 relative">
       {/* Header */}
-      <ConversationHeader />
+      <ConversationHeader priority={priority} onPriorityChange={setPriority} />
 
       {/* Topic */}
       <ConversationTopicHeader

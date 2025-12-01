@@ -25,7 +25,7 @@ export function ChatComposer() {
   const [mode, setMode] = useState<"reply" | "note">("reply");
 
   return (
-    <div className="z-50 w-full bg-none pt-[24px] px-[8px] pb-[8px]">
+    <div className="flex z-50 w-full bg-none p-2">
       <div className="bg-[#f2f3f3] rounded-[12px] flex flex-col gap-3 p-2 w-full shadow-[0_0_15px_white]">
         {/* Toggle Switch */}
         <div className="bg-[#e3e3e4] flex gap-0.5 items-center p-1 rounded-[400px] w-fit">
@@ -112,7 +112,10 @@ export function ChatComposer() {
                 </Icon16Wrapper>
               </div>
             </div>
-            <button type="button" className="bg-[#0320f5] flex gap-[4px] items-center justify-center px-[10px] py-[6px] rounded-[4px] hover:bg-blue-700 transition-colors">
+            <button
+              type="button"
+              className="bg-[#0320f5] flex gap-[4px] items-center justify-center px-[10px] py-[6px] rounded-[4px] hover:bg-blue-700 transition-colors"
+            >
               <p className="font-['Instrument_Sans'] font-semibold text-[14px] text-white tracking-[0.07px]">
                 Send
               </p>

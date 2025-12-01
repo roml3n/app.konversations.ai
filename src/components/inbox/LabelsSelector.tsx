@@ -116,7 +116,7 @@ export function LabelsSelector({
       </PopoverTrigger>
       <PopoverContent 
         className="p-0 w-[300px] rounded-[16px] border-none shadow-[0px_4px_24px_0px_rgba(0,0,0,0.08)] bg-white" 
-        align="start"
+        align="end"
         sideOffset={8}
       >
         <div className="flex flex-col gap-[24px] p-[16px]">

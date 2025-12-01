@@ -331,6 +331,7 @@ export function VoiceCallView({
   onToggleDetails?: () => void;
 }) {
   const [isCRMDrawerOpen, setIsCRMDrawerOpen] = useState(false);
+  const [priority, setPriority] = useState("Medium");
 
   // Mock conversation data for the LogToCRMDrawer
   const conversationData = {
@@ -346,7 +347,11 @@ export function VoiceCallView({
       {/* Header */}
       <div className="w-full z-[3] bg-white border-b border-[#e3e3e4]">
         {/* Top Bar */}
-        <ConversationHeader priority="Medium" status="Inbox" />
+        <ConversationHeader 
+          priority={priority} 
+          onPriorityChange={setPriority} 
+          status="Inbox" 
+        />
 
         {/* Title Bar */}
         <ConversationTopicHeader

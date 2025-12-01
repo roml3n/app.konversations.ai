@@ -2,12 +2,13 @@ import React from 'react';
 import { TagIcon, CaretDownIcon } from './icons';
 import { LabelsSelector } from './LabelsSelector';
 import { AssignSelector } from './AssignSelector';
+import { PrioritySelector } from './PrioritySelector';
 import { ImageWithFallback } from '../figma/ImageWithFallback';
 import { cn } from '../../lib/utils';
 
 // Local Icons
-const ChartSimpleIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5.6 3.15C5.6 2.57031 6.07031 2.1 6.65 2.1H7.35C7.92969 2.1 8.4 2.57031 8.4 3.15V10.85C8.4 11.4297 7.92969 11.9 7.35 11.9H6.65C6.07031 11.9 5.6 11.4297 5.6 10.85V3.15ZM2.1 7.35C2.1 6.77031 2.57031 6.3 3.15 6.3H3.85C4.42969 6.3 4.9 6.77031 4.9 7.35V10.85C4.9 11.4297 4.42969 11.9 3.85 11.9H3.15C2.57031 11.9 2.1 11.4297 2.1 10.85V7.35ZM10.15 3.5H10.85C11.4297 3.5 11.9 3.97031 11.9 4.55V10.85C11.9 11.4297 11.4297 11.9 10.85 11.9H10.15C9.57031 11.9 9.1 11.4297 9.1 10.85V4.55C9.1 3.97031 9.57031 3.5 10.15 3.5Z" fill="#EDCA4C"/></svg>
+const ChartSimpleIcon = ({ color = "#EDCA4C" }: { color?: string }) => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M5.6 3.15C5.6 2.57031 6.07031 2.1 6.65 2.1H7.35C7.92969 2.1 8.4 2.57031 8.4 3.15V10.85C8.4 11.4297 7.92969 11.9 7.35 11.9H6.65C6.07031 11.9 5.6 11.4297 5.6 10.85V3.15ZM2.1 7.35C2.1 6.77031 2.57031 6.3 3.15 6.3H3.85C4.42969 6.3 4.9 6.77031 4.9 7.35V10.85C4.9 11.4297 4.42969 11.9 3.85 11.9H3.15C2.57031 11.9 2.1 11.4297 2.1 10.85V7.35ZM10.15 3.5H10.85C11.4297 3.5 11.9 3.97031 11.9 4.55V10.85C11.9 11.4297 11.4297 11.9 10.85 11.9H10.15C9.57031 11.9 9.1 11.4297 9.1 10.85V4.55C9.1 3.97031 9.57031 3.5 10.15 3.5Z" fill={color}/></svg>
 );
 
 const SpinnerIcon = () => (
@@ -35,6 +36,7 @@ interface ConversationHeaderProps {
   status?: string;
   assignees?: Assignee[];
   labels?: string[];
+  onPriorityChange?: (priority: string) => void;
 }
 
 export function ConversationHeader({ 
@@ -45,13 +47,24 @@ export function ConversationHeader({
     { id: '2', initials: 'N', color: '#e78f8f' },
     { id: '3', imgUrl: 'https://images.unsplash.com/photo-1650913406617-bd9b0ab07d07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB1c2VyJTIwYXZhdGFyJTIwcG9ydHJhaXR8ZW58MXx8fHwxNzY0MzE0MDc5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral' }
   ],
-  labels = []
+  labels = [],
+  onPriorityChange
 }: ConversationHeaderProps) {
+  const getPriorityColor = (p: string) => {
+    switch(p) {
+      case 'High': return '#E7A188';
+      case 'Low': return '#92D0A8';
+      default: return '#EDCA4C'; // Medium
+    }
+  };
+
   return (
     <div className="h-[52px] border-b border-[#e3e3e4] flex items-center justify-between px-4 w-full">
         {/* Left Actions */}
         <div className="flex items-center gap-2">
-          <HeaderAction icon={<ChartSimpleIcon />} label={priority} />
+          <PrioritySelector currentPriority={priority} onPriorityChange={onPriorityChange}>
+            <HeaderAction icon={<ChartSimpleIcon color={getPriorityColor(priority)} />} label={priority} />
+          </PrioritySelector>
           <HeaderAction icon={<SpinnerIcon />} label={status} />
         </div>
 
@@ -65,7 +78,10 @@ export function ConversationHeader({
           </LabelsSelector>
 
           {/* Assign Button / Avatar Group */}
-          <AssignSelector currentAssignees={assignees.map(a => a.id)}>
+          <AssignSelector 
+            currentAssignee={assignees[0]?.id}
+            onAssign={(id, note) => console.log('Assigned:', id, note)}
+          >
             <button className="flex items-center bg-[#f2f3f3] rounded-full p-1 border border-[#e3e3e4] gap-1 cursor-pointer hover:bg-gray-200">
                 <div className="flex items-center -space-x-1">
                 {assignees.map((assignee, index) => (
@@ -92,9 +108,14 @@ export function ConversationHeader({
           </AssignSelector>
 
           {/* Assign Text Button */}
-          <button className="flex items-center gap-1 px-2 py-1 bg-white border border-[#e3e3e4] rounded-full shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.25)] hover:bg-gray-50">
-            <span className="text-[12px] font-['Instrument_Sans'] font-semibold text-[#5e6060]">Assign</span>
-          </button>
+          <AssignSelector 
+            currentAssignee={assignees[0]?.id}
+            onAssign={(id, note) => console.log('Assigned:', id, note)}
+          >
+            <button className="flex items-center gap-1 px-2 py-1 bg-white border border-[#e3e3e4] rounded-full shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.25)] hover:bg-gray-50">
+              <span className="text-[12px] font-['Instrument_Sans'] font-semibold text-[#5e6060]">Assign</span>
+            </button>
+          </AssignSelector>
         </div>
     </div>
   );

@@ -378,6 +378,7 @@ export function EmailThreadView({
   onToggleDetails?: () => void;
 }) {
   const [isCRMDrawerOpen, setIsCRMDrawerOpen] = useState(false);
+  const [priority, setPriority] = useState("High");
 
   // Mock conversation data for the LogToCRMDrawer
   const conversationData = {
@@ -394,7 +395,8 @@ export function EmailThreadView({
       <div className="w-full z-[3]">
         <div className="flex flex-col items-start w-full border-b border-[#e3e3e4]">
           <ConversationHeader
-            priority="High"
+            priority={priority}
+            onPriorityChange={setPriority}
             status="Escalated"
           />
           {/* Subject Line */}

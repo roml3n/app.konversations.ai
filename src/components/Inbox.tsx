@@ -8,7 +8,7 @@ import { AssignedToMeView } from './inbox/AssignedToMeView';
 
 export function Inbox() {
   // 'dashboard' or 'conversation'
-  const [viewMode, setViewMode] = useState<'dashboard' | 'conversation'>('dashboard');
+  const [viewMode, setViewMode] = useState<'dashboard' | 'conversation'>('conversation');
   // 'messages' (all), 'mentions', 'assigned', or channel IDs ('email', 'whatsapp', etc.)
   const [currentView, setCurrentView] = useState<string>('messages');
   const [selectedConversationId, setSelectedConversationId] = useState<string>('2'); // Default to the rich conversation
