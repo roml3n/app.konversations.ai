@@ -62,6 +62,26 @@ export interface Message {
   };
 }
 
+export interface Agent {
+  id: string;
+  name: string;
+  initials: string;
+  color: string;
+  avatarUrl?: string;
+}
+
+export const agents: Agent[] = [
+  { id: '1', name: 'Aggie Kamau', initials: 'A', color: '#bce5f3' },
+  { id: '2', name: 'Amanda Wakio', initials: 'A', color: '#b4bbee' },
+  { id: '3', name: 'Jacqueline Wandoe', initials: 'J', color: '#80d4eb' },
+  { id: '4', name: 'Jane Kamau', initials: 'J', color: '#e29a9a' },
+  { id: '5', name: 'Joan Kibe', initials: 'J', color: '#b6b6c3' },
+  { id: '6', name: 'Nikki Kimeu', initials: 'N', color: '#e78f8f' },
+  { id: '7', name: 'Pauline Nyaboke', initials: 'P', color: '#bce5f3' },
+  { id: '8', name: 'Samuel Baya', initials: 'S', color: '#ebdb80' },
+  { id: '9', name: 'Wallace Mutuku', initials: 'W', color: '#e78fd4' },
+];
+
 export const conversations: Conversation[] = [
   {
     id: '1',
@@ -95,7 +115,7 @@ export const conversations: Conversation[] = [
     contactName: 'Saito Watanashi',
     preview: 'Hi there, Acme team! My account freezes everytime I log...',
     time: '20m',
-    channel: 'whatsapp',
+    channel: 'email',
     avatarColor: '#f1b2b2',
     avatarText: 'S',
     isAssigned: true,
@@ -131,12 +151,12 @@ export const conversations: Conversation[] = [
   },
   {
     id: '4',
-    name: 'Internet problems',
-    preview: 'Hi, I have an issue with my internet, it keeps going off...',
+    name: 'Issue with my account',
+    preview: 'Good afternoon! This is Pauline from Acme Support...',
     time: '1d',
     channel: 'call',
     avatarColor: '#c0f0a3',
-    avatarText: 'W',
+    avatarText: 'S',
     status: 'Closed'
   },
   {
