@@ -76,7 +76,7 @@ export function PredictionScores() {
                    <span className="text-xs font-semibold text-muted-foreground tracking-[0.06px] whitespace-nowrap overflow-hidden text-ellipsis">{item.label}</span>
                    <InfoIcon />
                 </div>
-                <div className="text-2xl font-semibold text-foreground tracking-[0.12px]">{item.value}</div>
+                <div className="text-2xl font-semibold text-foreground tracking-[0.12px] text-[24px]">{item.value}</div>
                 <div className="flex items-center gap-1">
                    <TrendIcon />
                    <span className="text-xs text-[var(--chart-3)] tracking-[0.06px]">{item.percentage}</span>

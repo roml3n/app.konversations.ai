@@ -23,6 +23,7 @@ const EllipsisIcon = () => (
 interface ConversationTopicHeaderProps {
   title: string;
   tags?: string[];
+  className?: string;
   onLogToCRM?: () => void;
   onToggleDetails?: () => void;
 }
@@ -30,11 +31,12 @@ interface ConversationTopicHeaderProps {
 export function ConversationTopicHeader({
   title,
   tags = [],
+  className,
   onLogToCRM,
   onToggleDetails,
 }: ConversationTopicHeaderProps) {
   return (
-    <div className="h-[52px] border-b border-[#e3e3e4] flex items-center justify-between px-4 bg-white shrink-0">
+    <div className={`h-[52px] border-b border-[#e3e3e4] flex items-center justify-between px-4 bg-white shrink-0 ${className}`}>
       <div className="flex items-center gap-4">
         <h2 className="text-[18px] font-['Instrument_Sans'] font-semibold text-[#202121] truncate">
           {title}

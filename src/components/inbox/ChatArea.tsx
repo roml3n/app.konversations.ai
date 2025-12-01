@@ -24,6 +24,7 @@ import { VoiceCallView } from "./VoiceCallView";
 import { LabelsSelector } from "./LabelsSelector";
 import { ConversationHeader } from "./ConversationHeader";
 import { ConversationTopicHeader } from "./ConversationTopicHeader";
+import { ChatComposer } from "./ChatComposer";
 
 // Icons for this specific component
 const ChartSimpleIcon = () => (
@@ -189,11 +190,11 @@ export function ChatArea({
   const messages = conversationMessages[conversationId] || [];
 
   if (conversation?.channel === "email") {
-    return <EmailThreadView />;
+    return <EmailThreadView onToggleDetails={onToggleDetails} />;
   }
 
   if (conversation?.channel === "call") {
-    return <VoiceCallView />;
+    return <VoiceCallView onToggleDetails={onToggleDetails} />;
   }
 
   return (
@@ -423,27 +424,8 @@ export function ChatArea({
       </div>
 
       {/* Composer */}
-      <div className="p-4 border-t border-[#e3e3e4] bg-white">
-          <textarea
-            className="w-full bg-transparent border-none resize-none focus:ring-0 text-[12px] font-['Instrument_Sans'] text-[#202121] placeholder:text-[#a0a3a4] min-h-[26px] outline-none"
-            placeholder="Type a comment"
-          />
-          <div className="flex items-center justify-between mt-2">
-            <div className="flex gap-[4px]">
-              <div className="p-[4px] rounded hover:bg-gray-200 cursor-pointer">
-                <PaperclipIcon />
-              </div>
-              <div className="p-[4px] rounded hover:bg-gray-200 cursor-pointer">
-                <FormatIcon />
-              </div>
-            </div>
-            <button className="bg-[#0320f5] text-white px-[10px] py-[6px] rounded-[4px] flex items-center gap-[4px] hover:bg-blue-700 transition-colors">
-              <span className="font-['Instrument_Sans'] font-semibold text-[14px] tracking-[0.07px]">
-                Send
-              </span>
-              <SendIcon />
-            </button>
-          </div>
+      <div className="z-10 w-full border-t border-[#e3e3e4]">
+          <ChatComposer />
       </div>
 
       <LogToCRMDrawer

@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import svgPaths from "../../imports/svg-u33m1a9adr";
 import { cn } from "../../lib/utils";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { ArrowUpRightIcon } from 'lucide-react';
 import { ConversationTopicHeader } from "./ConversationTopicHeader";
+import { ConversationHeader } from "./ConversationHeader";
+import { LogToCRMDrawer } from "./LogToCRMDrawer";
+import { ChatComposer } from "./ChatComposer";
 
 // Icons
 const IconWrapper = ({ children, className }: { children: React.ReactNode; className?: string }) => (
@@ -31,19 +34,6 @@ const Icon16Wrapper = ({ children, className }: { children: React.ReactNode; cla
 );
 
 // Common Components
-function StatusBadge({ label, color, iconPath }: { label: string, color: string, iconPath: string }) {
-  return (
-    <div className="bg-white box-border flex gap-[4px] items-center justify-center px-[6px] py-[4px] relative rounded-[88px] border border-[#e3e3e4] shadow-[0px_1px_0px_0px_inset_rgba(255,255,255,0.25)]">
-      <IconWrapper className="size-[14px]">
-        <path d={iconPath} fill={`var(--fill-0, ${color})`} />
-      </IconWrapper>
-      <p className="font-['Instrument_Sans'] font-semibold leading-[1.2] text-[#5e6060] text-[12px] tracking-[0.06px]">
-        {label}
-      </p>
-    </div>
-  );
-}
-
 function Tag({ label, color, bgColor, iconColor }: { label: string, color: string, bgColor: string, iconColor: string }) {
   return (
     <div className="box-border flex gap-[2px] items-center px-[4px] py-[2px] rounded-[6px]" style={{ backgroundColor: bgColor }}>
@@ -53,41 +43,6 @@ function Tag({ label, color, bgColor, iconColor }: { label: string, color: strin
       <p className="font-['Instrument_Sans'] text-[#404141] text-[12px]">{label}</p>
     </div>
   );
-}
-
-function Avatar({ letter, color, imgUrl }: { letter: string, color?: string, imgUrl?: string }) {
-    if (imgUrl) {
-        return (
-            <div className="relative rounded-full shrink-0 size-[18px] overflow-hidden border-2 border-white ring-1 ring-transparent">
-                 <ImageWithFallback src={imgUrl} alt={letter} className="w-full h-full object-cover" />
-            </div>
-        );
-    }
-    return (
-        <div 
-            className="box-border flex flex-col items-center justify-center relative rounded-full shrink-0 size-[18px] border-2 border-white ring-1 ring-transparent"
-            style={{ backgroundColor: color || '#aaacff' }}
-        >
-            <p className="font-['Instrument_Sans'] font-semibold leading-none mix-blend-color-burn text-[#202121] text-[10px]">
-                {letter}
-            </p>
-        </div>
-    );
-}
-
-function AssignButton() {
-    return (
-        <div className="bg-[#f2f3f3] box-border flex gap-[2px] items-center justify-center p-[4px] relative rounded-[88px] border border-[#e3e3e4] shadow-[0px_1px_0px_0px_inset_rgba(255,255,255,0.25)] cursor-pointer hover:bg-gray-50">
-            <div className="flex items-center -space-x-1 px-1">
-                <Avatar letter="P" color="#aaacff" />
-                <Avatar letter="N" color="#e78f8f" />
-                <Avatar letter="S" imgUrl="https://images.unsplash.com/photo-1650913406617-bd9b0ab07d07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjB1c2VyJTIwYXZhdGFyJTIwcG9ydHJhaXR8ZW58MXx8fHwxNzY0MzE0MDc5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral" />
-            </div>
-            <Icon16Wrapper className="size-[16px] ml-1">
-                <path d={svgPaths.p322c5780} fill="#7A7D7D" />
-            </Icon16Wrapper>
-        </div>
-    );
 }
 
 // Audio Player
@@ -275,36 +230,34 @@ function SystemUpdate({ text, tag }: { text: React.ReactNode, tag?: { label: str
   );
 }
 
-export function VoiceCallView() {
+export function VoiceCallView({ onToggleDetails }: { onToggleDetails?: () => void }) {
+    const [isCRMDrawerOpen, setIsCRMDrawerOpen] = useState(false);
+    
+    // Mock conversation data for the LogToCRMDrawer
+    const conversationData = {
+        id: "voice-1",
+        name: "Saito Watanashi",
+        channel: "call",
+        avatarColor: "#f1b2b2",
+        avatarText: "S"
+    };
+
     return (
         <div className="bg-white flex flex-col h-full w-full isolate relative overflow-hidden">
              {/* Header */}
              <div className="w-full z-[3] bg-white border-b border-[#e3e3e4]">
                 {/* Top Bar */}
-                <div className="flex items-center justify-between px-[12px] py-[6px]">
-                    <div className="flex gap-[4px] items-center">
-                        <StatusBadge label="Medium" color="#EDCA4C" iconPath={svgPaths.p33b8900} />
-                        <StatusBadge label="Inbox" color="#AAACFF" iconPath={svgPaths.p3c9a6400} />
-                    </div>
-                    <div className="flex gap-[4px] items-center">
-                         <div className="bg-[#f2f3f3] p-[4px] rounded-full border border-[#e3e3e4]">
-                            <div className="bg-white rounded-full p-1 flex items-center justify-center size-[24px]">
-                                <Icon16Wrapper className="size-[16px]">
-                                    <path d={svgPaths.p306c3500} fill="#7A7D7D" />
-                                </Icon16Wrapper>
-                            </div>
-                         </div>
-                         <AssignButton />
-                         <div className="bg-white border border-[#e3e3e4] rounded-[88px] px-[8px] py-[4px] cursor-pointer hover:bg-gray-50">
-                             <p className="font-['Instrument_Sans'] font-semibold text-[#5e6060] text-[12px]">Assign</p>
-                         </div>
-                    </div>
-                </div>
+                <ConversationHeader 
+                    priority="Medium"
+                    status="Inbox"
+                />
                 
                 {/* Title Bar */}
                 <ConversationTopicHeader 
                     title="Issue with my account"
                     tags={["account"]}
+                    onLogToCRM={() => setIsCRMDrawerOpen(true)}
+                    onToggleDetails={onToggleDetails}
                 />
              </div>
 
@@ -431,39 +384,20 @@ export function VoiceCallView() {
                       </div>
 
                       {/* Internal Composer */}
-                      <div className="mt-4 bg-[#f2f3f3] rounded-[12px] p-[8px]">
-                           <textarea 
-                                placeholder="Type a comment"
-                                className="w-full bg-transparent border-none resize-none focus:ring-0 text-[12px] font-['Instrument_Sans'] text-[#202121] placeholder:text-[#a0a3a4] min-h-[26px] outline-none"
-                           />
-                           <div className="flex items-center justify-between mt-2">
-                               <div className="flex gap-[4px]">
-                                   <div className="p-[4px] rounded hover:bg-gray-200 cursor-pointer">
-                                       <Icon16Wrapper className="size-[16px]">
-                                           <path d={svgPaths.p25c66f80} fill="#7A7D7D" />
-                                       </Icon16Wrapper>
-                                   </div>
-                                   <div className="p-[4px] rounded hover:bg-gray-200 cursor-pointer">
-                                       <Icon16Wrapper className="size-[16px]">
-                                            <g>
-                                                <path d={svgPaths.p2f943480} fill="#7A7D7D" />
-                                                <path d={svgPaths.p2de75000} fill="#7A7D7D" />
-                                                <path d={svgPaths.p208c0b40} fill="#7A7D7D" />
-                                            </g>
-                                       </Icon16Wrapper>
-                                   </div>
-                               </div>
-                               <button className="bg-[#0320f5] text-white px-[10px] py-[6px] rounded-[4px] flex items-center gap-[4px] hover:bg-blue-700 transition-colors">
-                                   <span className="font-['Instrument_Sans'] font-semibold text-[14px] tracking-[0.07px]">Send</span>
-                                   <Icon16Wrapper className="size-[16px]">
-                                       <path d={svgPaths.p47ef80} fill="white" />
-                                   </Icon16Wrapper>
-                               </button>
-                           </div>
-                      </div>
-
                  </div>
              </div>
+
+             <div className="z-10 w-full border-t border-[#e3e3e4]">
+                <div className="max-w-[800px] mx-auto">
+                    <ChatComposer />
+                </div>
+             </div>
+
+             <LogToCRMDrawer
+                isOpen={isCRMDrawerOpen}
+                onClose={() => setIsCRMDrawerOpen(false)}
+                conversation={conversationData as any}
+            />
         </div>
     );
 }
