@@ -6,6 +6,7 @@ import {
 } from "../ui/popover";
 import { cn } from "../../lib/utils";
 import svgPaths from "../../imports/svg-fj1eikzggx";
+import { CreateLabelModal } from "./CreateLabelModal";
 
 // --- Icons ---
 function SearchIcon() {
@@ -77,8 +78,22 @@ export function LabelsSelector({
   onLabelsChange 
 }: LabelsSelectorProps) {
   const [open, setOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
   const [selected, setSelected] = useState<string[]>(selectedLabels);
   const [searchQuery, setSearchQuery] = useState('');
+  const [allLabels, setAllLabels] = useState<Label[]>(AVAILABLE_LABELS);
+
+  const handleCreateLabel = (name: string, color: string) => {
+    const newLabel: Label = {
+      id: name.toLowerCase().replace(/\s+/g, '-'),
+      name,
+      color
+    };
+    setAllLabels([...allLabels, newLabel]);
+    // Optionally select it immediately
+    setSelected([...selected, newLabel.id]);
+    onLabelsChange?.([...selected, newLabel.id]);
+  };
 
   // Sync external props to state if they change
   useEffect(() => {
@@ -105,11 +120,12 @@ export function LabelsSelector({
     setOpen(false);
   };
 
-  const filteredLabels = AVAILABLE_LABELS.filter(label => 
+  const filteredLabels = allLabels.filter(label => 
     label.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
+    <>
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         {children}
@@ -134,7 +150,10 @@ export function LabelsSelector({
             </div>
 
             {/* Create New Label */}
-            <div className="flex gap-[8px] items-center w-full cursor-pointer hover:opacity-70 transition-opacity">
+            <div 
+                onClick={() => setCreateModalOpen(true)}
+                className="flex gap-[8px] items-center w-full cursor-pointer hover:opacity-70 transition-opacity"
+            >
                 <CreateLabelIcon />
                 <p className="font-['Instrument_Sans'] font-normal text-[#5e6060] text-[14px] tracking-[0.07px]">
                     Create new label
@@ -215,5 +234,11 @@ export function LabelsSelector({
         </div>
       </PopoverContent>
     </Popover>
+    <CreateLabelModal 
+        open={createModalOpen} 
+        onClose={() => setCreateModalOpen(false)} 
+        onCreate={handleCreateLabel}
+    />
+    </>
   );
 }

@@ -7,6 +7,7 @@ import { ExecutiveOverview } from './components/ExecutiveOverview';
 import { ChannelPerformance } from './components/ChannelPerformance';
 import { FilterProvider } from './contexts/FilterContext';
 import { Inbox } from './components/Inbox';
+import { Workforce } from './components/Workforce';
 
 export default function App() {
   const [activeModule, setActiveModule] = useState('insights');
@@ -19,7 +20,7 @@ export default function App() {
         
         {activeModule === 'insights' ? (
           <div className="flex flex-1 flex-col overflow-hidden m-2 rounded-lg p-0">
-            <Header />
+            <Header title="Insights" />
             <SubHeader />
             
             <div className="flex flex-1 flex-col gap-6 overflow-auto bg-[rgb(255,255,255)] px-6 py-6">
@@ -39,6 +40,10 @@ export default function App() {
         ) : activeModule === 'inbox' ? (
           <div className="flex flex-1 flex-col overflow-hidden m-2 rounded-lg p-0 bg-white">
             <Inbox />
+          </div>
+        ) : activeModule === 'workforce' ? (
+          <div className="flex flex-1 flex-col overflow-hidden m-2 rounded-lg p-0 bg-white">
+            <Workforce />
           </div>
         ) : (
           <div className="flex flex-1 items-center justify-center m-2 rounded-lg bg-white">

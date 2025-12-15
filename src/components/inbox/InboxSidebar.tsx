@@ -20,7 +20,25 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "../ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import { cn } from "../../lib/utils";
+import { CreateLabelModal } from "./CreateLabelModal";
+import { DeleteLabelModal } from "./DeleteLabelModal";
+
+const INITIAL_LABELS = [
+  { label: "account", color: "#D08700", bgColor: "rgba(202,172,65,0.2)" },
+  { label: "auth", color: "#5258FE", bgColor: "rgba(90,90,205,0.2)" },
+  { label: "billing", color: "#E53E3E", bgColor: "rgba(229,62,62,0.2)" },
+  { label: "settings", color: "#01B386", bgColor: "rgba(72,187,121,0.2)" },
+  { label: "notifications", color: "#FF6900", bgColor: "rgba(222,107,32,0.2)" },
+  { label: "preferences", color: "#CD5AB6", bgColor: "rgba(205,90,182,0.2)" },
+  { label: "support", color: "#48C3E2", bgColor: "rgba(72,195,226,0.2)" },
+];
 
 interface SidebarItemProps {
   icon: React.ReactNode;
@@ -113,11 +131,13 @@ interface LabelItemProps {
   label: string;
   color: string;
   bgColor: string;
+  onEdit: () => void;
+  onDelete: () => void;
 }
 
-function LabelItem({ label, color, bgColor }: LabelItemProps) {
+function LabelItem({ label, color, bgColor, onEdit, onDelete }: LabelItemProps) {
   return (
-    <button type="button" className="w-full flex items-center justify-between px-2 py-1 rounded-lg hover:bg-[#e3e3e4]/50 transition-colors group">
+    <div className="w-full flex items-center justify-between px-2 py-1 rounded-lg hover:bg-[#e3e3e4]/50 transition-colors group cursor-pointer">
       <div className="flex items-center gap-2">
         <div
           className="px-1 py-0.5 rounded-[6px] flex items-center gap-1"
@@ -134,20 +154,44 @@ function LabelItem({ label, color, bgColor }: LabelItemProps) {
           </span>
         </div>
       </div>
-      <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 14 14"
-          fill="none"
-        >
-          <path
-            d="M7 2.8C7.3866 2.8 7.7 3.1134 7.7 3.5C7.7 3.8866 7.3866 4.2 7 4.2C6.6134 4.2 6.3 3.8866 6.3 3.5C6.3 3.1134 6.6134 2.8 7 2.8ZM7 6.3C7.3866 6.3 7.7 6.6134 7.7 7C7.7 7.3866 7.3866 7.7 7 7.7C6.6134 7.7 6.3 7.3866 6.3 7C6.3 6.6134 6.6134 6.3 7 6.3ZM7 9.8C7.3866 9.8 7.7 10.1134 7.7 10.5C7.7 10.8866 7.3866 11.2 7 11.2C6.6134 11.2 6.3 10.8866 6.3 10.5C6.3 10.1134 6.6134 9.8 7 9.8Z"
-            fill="#7A8890"
-          />
-        </svg>
-      </div>
-    </button>
+      
+      {/* Dropdown Trigger */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <div 
+            role="button"
+            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-gray-200 rounded cursor-pointer"
+            onClick={(e) => e.stopPropagation()}
+          >
+             <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+            >
+              <path
+                d="M7 2.8C7.3866 2.8 7.7 3.1134 7.7 3.5C7.7 3.8866 7.3866 4.2 7 4.2C6.6134 4.2 6.3 3.8866 6.3 3.5C6.3 3.1134 6.6134 2.8 7 2.8ZM7 6.3C7.3866 6.3 7.7 6.6134 7.7 7C7.7 7.3866 7.3866 7.7 7 7.7C6.6134 7.7 6.3 7.3866 6.3 7C6.3 6.6134 6.6134 6.3 7 6.3ZM7 9.8C7.3866 9.8 7.7 10.1134 7.7 10.5C7.7 10.8866 7.3866 11.2 7 11.2C6.6134 11.2 6.3 10.8866 6.3 10.5C6.3 10.1134 6.6134 9.8 7 9.8Z"
+                fill="#7A8890"
+              />
+            </svg>
+          </div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-40 bg-white border border-gray-200 shadow-lg rounded-lg p-1 z-[50]">
+          <DropdownMenuItem 
+            onClick={(e) => { e.stopPropagation(); onEdit(); }}
+            className="text-[13px] font-['Instrument_Sans'] text-[#161a1c] cursor-pointer hover:bg-gray-100 rounded px-2 py-1.5 outline-none"
+          >
+            Rename label
+          </DropdownMenuItem>
+          <DropdownMenuItem 
+            onClick={(e) => { e.stopPropagation(); onDelete(); }}
+            className="text-[13px] font-['Instrument_Sans'] text-[#e53e3e] cursor-pointer hover:bg-red-50 rounded px-2 py-1.5 outline-none focus:bg-red-50 focus:text-[#e53e3e]"
+          >
+            Delete label
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
   );
 }
 
@@ -156,12 +200,57 @@ interface InboxSidebarProps {
   onViewSelect?: (view: string) => void;
 }
 
+interface LabelData {
+  label: string;
+  color: string;
+  bgColor: string;
+}
+
 export function InboxSidebar({
   activeView = "messages",
   onViewSelect,
 }: InboxSidebarProps) {
   const [isChannelsOpen, setIsChannelsOpen] = useState(true);
   const [isLabelsOpen, setIsLabelsOpen] = useState(true);
+  const [isCreateLabelOpen, setIsCreateLabelOpen] = useState(false);
+  const [labels, setLabels] = useState<LabelData[]>(INITIAL_LABELS);
+  
+  // Edit/Delete State
+  const [editingLabel, setEditingLabel] = useState<LabelData | null>(null);
+  const [deletingLabel, setDeletingLabel] = useState<LabelData | null>(null);
+
+  const handleCreateLabel = (name: string, color: string) => {
+    const bgColor = color.startsWith("#") ? `${color}33` : color;
+    setLabels([...labels, { label: name, color, bgColor }]);
+  };
+
+  const handleEditLabel = (name: string, color: string) => {
+    if (!editingLabel) return;
+    
+    setLabels(labels.map(l => {
+      if (l.label === editingLabel.label) {
+        const bgColor = color.startsWith("#") ? `${color}33` : color;
+        return { label: name, color, bgColor };
+      }
+      return l;
+    }));
+    setEditingLabel(null);
+    setIsCreateLabelOpen(false);
+  };
+
+  const handleDeleteLabel = () => {
+    if (!deletingLabel) return;
+    setLabels(labels.filter(l => l.label !== deletingLabel.label));
+    setDeletingLabel(null);
+  };
+
+  // Computed properties for Modal
+  const isModalOpen = isCreateLabelOpen || !!editingLabel;
+  
+  const handleModalClose = () => {
+    setIsCreateLabelOpen(false);
+    setEditingLabel(null);
+  };
 
   return (
     <div className="w-[200px] shrink-0 h-full bg-[#f4f7f8] border-r border-[#e8edf0] flex flex-col py-[24px] px-[8px] overflow-y-auto">
@@ -198,7 +287,7 @@ export function InboxSidebar({
       </div>
 
       {/* Channels */}
-      <div className="mb-6">
+      <div className="mb-6 bg-[rgb(232,237,240)] rounded-[8px]">
         <Collapsible
           open={isChannelsOpen}
           onOpenChange={setIsChannelsOpen}
@@ -275,7 +364,7 @@ export function InboxSidebar({
       </div>
 
       {/* Labels */}
-      <div>
+      <div className="rounded-[8px] bg-[rgb(232,237,240)]">
         <Collapsible
           open={isLabelsOpen}
           onOpenChange={setIsLabelsOpen}
@@ -297,7 +386,14 @@ export function InboxSidebar({
                 Labels
               </span>
             </div>
-            <button type="button" className="text-[#7A8890] opacity-0 group-hover:opacity-100 transition-opacity">
+            <button 
+              type="button" 
+              className="text-[#7A8890] opacity-0 group-hover:opacity-100 transition-opacity hover:text-[#161a1c]"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsCreateLabelOpen(true);
+              }}
+            >
               <div className="w-3.5 h-3.5">
                 <PlusIcon />
               </div>
@@ -305,44 +401,36 @@ export function InboxSidebar({
           </div>
 
           <CollapsibleContent className="flex flex-col gap-1 pl-4">
-            <LabelItem
-              label="account"
-              color="#D08700"
-              bgColor="rgba(202,172,65,0.2)"
-            />
-            <LabelItem
-              label="auth"
-              color="#5258FE"
-              bgColor="rgba(90,90,205,0.2)"
-            />
-            <LabelItem
-              label="billing"
-              color="#E53E3E"
-              bgColor="rgba(229,62,62,0.2)"
-            />
-            <LabelItem
-              label="settings"
-              color="#01B386"
-              bgColor="rgba(72,187,121,0.2)"
-            />
-            <LabelItem
-              label="notifications"
-              color="#FF6900"
-              bgColor="rgba(222,107,32,0.2)"
-            />
-            <LabelItem
-              label="preferences"
-              color="#CD5AB6"
-              bgColor="rgba(205,90,182,0.2)"
-            />
-            <LabelItem
-              label="support"
-              color="#48C3E2"
-              bgColor="rgba(72,195,226,0.2)"
-            />
+            {labels.map((item) => (
+              <LabelItem
+                key={item.label}
+                label={item.label}
+                color={item.color}
+                bgColor={item.bgColor}
+                onEdit={() => setEditingLabel(item)}
+                onDelete={() => setDeletingLabel(item)}
+              />
+            ))}
           </CollapsibleContent>
         </Collapsible>
       </div>
+
+      {/* Modals */}
+      <CreateLabelModal
+        open={isModalOpen}
+        onClose={handleModalClose}
+        onCreate={handleCreateLabel}
+        onEdit={handleEditLabel}
+        initialName={editingLabel?.label}
+        initialColor={editingLabel?.color}
+        isEditing={!!editingLabel}
+      />
+
+      <DeleteLabelModal
+        open={!!deletingLabel}
+        onClose={() => setDeletingLabel(null)}
+        onDelete={handleDeleteLabel}
+      />
     </div>
   );
 }
