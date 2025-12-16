@@ -1,0 +1,289 @@
+/* FullCalendar Custom Styling for Scheduling */
+
+/* Main calendar container */
+.fc {
+  background: #f2f3f3;
+  border-radius: 12px;
+  overflow: hidden;
+  font-family: 'Instrument Sans', sans-serif;
+}
+
+/* Remove default borders and apply custom ones */
+.fc-theme-standard td,
+.fc-theme-standard th {
+  border: none;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Remove border on last column */
+.fc-theme-standard .fc-col-header-cell:last-child,
+.fc-theme-standard .fc-timegrid-col:last-child {
+  border-right: none;
+}
+
+/* Header row styling */
+.fc-col-header {
+  background: #f2f3f3;
+}
+
+.fc-col-header-cell {
+  padding: 0;
+  height: 64px;
+  vertical-align: middle;
+}
+
+.fc-col-header-cell-cushion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  text-decoration: none;
+  color: #5e6060;
+  height: 100%;
+  line-height: 1.2;
+}
+
+/* Day number - large and semibold */
+.fc-col-header-cell-cushion::before {
+  content: attr(data-day-number);
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  color: inherit;
+  line-height: 1.2;
+}
+
+/* Day name - smaller and medium weight */
+.fc-col-header-cell-cushion {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.07px;
+}
+
+/* Today's header - blue color */
+.fc-day-today .fc-col-header-cell-cushion {
+  color: #62c3dd;
+}
+
+/* Hide default day text, we'll add it via CSS */
+.fc-col-header-cell-cushion .fc-scrollgrid-sync-inner {
+  display: none;
+}
+
+/* Time grid body styling */
+.fc-timegrid-body {
+  background: #f2f3f3;
+}
+
+.fc-timegrid-slot {
+  height: 36px !important;
+}
+
+/* Time label column styling */
+.fc-timegrid-axis {
+  width: 66px;
+  background: #f2f3f3;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.fc-timegrid-slot-label {
+  vertical-align: middle;
+  text-align: right;
+  padding: 0 8px;
+}
+
+.fc-timegrid-slot-label-cushion {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #a0a3a4;
+  letter-spacing: 0.07px;
+  line-height: 1.2;
+  text-transform: lowercase;
+}
+
+/* Axis cell (top-left corner with GMT +3) */
+.fc-timegrid-axis-cushion {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #a0a3a4;
+  letter-spacing: 0.07px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 8px;
+  height: 100%;
+}
+
+/* Day columns - flexible width */
+.fc-timegrid-col {
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+/* Today cell background - keep transparent */
+.fc-day-today {
+  background-color: transparent !important;
+}
+
+.fc-timegrid-col.fc-day-today {
+  background-color: transparent !important;
+}
+
+/* Events styling */
+.fc-event {
+  border: none !important;
+  border-radius: 4px;
+  padding: 4px;
+  cursor: move;
+  margin: 0 4px;
+}
+
+.fc-event-main {
+  padding: 0;
+}
+
+.fc-event-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 4px;
+  height: 100%;
+  position: relative;
+}
+
+.fc-event-agent-info {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 4px;
+  border-radius: 6px;
+}
+
+.fc-event-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.fc-event-avatar span {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #1e2939;
+  line-height: 1.2;
+  mix-blend-mode: color-burn;
+}
+
+.fc-event-agent-name {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: #404141;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fc-event-time-label {
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(30, 30, 30, 0.7);
+  line-height: 1.2;
+  padding: 0 4px;
+}
+
+/* Resize handles */
+.fc-event-resizer {
+  height: 8px;
+  bottom: 0;
+  width: 100%;
+  cursor: ns-resize;
+}
+
+/* Now indicator */
+.fc-timegrid-now-indicator-line {
+  border-color: #62c3dd;
+  border-width: 1.5px;
+}
+
+.fc-timegrid-now-indicator-arrow {
+  display: none;
+}
+
+/* Scrollbar styling */
+.fc-scroller {
+  overflow-y: auto !important;
+}
+
+.fc-scroller::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.fc-scroller::-webkit-scrollbar-track {
+  background: #f2f3f3;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb {
+  background: #a0a3a4;
+  border-radius: 4px;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb:hover {
+  background: #7a7d7d;
+}
+
+/* Event hover state */
+.fc-event:hover {
+  opacity: 0.9;
+}
+
+/* Dragging state */
+.fc-event-dragging {
+  opacity: 0.5;
+}
+
+/* External drop target styling */
+.fc-highlight {
+  background: rgba(98, 195, 221, 0.1) !important;
+}
+
+/* Disable text selection during drag */
+.fc-event-dragging,
+.fc-event-resizing {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+/* Make sure the grid uses flexbox layout for equal columns */
+.fc-timegrid-cols {
+  display: flex;
+}
+
+.fc-timegrid-cols table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+/* Header columns should be equal width */
+.fc-col-header colgroup col {
+  width: auto !important;
+}
+
+.fc-col-header-cell {
+  flex: 1 1 0;
+  min-width: 0;
+}
