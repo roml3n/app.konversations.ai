@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Phone, Bell } from "lucide-react";
 import { WorkforceHeader } from "./workforce/WorkforceHeader";
 import { LiveMonitoring } from "./workforce/LiveMonitoring";
@@ -7,9 +8,12 @@ import { Forecasting } from "./workforce/Forecasting";
 import { Scheduling } from "./workforce/Scheduling";
 
 export function Workforce() {
-  const [activeTab, setActiveTab] = useState<
-    "real-time" | "forecasting" | "scheduling" | "reports"
-  >("real-time");
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const tab = searchParams.get('tab') || 'real-time';
+  const activeTab = ['real-time', 'forecasting', 'scheduling', 'reports'].includes(tab) 
+    ? tab as "real-time" | "forecasting" | "scheduling" | "reports" 
+    : "real-time";
 
   return (
     <div className="flex h-full flex-col bg-white overflow-hidden">
@@ -19,7 +23,6 @@ export function Workforce() {
         {/* Tab Navigation */}
         <WorkforceTabs
           activeTab={activeTab}
-          onTabChange={setActiveTab}
         />
 
         {/* Content */}

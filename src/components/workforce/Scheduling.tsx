@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
+import interactionPlugin, {
+  Draggable,
+} from "@fullcalendar/interaction";
 import {
   EventContentArg,
   EventDropArg,
@@ -10,6 +12,7 @@ import {
   EventClickArg,
 } from "@fullcalendar/core";
 import svgPaths from "../../imports/svg-fvyzsrmc73";
+import { CurrentTimeIndicator } from "./CurrentTimeIndicator";
 import "./scheduling-calendar.css";
 
 interface Agent {
@@ -159,7 +162,9 @@ function createInitialEvents(): CalendarEvent[] {
   ];
 
   return schedules.map((schedule, index) => {
-    const agent = agents.find((a) => a.id === schedule.agentId)!;
+    const agent = agents.find(
+      (a) => a.id === schedule.agentId,
+    )!;
     const startDate = new Date(sunday);
     startDate.setDate(sunday.getDate() + schedule.day);
     startDate.setHours(Math.floor(schedule.startHour));
@@ -169,10 +174,10 @@ function createInitialEvents(): CalendarEvent[] {
 
     const endDate = new Date(startDate);
     endDate.setHours(
-      startDate.getHours() + Math.floor(schedule.duration)
+      startDate.getHours() + Math.floor(schedule.duration),
     );
     endDate.setMinutes(
-      startDate.getMinutes() + (schedule.duration % 1) * 60
+      startDate.getMinutes() + (schedule.duration % 1) * 60,
     );
 
     return {
@@ -217,7 +222,7 @@ function DraggableAgent({ agent }: { agent: Agent }) {
   return (
     <div
       ref={dragRef}
-      className="bg-white content-stretch flex gap-[5px] items-center justify-center opacity-80 p-[8px] relative rounded-[8px] shrink-0 cursor-move hover:opacity-100 transition-opacity"
+      className="bg-white content-stretch flex gap-[5px] items-center justify-center opacity-80 p-[2px] relative rounded-[8px] shrink-0 cursor-move hover:opacity-100 transition-opacity"
     >
       <div
         aria-hidden="true"
@@ -275,7 +280,10 @@ function renderEventContent(eventInfo: EventContentArg) {
   return (
     <div
       className="fc-event-content-wrapper"
-      style={{ backgroundColor: bgColor }}
+      style={{
+        backgroundColor: bgColor,
+        border: `1px solid ${agentColor}33`,
+      }}
     >
       <div className="fc-event-agent-info">
         <div
@@ -294,16 +302,20 @@ function renderEventContent(eventInfo: EventContentArg) {
 export function Scheduling() {
   const calendarRef = useRef<FullCalendar>(null);
   const [events, setEvents] = useState<CalendarEvent[]>(
-    createInitialEvents()
+    createInitialEvents(),
   );
   const [searchQuery, setSearchQuery] = useState("");
 
   // Add day numbers to header cells
   useEffect(() => {
     const updateDayHeaders = () => {
-      const dayHeaders = document.querySelectorAll('.fc-col-header-cell');
+      const dayHeaders = document.querySelectorAll(
+        ".fc-col-header-cell",
+      );
       dayHeaders.forEach((header) => {
-        const link = header.querySelector('.fc-col-header-cell-cushion');
+        const link = header.querySelector(
+          ".fc-col-header-cell-cushion",
+        );
         if (link && link.textContent) {
           // Extract day name from FullCalendar's format
           const text = link.textContent;
@@ -312,7 +324,7 @@ export function Scheduling() {
             const dayName = dayMatch[1];
             const dayNumber = dayMatch[2];
             // Set the day number as a data attribute for CSS
-            link.setAttribute('data-day-number', dayNumber);
+            link.setAttribute("data-day-number", dayNumber);
             // Update the text to just show day name
             link.textContent = dayName;
           }
@@ -320,9 +332,11 @@ export function Scheduling() {
       });
 
       // Update timezone label
-      const axisCell = document.querySelector('.fc-timegrid-axis-cushion');
-      if (axisCell && !axisCell.textContent?.includes('GMT')) {
-        axisCell.textContent = 'GMT +3';
+      const axisCell = document.querySelector(
+        ".fc-timegrid-axis-cushion",
+      );
+      if (axisCell && !axisCell.textContent?.includes("GMT")) {
+        axisCell.textContent = "GMT +3";
       }
     };
 
@@ -339,8 +353,8 @@ export function Scheduling() {
               start: info.event.start!,
               end: info.event.end!,
             }
-          : event
-      )
+          : event,
+      ),
     );
   };
 
@@ -353,8 +367,8 @@ export function Scheduling() {
               start: info.event.start!,
               end: info.event.end!,
             }
-          : event
-      )
+          : event,
+      ),
     );
   };
 
@@ -372,20 +386,70 @@ export function Scheduling() {
   const handleEventClick = (info: EventClickArg) => {
     if (window.confirm(`Delete "${info.event.title}"?`)) {
       setEvents((prevEvents) =>
-        prevEvents.filter((event) => event.id !== info.event.id)
+        prevEvents.filter(
+          (event) => event.id !== info.event.id,
+        ),
       );
       info.event.remove();
     }
   };
 
+  const renderDayHeader = (args: any) => {
+    const date = args.date;
+    const dayNumber = date.getDate();
+    const dayName = date.toLocaleDateString("en-US", {
+      weekday: "long",
+    });
+
+    return (
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "2px",
+          height: "100%",
+        }}
+      >
+        <span
+          style={{
+            fontFamily: "Instrument Sans, sans-serif",
+            fontSize: "20px",
+            fontWeight: 600,
+            color: args.isToday ? "#62c3dd" : "#5e6060",
+            lineHeight: 1.2,
+            letterSpacing: "0.1px",
+          }}
+        >
+          {dayNumber}
+        </span>
+        <span
+          style={{
+            fontFamily: "Instrument Sans, sans-serif",
+            fontSize: "14px",
+            fontWeight: 400,
+            color: args.isToday ? "#62c3dd" : "#a0a3a4",
+            lineHeight: 1.2,
+            letterSpacing: "0.07px",
+          }}
+        >
+          {dayName}
+        </span>
+      </div>
+    );
+  };
+
   const filteredAgents = agents.filter((agent) =>
-    agent.name.toLowerCase().includes(searchQuery.toLowerCase())
+    agent.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase()),
   );
 
   return (
     <div className="basis-0 content-stretch flex gap-[10px] grow items-start min-h-fit min-w-px relative shrink-0 w-full pb-6">
       {/* Calendar */}
-      <div className="relative flex-1 w-full h-full">
+      <div className="relative flex-1 w-full h-full border-0 outline-none">
         <FullCalendar
           ref={calendarRef}
           plugins={[timeGridPlugin, interactionPlugin]}
@@ -414,14 +478,16 @@ export function Scheduling() {
           eventReceive={handleEventReceive}
           eventClick={handleEventClick}
           eventContent={renderEventContent}
-          nowIndicator={true}
+          nowIndicator={false}
           scrollTime="06:00:00"
           snapDuration="00:15:00"
           eventDurationEditable={true}
           eventStartEditable={true}
           dayHeaderClassNames="fc-custom-day-header"
           slotLabelClassNames="fc-custom-slot-label"
+          dayHeaderContent={renderDayHeader}
         />
+        <CurrentTimeIndicator />
       </div>
 
       {/* Agents Panel */}
@@ -446,7 +512,8 @@ export function Scheduling() {
                   fontWeight: 400,
                 }}
               >
-                Drag an agent into the calendar to schedule them manually
+                Drag an agent into the calendar to schedule them
+                manually
               </p>
             </div>
 
@@ -463,7 +530,10 @@ export function Scheduling() {
                         viewBox="0 0 16 16"
                       >
                         <g>
-                          <path d={svgPaths.pba9f400} fill="#6A7282" />
+                          <path
+                            d={svgPaths.pba9f400}
+                            fill="#6A7282"
+                          />
                         </g>
                       </svg>
                     </div>
@@ -472,7 +542,9 @@ export function Scheduling() {
                     type="text"
                     placeholder="Search for agents..."
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={(e) =>
+                      setSearchQuery(e.target.value)
+                    }
                     className="bg-transparent border-none outline-none font-['Instrument_Sans'] opacity-50 relative shrink-0 text-[#1e2939] text-[13px] flex-1"
                     style={{ fontWeight: 400 }}
                   />

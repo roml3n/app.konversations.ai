@@ -6,25 +6,80 @@
   border-radius: 12px;
   overflow: hidden;
   font-family: 'Instrument Sans', sans-serif;
+  border: none !important;
 }
 
 /* Remove default borders and apply custom ones */
 .fc-theme-standard td,
 .fc-theme-standard th {
   border: none;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
-/* Remove border on last column */
-.fc-theme-standard .fc-col-header-cell:last-child,
-.fc-theme-standard .fc-timegrid-col:last-child {
-  border-right: none;
+/* Remove border from scrollgrid */
+.fc-scrollgrid {
+  border: none !important;
+}
+
+.fc-scrollgrid-section > * {
+  border: none !important;
+}
+
+/* Horizontal gridlines on time slots */
+.fc-timegrid-slot {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+/* Horizontal gridlines on header row */
+.fc-col-header-cell {
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-bottom: none !important;
+}
+
+/* Only show vertical border on the right of time axis */
+.fc-timegrid-axis {
+  border-top: none !important;
+  border-left: none !important;
+  border-bottom: none !important;
+  border-right: none !important;
+}
+
+/* Remove right border from the header corner cell */
+.fc-col-header .fc-timegrid-axis {
+  border-right: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Add right border to time axis cells in the body (not header) */
+.fc-timegrid-body .fc-timegrid-axis,
+.fc-timegrid-slots .fc-timegrid-axis,
+td.fc-timegrid-slot-label {
+  border-right: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ensure time slot labels have the border */
+td.fc-timegrid-axis {
+  border-right: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-bottom: none !important;
+}
+
+/* Remove all other vertical borders */
+.fc-theme-standard .fc-col-header-cell,
+.fc-theme-standard .fc-timegrid-col {
+  border-right: none !important;
+  border-left: none !important;
+  border-top: none !important;
 }
 
 /* Header row styling */
 .fc-col-header {
   background: #f2f3f3;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
 .fc-col-header-cell {
@@ -36,11 +91,10 @@
 .fc-col-header-cell-cushion {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: bottom;
   justify-content: center;
-  padding: 8px;
+  padding: 0px;
   text-decoration: none;
-  color: #5e6060;
   height: 100%;
   line-height: 1.2;
 }
@@ -51,8 +105,9 @@
   font-family: 'Instrument Sans', sans-serif;
   font-size: 20px;
   font-weight: 600;
-  color: inherit;
+  color: #5e6060;
   line-height: 1.2;
+  letter-spacing: 0.1px;
 }
 
 /* Day name - smaller and medium weight */
@@ -60,10 +115,15 @@
   font-family: 'Instrument Sans', sans-serif;
   font-size: 14px;
   font-weight: 500;
+  color: #a0a3a4;
   letter-spacing: 0.07px;
 }
 
-/* Today's header - blue color */
+/* Today's header - blue color for both day number and name */
+.fc-day-today .fc-col-header-cell-cushion::before {
+  color: #62c3dd;
+}
+
 .fc-day-today .fc-col-header-cell-cushion {
   color: #62c3dd;
 }
@@ -82,15 +142,32 @@
   height: 36px !important;
 }
 
-/* Time label column styling */
+/* Time label column styling - Fixed width for time axis */
 .fc-timegrid-axis {
-  width: 66px;
-  background: #f2f3f3;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  background: #f2f3f3 !important;
+  width: 66px !important;
+  min-width: 66px !important;
+  max-width: 66px !important;
 }
 
+th.fc-timegrid-axis {
+  width: 66px !important;
+  min-width: 66px !important;
+  max-width: 66px !important;
+  background: #f2f3f3 !important;
+  border-right: 1px solid rgba(0, 0, 0, 0.1) !important;
+}
+
+.fc-scrollgrid colgroup col.fc-timegrid-axis {
+  width: 66px !important;
+  min-width: 66px !important;
+  max-width: 66px !important;
+}
+
+/* Time labels styling */
 .fc-timegrid-slot-label {
-  vertical-align: middle;
+  width: 66px !important;
+  vertical-align: top;
   text-align: right;
   padding: 0 8px;
 }
@@ -103,26 +180,6 @@
   letter-spacing: 0.07px;
   line-height: 1.2;
   text-transform: lowercase;
-}
-
-/* Axis cell (top-left corner with GMT +3) */
-.fc-timegrid-axis-cushion {
-  font-family: 'Instrument Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  color: #a0a3a4;
-  letter-spacing: 0.07px;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  padding: 8px;
-  height: 100%;
-}
-
-/* Day columns - flexible width */
-.fc-timegrid-col {
-  min-width: 0;
-  flex: 1 1 0;
 }
 
 /* Today cell background - keep transparent */
@@ -138,13 +195,33 @@
 .fc-event {
   border: none !important;
   border-radius: 4px;
-  padding: 4px;
+  padding: 0 !important;
   cursor: move;
-  margin: 0 4px;
+  margin: 0 !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .fc-event-main {
-  padding: 0;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.fc-event-main-frame {
+  border: none !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.fc-timegrid-event-harness {
+  margin: 0 4px !important;
 }
 
 .fc-event-content-wrapper {
@@ -155,6 +232,8 @@
   border-radius: 4px;
   height: 100%;
   position: relative;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 .fc-event-agent-info {
@@ -216,6 +295,7 @@
 .fc-timegrid-now-indicator-line {
   border-color: #62c3dd;
   border-width: 1.5px;
+  display: none; /* Hide default FullCalendar indicator */
 }
 
 .fc-timegrid-now-indicator-arrow {
@@ -266,24 +346,4 @@
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
-}
-
-/* Make sure the grid uses flexbox layout for equal columns */
-.fc-timegrid-cols {
-  display: flex;
-}
-
-.fc-timegrid-cols table {
-  table-layout: fixed;
-  width: 100%;
-}
-
-/* Header columns should be equal width */
-.fc-col-header colgroup col {
-  width: auto !important;
-}
-
-.fc-col-header-cell {
-  flex: 1 1 0;
-  min-width: 0;
 }

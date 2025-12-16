@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import svgPathsExpanded from '../imports/svg-xwi0g5shfp';
 import svgPathsCollapsed from '../imports/svg-uicivvdl9e';
 
@@ -177,10 +178,10 @@ export function Sidebar({ activeItem = 'insights', onItemClick }: SidebarProps) 
                 const Icon = item.icon;
                 const isActive = activeItem === item.id;
                 return (
-                  <button
+                  <Link
                     key={item.id}
-                    onClick={() => onItemClick?.(item.id)}
-                    className={`relative rounded-[8px] shrink-0 w-full transition-colors ${
+                    to={`/${item.id}`}
+                    className={`relative rounded-[8px] shrink-0 w-full transition-colors ${ 
                       isActive 
                         ? 'bg-[rgba(255,255,255,0.1)]' 
                         : 'hover:bg-[rgba(255,255,255,0.1)]'
@@ -212,7 +213,7 @@ export function Sidebar({ activeItem = 'insights', onItemClick }: SidebarProps) 
                         </div>
                       </div>
                     </div>
-                  </button>
+                  </Link>
                 );
               })}
             </div>
