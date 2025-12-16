@@ -6,6 +6,7 @@ import { LiveMonitoring } from "./workforce/LiveMonitoring";
 import { WorkforceTabs } from "./workforce/WorkforceTabs";
 import { Forecasting } from "./workforce/Forecasting";
 import { Scheduling } from "./workforce/Scheduling";
+import { Reports } from "./workforce/Reports";
 
 export function Workforce() {
   const location = useLocation();
@@ -29,11 +30,7 @@ export function Workforce() {
         {activeTab === "real-time" && <LiveMonitoring />}
         {activeTab === "forecasting" && <Forecasting />}
         {activeTab === "scheduling" && <Scheduling />}
-        {activeTab === "reports" && (
-          <div className="flex items-center justify-center py-20 text-muted-foreground">
-            <p>Reports - Coming Soon</p>
-          </div>
-        )}
+        {activeTab === "reports" && <Reports />}
       </div>
     </div>
   );

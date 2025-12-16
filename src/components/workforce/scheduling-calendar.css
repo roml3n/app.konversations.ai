@@ -83,19 +83,22 @@ td.fc-timegrid-axis {
 }
 
 .fc-col-header-cell {
-  padding: 0;
+  padding: 0 !important;
   height: 64px;
   vertical-align: middle;
+  text-align: center;
 }
 
 .fc-col-header-cell-cushion {
-  display: flex;
+  display: flex !important;
   flex-direction: column;
-  align-items: bottom;
+  align-items: center;
   justify-content: center;
-  padding: 0px;
+  padding: 0 !important;
+  margin: 0 auto !important;
   text-decoration: none;
-  height: 100%;
+  height: 64px !important;
+  width: 100%;
   line-height: 1.2;
 }
 
@@ -108,6 +111,10 @@ td.fc-timegrid-axis {
   color: #5e6060;
   line-height: 1.2;
   letter-spacing: 0.1px;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: center;
+  width: 100%;
 }
 
 /* Day name - smaller and medium weight */
@@ -117,6 +124,9 @@ td.fc-timegrid-axis {
   font-weight: 500;
   color: #a0a3a4;
   letter-spacing: 0.07px;
+  padding: 0 !important;
+  margin: 0 !important;
+  text-align: center;
 }
 
 /* Today's header - blue color for both day number and name */
