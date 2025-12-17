@@ -282,7 +282,7 @@ function renderEventContent(eventInfo: EventContentArg) {
       className="fc-event-content-wrapper"
       style={{
         backgroundColor: bgColor,
-        border: `1px solid ${agentColor}33`,
+        borderLeft: `2px solid ${agentColor}50`,
       }}
     >
       <div className="fc-event-agent-info">
