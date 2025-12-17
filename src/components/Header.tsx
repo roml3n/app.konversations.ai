@@ -13,7 +13,7 @@ interface HeaderProps {
 
 export function Header({ title }: HeaderProps) {
   return (
-    <div className="flex items-center justify-between border-b border-border bg-card px-6 py-2">
+    <div className="flex w-full items-center justify-between border-b border-border bg-card px-6 py-2">
       {/* Left side: Navigation arrows + Title */}
       <div className="flex items-center gap-6">
         {/* Navigation arrows */}

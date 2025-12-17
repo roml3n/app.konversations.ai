@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  BrowserRouter,
+  BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
@@ -15,6 +15,7 @@ import { ChannelPerformance } from "./components/ChannelPerformance";
 import { FilterProvider } from "./contexts/FilterContext";
 import { Inbox } from "./components/Inbox";
 import { Workforce } from "./components/Workforce";
+import { Settings } from "./components/Settings";
 
 function InsightsModule() {
   const location = useLocation();
@@ -104,10 +105,8 @@ function AppContent() {
         <Route
           path="/settings"
           element={
-            <div className="flex flex-1 items-center justify-center m-2 rounded-lg bg-white">
-              <p className="text-muted-foreground">
-                Settings Module - Coming Soon
-              </p>
+            <div className="flex flex-1 flex-col overflow-hidden m-2 rounded-lg p-0">
+              <Settings />
             </div>
           }
         />
@@ -118,10 +117,10 @@ function AppContent() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <Router>
       <FilterProvider>
         <AppContent />
       </FilterProvider>
-    </BrowserRouter>
+    </Router>
   );
 }

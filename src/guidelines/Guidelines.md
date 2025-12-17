@@ -1,6 +1,8 @@
 - Only use absolute positioning when necessary. Opt for responsive and well structured layouts that use flexbox and grid by default
 - Refactor code as you go to keep code clean
 - Keep file sizes small and put helper functions and components in their own files.
+- Use Font Awesome for all icons used, if the icons aren't available in font awesome, look for an icon pack from React Icons that closely resembles that icon and use that
+- Study codebase structure before making new components, try to see if the component already exists, if it does, priritize using that instead of making a new one to make the code usable
 
 <!--
 

@@ -849,6 +849,11 @@
     height: 48px;
   }
 
+  .size-\[108px\] {
+    width: 108px;
+    height: 108px;
+  }
+
   .size-full {
     width: 100%;
     height: 100%;
@@ -1158,6 +1163,10 @@
     width: 12px;
   }
 
+  .w-\[14px\] {
+    width: 14px;
+  }
+
   .w-\[15\.75px\] {
     width: 15.75px;
   }
@@ -1186,6 +1195,10 @@
     width: 36px;
   }
 
+  .w-\[60\%\] {
+    width: 60%;
+  }
+
   .w-\[72px\] {
     width: 72px;
   }
@@ -1204,6 +1217,10 @@
 
   .w-\[175px\] {
     width: 175px;
+  }
+
+  .w-\[196px\] {
+    width: 196px;
   }
 
   .w-\[200px\] {
@@ -1288,6 +1305,10 @@
 
   .max-w-\[800px\] {
     max-width: 800px;
+  }
+
+  .max-w-\[980px\] {
+    max-width: 980px;
   }
 
   .max-w-\[1200px\] {
@@ -1556,6 +1577,10 @@
 
   .gap-4 {
     gap: calc(var(--spacing) * 4);
+  }
+
+  .gap-5 {
+    gap: calc(var(--spacing) * 5);
   }
 
   .gap-6 {
@@ -1973,6 +1998,10 @@
 
   .border-\[\#d1d5dc\] {
     border-color: #d1d5dc;
+  }
+
+  .border-\[\#d6d7ff\] {
+    border-color: #d6d7ff;
   }
 
   .border-\[\#d4661f\] {
@@ -2657,6 +2686,10 @@
     padding-left: calc(var(--spacing) * 2);
   }
 
+  .pl-3 {
+    padding-left: calc(var(--spacing) * 3);
+  }
+
   .pl-4 {
     padding-left: calc(var(--spacing) * 4);
   }
@@ -2788,6 +2821,10 @@
 
   .text-\[24px\] {
     font-size: 24px;
+  }
+
+  .text-\[28px\] {
+    font-size: 28px;
   }
 
   .text-\[36px\] {
@@ -2929,12 +2966,16 @@
     white-space: pre-wrap;
   }
 
-  .text-\[\#01b386\] {
+  .text-\[\#01B386\], .text-\[\#01b386\] {
     color: #01b386;
   }
 
   .text-\[\#1e2939\] {
     color: #1e2939;
+  }
+
+  .text-\[\#2c5763\] {
+    color: #2c5763;
   }
 
   .text-\[\#3da067\] {
@@ -2989,12 +3030,16 @@
     color: #161a1c;
   }
 
-  .text-\[\#292F32\] {
+  .text-\[\#292F32\], .text-\[\#292f32\] {
     color: #292f32;
   }
 
   .text-\[\#0320f5\] {
     color: #0320f5;
+  }
+
+  .text-\[\#777\] {
+    color: #777;
   }
 
   .text-\[\#5258fe\] {
@@ -3453,6 +3498,12 @@
   }
 
   @media (hover: hover) {
+    .hover\:bg-\[\#ebeef0\]:hover {
+      background-color: #ebeef0;
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:bg-\[\#f2f3f3\]:hover {
       background-color: #f2f3f3;
     }
@@ -3615,6 +3666,20 @@
   }
 
   @media (hover: hover) {
+    .hover\:from-\[\#fafafa\]:hover {
+      --tw-gradient-from: #fafafa;
+      --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:to-\[\#e8e8e8\]:hover {
+      --tw-gradient-to: #e8e8e8;
+      --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:text-\[\#7A7D7D\]:hover {
       color: #7a7d7d;
     }
@@ -3685,6 +3750,10 @@
       --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
     }
+  }
+
+  .focus\:border-\[\#01b386\]:focus {
+    border-color: #01b386;
   }
 
   .focus\:border-\[\#e3e8f0\]:focus {
