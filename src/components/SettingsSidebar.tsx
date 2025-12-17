@@ -103,7 +103,7 @@ export function SettingsSidebar({
   };
 
   return (
-    <div className="bg-[#f4f7f8] flex flex-col gap-6 h-screen px-[8px] py-[24px] relative shrink-0 w-[196px] border-r border-[#edf1f4]">
+    <div className="bg-[#f4f7f8] flex flex-col gap-6 h-screen px-[8px] py-[24px] relative shrink-0 w-fit border-r border-[#edf1f4]">
       {/* Header */}
       <div className="flex items-center justify-start pl-3 relative shrink-0">
         <p
