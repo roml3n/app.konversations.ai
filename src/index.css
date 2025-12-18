@@ -496,6 +496,10 @@
     inset: -1.5px;
   }
 
+  .inset-\[-1px_0_0_0\] {
+    inset: -1px 0 0;
+  }
+
   .inset-\[0_14\.84\%\] {
     inset: 0 14.84%;
   }
@@ -748,6 +752,18 @@
 
   .table {
     display: table;
+  }
+
+  .table-caption {
+    display: table-caption;
+  }
+
+  .table-cell {
+    display: table-cell;
+  }
+
+  .table-row {
+    display: table-row;
   }
 
   .size-0 {
@@ -1109,6 +1125,10 @@
     min-height: 1px;
   }
 
+  .w-2 {
+    width: calc(var(--spacing) * 2);
+  }
+
   .w-3 {
     width: calc(var(--spacing) * 3);
   }
@@ -1229,6 +1249,10 @@
     width: 200px;
   }
 
+  .w-\[213px\] {
+    width: 213px;
+  }
+
   .w-\[240px\] {
     width: 240px;
   }
@@ -1243,6 +1267,10 @@
 
   .w-\[300px\] {
     width: 300px;
+  }
+
+  .w-\[303px\] {
+    width: 303px;
   }
 
   .w-\[340px\] {
@@ -1379,6 +1407,10 @@
 
   .basis-0 {
     flex-basis: calc(var(--spacing) * 0);
+  }
+
+  .caption-bottom {
+    caption-side: bottom;
   }
 
   .border-collapse {
@@ -1667,6 +1699,10 @@
     gap: 36px;
   }
 
+  .gap-\[43px\] {
+    gap: 43px;
+  }
+
   .gap-\[64px\] {
     gap: 64px;
   }
@@ -1763,6 +1799,10 @@
 
   .overflow-hidden {
     overflow: hidden;
+  }
+
+  .overflow-x-auto {
+    overflow-x: auto;
   }
 
   .overflow-x-hidden {
@@ -2092,12 +2132,20 @@
     border-color: var(--color-white);
   }
 
+  .bg-\[\#01b386\] {
+    background-color: #01b386;
+  }
+
   .bg-\[\#3d8aff\] {
     background-color: #3d8aff;
   }
 
   .bg-\[\#5A5ACD\] {
     background-color: #5a5acd;
+  }
+
+  .bg-\[\#7a8890\] {
+    background-color: #7a8890;
   }
 
   .bg-\[\#7ba7f9\] {
@@ -2640,6 +2688,10 @@
 
   .py-\[9px\] {
     padding-block: 9px;
+  }
+
+  .py-\[16px\] {
+    padding-block: 16px;
   }
 
   .py-\[24px\] {
@@ -3729,6 +3781,12 @@
   }
 
   @media (hover: hover) {
+    .hover\:bg-transparent:hover {
+      background-color: #0000;
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:bg-white:hover {
       background-color: var(--color-white);
     }
@@ -3757,6 +3815,12 @@
   @media (hover: hover) {
     .hover\:text-\[\#161a1c\]:hover {
       color: #161a1c;
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:text-\[\#0218d0\]:hover {
+      color: #0218d0;
     }
   }
 
@@ -4071,6 +4135,10 @@
     --tw-enter-scale: .95;
   }
 
+  .data-\[state\=selected\]\:bg-muted[data-state="selected"] {
+    background-color: var(--muted);
+  }
+
   .data-\[variant\=destructive\]\:text-destructive[data-variant="destructive"] {
     color: var(--destructive);
   }
@@ -4238,6 +4306,16 @@
     color: var(--muted-foreground);
   }
 
+  .\[\&_tr\]\:border-b tr {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 1px;
+  }
+
+  .\[\&_tr\:last-child\]\:border-0 tr:last-child {
+    border-style: var(--tw-border-style);
+    border-width: 0;
+  }
+
   .\[\&\:has\(\>\.day-range-end\)\]\:rounded-r-md:has( > .day-range-end) {
     border-top-right-radius: var(--radius);
     border-bottom-right-radius: var(--radius);
@@ -4271,6 +4349,10 @@
     border-bottom-right-radius: var(--radius);
   }
 
+  .\[\&\:has\(\[role\=checkbox\]\)\]\:pr-0:has([role="checkbox"]) {
+    padding-right: calc(var(--spacing) * 0);
+  }
+
   :is(.\*\:\[span\]\:last\:flex > *):is(span):last-child {
     display: flex;
   }
@@ -4285,6 +4367,16 @@
 
   :is(.data-\[variant\=destructive\]\:\*\:\[svg\]\:\!text-destructive[data-variant="destructive"] > *):is(svg) {
     color: var(--destructive) !important;
+  }
+
+  .\[\&\>\[role\=checkbox\]\]\:translate-y-\[2px\] > [role="checkbox"] {
+    --tw-translate-y: 2px;
+    translate: var(--tw-translate-x) var(--tw-translate-y);
+  }
+
+  .\[\&\>tr\]\:last\:border-b-0 > tr:last-child {
+    border-bottom-style: var(--tw-border-style);
+    border-bottom-width: 0;
   }
 }
 

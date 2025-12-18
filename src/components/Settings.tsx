@@ -3,6 +3,8 @@ import { Header } from "./Header";
 import { SettingsSidebar } from "./SettingsSidebar";
 import { General } from "./settings/General";
 import { Security } from "./settings/Security";
+import { Notifications } from "./settings/Notifications";
+import { Agents } from "./settings/Agents";
 
 export function Settings() {
   const location = useLocation();
@@ -36,17 +38,13 @@ export function Settings() {
                 </div>
               )}
               {view === "notifications" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    Notifications - Coming Soon
-                  </p>
+                <div className="py-6 w-[60%] justify-center flex mx-auto">
+                  <Notifications />
                 </div>
               )}
               {view === "agents" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    Agents - Coming Soon
-                  </p>
+                <div className="py-6 w-[60%] justify-center flex mx-auto">
+                  <Agents />
                 </div>
               )}
               {view === "roles" && (
