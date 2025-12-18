@@ -2,31 +2,7 @@ import svgPaths from '../../imports/svg-451sirnluu';
 import { useFilters } from '../../contexts/FilterContext';
 import { useMemo } from 'react';
 import { MOCK_TOPICS } from '../../lib/mockData';
-
-function ChevronsUpDown() {
-  return (
-    <div className="relative shrink-0 size-[16px]">
-      <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 16 16">
-        <path d={svgPaths.p17a0fc80} stroke="#A0A3A4" strokeLinecap="round" strokeLinejoin="round" />
-        <path d={svgPaths.p3042540} stroke="#A0A3A4" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    </div>
-  );
-}
-
-function Pagination() {
-    return (
-      <div className="flex items-center gap-1 bg-[#f2f3f3] rounded-[8px] p-1">
-        <button className="w-4 h-4 flex items-center justify-center opacity-20">
-           <svg className="size-full" viewBox="0 0 16 16" fill="none"><path d={svgPaths.p4d7d300} fill="#7A7D7D"/></svg>
-        </button>
-        <span className="text-[13px] text-[#7a7d7d] px-1 font-['Instrument_Sans']">1 - 5 of 10</span>
-        <button className="w-4 h-4 flex items-center justify-center">
-           <svg className="size-full" viewBox="0 0 16 16" fill="none"><path d={svgPaths.p4376000} fill="#7A7D7D"/></svg>
-        </button>
-      </div>
-    );
-}
+import { DataTable, DataTableColumn } from '../ui/DataTable';
 
 function getCellColor(value: number, max: number) {
     // Simple heatmap logic based on relative max
@@ -43,6 +19,15 @@ function getTextColor(value: number, max: number) {
     const ratio = max > 0 ? value / max : 0;
     if (ratio >= 0.6) return '#fefefe';
     return '#7a7d7d';
+}
+
+interface TopicHeatmapData {
+  topicName: string;
+  Freshdesk: number;
+  Call: number;
+  WhatsApp: number;
+  Email: number;
+  total: number;
 }
 
 export function TopicsHeatmap() {
@@ -107,56 +92,118 @@ export function TopicsHeatmap() {
       <h3 className="font-['Instrument_Sans'] text-[#7a7d7d] text-[14px] mb-4">Top 10 conversations topics (heatmap)</h3>
       
       <div className="flex-1 overflow-hidden">
-        <div className="grid grid-cols-[140px_1fr_1fr_1fr_1fr_100px] gap-x-px mb-0 bg-white">
-           {['Topic', 'Freshdesk', 'Call', 'WhatsApp', 'Email', 'Total'].map((h, i) => (
-             <div key={i} className={`bg-[#f4f4f6] h-[42px] flex items-center px-2 ${i===0?'rounded-l-[12px]':''} ${i===5?'rounded-r-[12px]':''}`}>
-               <div className="flex items-center justify-between w-full">
-                 <span className="text-[13px] font-semibold text-[#7a7d7d] font-['Instrument_Sans'] leading-[18px]">{h}</span>
-                 <ChevronsUpDown />
-               </div>
-             </div>
-           ))}
-        </div>
-        
-        <div className="flex flex-col gap-px bg-white">
-            {data.map((row, idx) => (
-                <div key={idx} className="grid grid-cols-[140px_1fr_1fr_1fr_1fr_100px] gap-x-px h-[51px]">
-                    {/* Topic */}
-                    <div className="bg-white flex items-center px-2">
-                        <span className="text-[12px] text-[#404141] font-['Instrument_Sans'] opacity-70">{row.topicName}</span>
-                    </div>
-                    
-                    {/* Freshdesk */}
-                    <div className="flex items-center justify-center" style={{ backgroundColor: getCellColor(row.Freshdesk, maxValue) }}>
-                        <span className="text-[12px] font-['Instrument_Sans']" style={{ color: getTextColor(row.Freshdesk, maxValue) }}>{row.Freshdesk}</span>
-                    </div>
-
-                    {/* Call */}
-                    <div className="flex items-center justify-center" style={{ backgroundColor: getCellColor(row.Call, maxValue) }}>
-                        <span className="text-[12px] font-['Instrument_Sans']" style={{ color: getTextColor(row.Call, maxValue) }}>{row.Call}</span>
-                    </div>
-
-                    {/* WhatsApp */}
-                    <div className="flex items-center justify-center" style={{ backgroundColor: getCellColor(row.WhatsApp, maxValue) }}>
-                        <span className="text-[12px] font-['Instrument_Sans']" style={{ color: getTextColor(row.WhatsApp, maxValue) }}>{row.WhatsApp}</span>
-                    </div>
-
-                    {/* Email */}
-                    <div className="flex items-center justify-center" style={{ backgroundColor: getCellColor(row.Email, maxValue) }}>
-                         <span className="text-[12px] font-['Instrument_Sans']" style={{ color: getTextColor(row.Email, maxValue) }}>{row.Email}</span>
-                    </div>
-
-                    {/* Total */}
-                    <div className="bg-white flex items-center justify-center">
-                        <span className="text-[12px] font-semibold text-[#7a7d7d] font-['Instrument_Sans']">{row.total}</span>
-                    </div>
+        <DataTable<TopicHeatmapData>
+          columns={[
+            {
+              header: 'Topic',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'topicName',
+              render: (row) => (
+                <span className="text-[12px] text-[#404141] font-['Instrument_Sans'] opacity-70">
+                  {row.topicName}
+                </span>
+              ),
+            },
+            {
+              header: 'Freshdesk',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'Freshdesk',
+              align: 'center',
+              render: (row) => (
+                <div 
+                  className="flex items-center justify-center -mx-[8px] -my-[8px] h-[51px]" 
+                  style={{ backgroundColor: getCellColor(row.Freshdesk, maxValue) }}
+                >
+                  <span 
+                    className="text-[12px] font-['Instrument_Sans']" 
+                    style={{ color: getTextColor(row.Freshdesk, maxValue) }}
+                  >
+                    {row.Freshdesk}
+                  </span>
                 </div>
-            ))}
-        </div>
-      </div>
-
-      <div className="mt-4 flex justify-end">
-        <Pagination />
+              ),
+            },
+            {
+              header: 'Call',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'Call',
+              align: 'center',
+              render: (row) => (
+                <div 
+                  className="flex items-center justify-center -mx-[8px] -my-[8px] h-[51px]" 
+                  style={{ backgroundColor: getCellColor(row.Call, maxValue) }}
+                >
+                  <span 
+                    className="text-[12px] font-['Instrument_Sans']" 
+                    style={{ color: getTextColor(row.Call, maxValue) }}
+                  >
+                    {row.Call}
+                  </span>
+                </div>
+              ),
+            },
+            {
+              header: 'WhatsApp',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'WhatsApp',
+              align: 'center',
+              render: (row) => (
+                <div 
+                  className="flex items-center justify-center -mx-[8px] -my-[8px] h-[51px]" 
+                  style={{ backgroundColor: getCellColor(row.WhatsApp, maxValue) }}
+                >
+                  <span 
+                    className="text-[12px] font-['Instrument_Sans']" 
+                    style={{ color: getTextColor(row.WhatsApp, maxValue) }}
+                  >
+                    {row.WhatsApp}
+                  </span>
+                </div>
+              ),
+            },
+            {
+              header: 'Email',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'Email',
+              align: 'center',
+              render: (row) => (
+                <div 
+                  className="flex items-center justify-center -mx-[8px] -my-[8px] h-[51px]" 
+                  style={{ backgroundColor: getCellColor(row.Email, maxValue) }}
+                >
+                  <span 
+                    className="text-[12px] font-['Instrument_Sans']" 
+                    style={{ color: getTextColor(row.Email, maxValue) }}
+                  >
+                    {row.Email}
+                  </span>
+                </div>
+              ),
+            },
+            {
+              header: 'Total',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'total',
+              align: 'center',
+              render: (row) => (
+                <span className="text-[12px] font-semibold text-[#7a7d7d] font-['Instrument_Sans']">
+                  {row.total}
+                </span>
+              ),
+            },
+          ]}
+          data={data}
+          animateRows={false}
+          noBorders={true}
+          pagination={true}
+          defaultItemsPerPage={5}
+        />
       </div>
     </div>
   );

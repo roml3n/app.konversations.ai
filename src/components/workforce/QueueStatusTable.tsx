@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { BaseTable, Column } from '../tables/BaseTable';
+import { DataTable, DataTableColumn } from '../ui/DataTable';
 
 interface QueueData {
   queue: string;
@@ -20,89 +19,167 @@ const queueData: QueueData[] = [
   { queue: 'Retention', waiting: 2, longestWait: '58s', available: 1, onCall: 8, serviceLevel: '88.4%', occupancy: '65.9%', callsToday: 211 },
 ];
 
-const columns: Column[] = [
-  { key: 'queue', header: 'Queue', sortable: true, width: '138.25px' },
-  { key: 'waiting', header: 'Waiting', sortable: true, width: '138.25px' },
-  { key: 'longestWait', header: 'Longest wait', sortable: true, width: '1fr' },
-  { key: 'available', header: 'Available', sortable: true, width: '1fr' },
-  { key: 'onCall', header: 'On Call', sortable: true, width: '1fr' },
-  { key: 'serviceLevel', header: 'Service Level', sortable: true, width: '1fr' },
-  { key: 'occupancy', header: 'Occupancy', sortable: true, width: '1fr' },
-  { key: 'callsToday', header: 'Calls Today', sortable: true, width: '1fr' },
-];
-
-type SortColumn = keyof QueueData | null;
-type SortDirection = 'asc' | 'desc' | null;
-
 export function QueueStatusTable() {
-  const [sortColumn, setSortColumn] = useState<SortColumn>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
-  const [currentPage] = useState(1);
-
-  const handleSort = (columnKey: string) => {
-    const column = columnKey as keyof QueueData;
-    
-    if (sortColumn === column) {
-      if (sortDirection === 'asc') {
-        setSortDirection('desc');
-      } else if (sortDirection === 'desc') {
-        setSortColumn(null);
-        setSortDirection(null);
-      } else {
-        setSortDirection('asc');
-      }
-    } else {
-      setSortColumn(column);
-      setSortDirection('asc');
-    }
-  };
-
-  const sortedData = [...queueData].sort((a, b) => {
-    if (!sortColumn || !sortDirection) return 0;
-    
-    const aVal = a[sortColumn];
-    const bVal = b[sortColumn];
-    
-    if (typeof aVal === 'string' && typeof bVal === 'string') {
-      return sortDirection === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-    }
-    
-    if (typeof aVal === 'number' && typeof bVal === 'number') {
-      return sortDirection === 'asc' ? aVal - bVal : bVal - aVal;
-    }
-    
-    return 0;
-  });
-
-  const getCellColor = (value: any, columnKey: string): 'green' | 'red' | 'orange' | 'default' => {
+  const getCellColor = (value: any, columnKey: string): string => {
     if (columnKey === 'serviceLevel') {
       const numValue = parseFloat(value);
-      if (numValue >= 90) return 'green';
-      if (numValue >= 75) return 'orange';
-      return 'red';
+      if (numValue >= 90) return '#45b273';
+      if (numValue >= 75) return '#ff8904';
+      return '#da3b3b';
     }
     
     if (columnKey === 'occupancy') {
       const numValue = parseFloat(value);
-      if (numValue >= 75 && numValue <= 85) return 'green';
-      if (numValue >= 65 && numValue < 95) return 'orange';
-      return 'red';
+      if (numValue >= 75 && numValue <= 85) return '#45b273';
+      if (numValue >= 65 && numValue < 95) return '#ff8904';
+      return '#da3b3b';
     }
     
-    return 'default';
+    return '#7a7d7d';
   };
 
+  const columns: DataTableColumn<QueueData>[] = [
+    {
+      header: 'Queue',
+      width: '216px',
+      sortable: true,
+      sortAccessor: 'queue',
+      render: (row, index) => (
+        <p
+          className="font-['Instrument_Sans'] text-[#7a7d7d] text-[14px] leading-[1.2] tracking-[0.07px]"
+          style={{
+            fontVariationSettings: "'wdth' 100",
+            fontWeight: index === 0 ? 500 : 400,
+          }}
+        >
+          {row.queue}
+        </p>
+      ),
+    },
+    {
+      header: 'Waiting',
+      width: 'minmax(0px, 1fr)',
+      sortable: true,
+      sortAccessor: 'waiting',
+      render: (row) => (
+        <p
+          className="font-['Instrument_Sans'] text-[#7a7d7d] text-[14px] leading-[1.2] tracking-[0.07px]"
+          style={{ fontVariationSettings: "'wdth' 100", fontWeight: 400 }}
+        >
+          {row.waiting}
+        </p>
+      ),
+    },
+    {
+      header: 'Longest wait',
+      width: 'minmax(0px, 1fr)',
+      sortable: true,
+      sortAccessor: 'longestWait',
+      render: (row) => (
+        <p
+          className="font-['Instrument_Sans'] text-[#7a7d7d] text-[14px] leading-[1.2] tracking-[0.07px]"
+          style={{ fontVariationSettings: "'wdth' 100", fontWeight: 400 }}
+        >
+          {row.longestWait}
+        </p>
+      ),
+    },
+    {
+      header: 'Available',
+      width: 'minmax(0px, 1fr)',
+      sortable: true,
+      sortAccessor: 'available',
+      render: (row) => (
+        <p
+          className="font-['Instrument_Sans'] text-[#7a7d7d] text-[14px] leading-[1.2] tracking-[0.07px]"
+          style={{ fontVariationSettings: "'wdth' 100", fontWeight: 400 }}
+        >
+          {row.available}
+        </p>
+      ),
+    },
+    {
+      header: 'On Call',
+      width: 'minmax(0px, 1fr)',
+      sortable: true,
+      sortAccessor: 'onCall',
+      render: (row) => (
+        <p
+          className="font-['Instrument_Sans'] text-[#7a7d7d] text-[14px] leading-[1.2] tracking-[0.07px]"
+          style={{ fontVariationSettings: "'wdth' 100", fontWeight: 400 }}
+        >
+          {row.onCall}
+        </p>
+      ),
+    },
+    {
+      header: 'Service Level',
+      width: 'minmax(0px, 1fr)',
+      sortable: true,
+      sortAccessor: (row) => parseFloat(row.serviceLevel),
+      render: (row) => (
+        <p
+          className="font-['Instrument_Sans'] text-[14px] leading-[1.2] tracking-[0.07px]"
+          style={{
+            fontVariationSettings: "'wdth' 100",
+            fontWeight: 400,
+            color: getCellColor(row.serviceLevel, 'serviceLevel'),
+          }}
+        >
+          {row.serviceLevel}
+        </p>
+      ),
+    },
+    {
+      header: 'Occupancy',
+      width: 'minmax(0px, 1fr)',
+      sortable: true,
+      sortAccessor: (row) => parseFloat(row.occupancy),
+      render: (row) => (
+        <p
+          className="font-['Instrument_Sans'] text-[14px] leading-[1.2] tracking-[0.07px]"
+          style={{
+            fontVariationSettings: "'wdth' 100",
+            fontWeight: 400,
+            color: getCellColor(row.occupancy, 'occupancy'),
+          }}
+        >
+          {row.occupancy}
+        </p>
+      ),
+    },
+    {
+      header: 'Calls Today',
+      width: 'minmax(0px, 1fr)',
+      sortable: true,
+      sortAccessor: 'callsToday',
+      render: (row) => (
+        <p
+          className="font-['Instrument_Sans'] text-[#7a7d7d] text-[14px] leading-[1.2] tracking-[0.07px]"
+          style={{ fontVariationSettings: "'wdth' 100", fontWeight: 400 }}
+        >
+          {row.callsToday}
+        </p>
+      ),
+    },
+  ];
+
   return (
-    <BaseTable
-      title="Queue status"
-      columns={columns}
-      data={sortedData}
-      currentPage={currentPage}
-      totalPages={1}
-      totalItems={5}
-      itemsPerPage={10}
-      onSort={handleSort}
-      getCellColor={getCellColor}
-    />
+    <div className="bg-[#fefefe] rounded-[8px] border border-[#e3e3e4] p-[16px]">
+      <div className="mb-[24px]">
+        <p
+          className="font-['Instrument_Sans'] text-[#404141] text-[16px] tracking-[0.08px]"
+          style={{ fontVariationSettings: "'wdth' 100", fontWeight: 600 }}
+        >
+          Queue status
+        </p>
+      </div>
+      <DataTable
+        columns={columns}
+        data={queueData}
+        animateRows={true}
+        animationDelay={0}
+      />
+    </div>
   );
 }

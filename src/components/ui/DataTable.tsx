@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "./table";
+import { TablePagination } from "./TablePagination";
 
 export interface DataTableColumn<T> {
   header: string;
@@ -28,6 +29,10 @@ interface DataTableProps<T> {
   animateRows?: boolean;
   animationDelay?: number;
   className?: string;
+  noBorders?: boolean; // New prop to remove borders between rows
+  pagination?: boolean; // Enable pagination
+  defaultItemsPerPage?: number; // Default items per page
+  itemsPerPageOptions?: number[]; // Options for items per page dropdown
 }
 
 type SortDirection = "asc" | "desc" | null;
@@ -39,9 +44,15 @@ export function DataTable<T>({
   animateRows = true,
   animationDelay = 0.7,
   className = "",
+  noBorders = false,
+  pagination = false,
+  defaultItemsPerPage = 10,
+  itemsPerPageOptions = [5, 10, 20, 50, 100],
 }: DataTableProps<T>) {
   const [sortColumn, setSortColumn] = useState<number | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(defaultItemsPerPage);
 
   const handleSort = (columnIndex: number) => {
     const column = columns[columnIndex];
@@ -110,6 +121,21 @@ export function DataTable<T>({
     });
   }
 
+  // Apply pagination if enabled
+  const totalItems = sortedData.length;
+  const paginatedData = pagination
+    ? sortedData.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+    : sortedData;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleItemsPerPageChange = (newItemsPerPage: number) => {
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1); // Reset to first page
+  };
+
   const getSortIcon = (columnIndex: number) => {
     if (sortColumn !== columnIndex) {
       return faSort;
@@ -123,98 +149,115 @@ export function DataTable<T>({
     .join(" ");
 
   return (
-    <div className={`w-full ${className}`}>
-      <Table>
-        <TableHeader>
-          <TableRow className="border-0 hover:bg-transparent">
-            {columns.map((column, idx) => (
-              <TableHead
-                key={column.header}
-                className={`bg-[#f4f4f6] h-[34px] px-[8px] border-0 ${
-                  idx === 0 ? "rounded-l-[12px]" : ""
-                } ${idx === columns.length - 1 ? "rounded-r-[12px]" : ""}`}
-                style={{ width: column.width }}
-              >
-                <div className="flex items-center justify-between w-full">
-                  <p
-                    className="font-['Instrument_Sans'] text-[#7a7d7d] text-[13px] leading-[18px]"
-                    style={{
-                      fontVariationSettings: "'wdth' 100",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {column.header}
-                  </p>
-                  {column.sortable && (
-                    <button
-                      onClick={() => handleSort(idx)}
-                      className="flex items-center hover:opacity-70 transition-opacity"
-                    >
-                      <FontAwesomeIcon
-                        icon={getSortIcon(idx)}
-                        className="w-[14px] h-[14px] text-[#A0A3A4]"
-                      />
-                    </button>
-                  )}
-                </div>
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sortedData.length === 0 ? (
-            <TableRow className="hover:bg-transparent">
-              <TableCell
-                colSpan={columns.length}
-                className="py-8 text-center text-[#7a8890] text-[14px]"
-              >
-                {emptyMessage}
-              </TableCell>
-            </TableRow>
-          ) : (
-            sortedData.map((row, rowIdx) => {
-              const RowWrapper = animateRows ? motion.tr : TableRow;
-              const animationProps = animateRows
-                ? {
-                    initial: { opacity: 0, x: -20 },
-                    animate: { opacity: 1, x: 0 },
-                    transition: { delay: animationDelay + rowIdx * 0.05 },
-                  }
-                : {};
-
-              return (
-                <RowWrapper
-                  key={rowIdx}
-                  {...animationProps}
-                  className="h-[51px] hover:bg-muted/30 transition-colors"
+    <div className={`w-full ${pagination ? 'flex flex-col h-full' : ''} ${className}`}>
+      <div className={pagination ? 'flex-1 overflow-auto' : ''}>
+        <Table>
+          <TableHeader className="[&_tr]:border-0">
+            <TableRow className="border-0 hover:bg-transparent">
+              {columns.map((column, idx) => (
+                <TableHead
+                  key={`col-${idx}`}
+                  className={`bg-[#f4f4f6] min-h-[34px] h-auto px-[8px] py-[8px] border-0 ${
+                    idx === 0 ? "rounded-l-[12px]" : ""
+                  } ${idx === columns.length - 1 ? "rounded-r-[12px]" : ""}`}
+                  style={{ width: column.width }}
                 >
-                  {columns.map((column, colIdx) => (
-                    <TableCell
-                      key={colIdx}
-                      className={`px-[8px] ${
-                        column.align === "center"
-                          ? "text-center"
-                          : column.align === "right"
-                          ? "text-right"
-                          : ""
-                      }`}
-                      style={{ width: column.width }}
+                  <div className="flex items-center justify-between w-full gap-2">
+                    <p
+                      className="font-['Instrument_Sans'] text-[#7a7d7d] text-[13px] leading-[18px] whitespace-normal"
+                      style={{
+                        fontVariationSettings: "'wdth' 100",
+                        fontWeight: 600,
+                      }}
                     >
-                      {column.render
-                        ? column.render(row, rowIdx)
-                        : column.accessor
-                        ? typeof column.accessor === "function"
-                          ? column.accessor(row)
-                          : String(row[column.accessor])
-                        : null}
-                    </TableCell>
-                  ))}
-                </RowWrapper>
-              );
-            })
-          )}
-        </TableBody>
-      </Table>
+                      {column.header}
+                    </p>
+                    {column.sortable && (
+                      <button
+                        onClick={() => handleSort(idx)}
+                        className="flex items-center hover:opacity-70 transition-opacity shrink-0"
+                      >
+                        <FontAwesomeIcon
+                          icon={getSortIcon(idx)}
+                          className="w-[14px] h-[14px] text-[#A0A3A4]"
+                        />
+                      </button>
+                    )}
+                  </div>
+                </TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedData.length === 0 ? (
+              <TableRow className="hover:bg-transparent">
+                <TableCell
+                  colSpan={columns.length}
+                  className="py-8 text-center text-[#7a8890] text-[14px]"
+                >
+                  {emptyMessage}
+                </TableCell>
+              </TableRow>
+            ) : (
+              paginatedData.map((row, rowIdx) => {
+                const RowWrapper = animateRows ? motion.tr : TableRow;
+                const animationProps = animateRows
+                  ? {
+                      initial: { opacity: 0, x: -20 },
+                      animate: { opacity: 1, x: 0 },
+                      transition: { delay: animationDelay + rowIdx * 0.05 },
+                    }
+                  : {};
+
+                return (
+                  <RowWrapper
+                    key={rowIdx}
+                    {...animationProps}
+                    className={`h-[51px] hover:bg-muted/30 transition-colors ${
+                      noBorders ? "border-0" : ""
+                    }`}
+                  >
+                    {columns.map((column, colIdx) => (
+                      <TableCell
+                        key={colIdx}
+                        className={`px-[8px] ${
+                          column.align === "center"
+                            ? "text-center"
+                            : column.align === "right"
+                            ? "text-right"
+                            : ""
+                        } ${noBorders ? "border-0" : ""}`}
+                        style={{ width: column.width }}
+                      >
+                        {column.render
+                          ? column.render(row, rowIdx)
+                          : column.accessor
+                          ? typeof column.accessor === "function"
+                            ? column.accessor(row)
+                            : String(row[column.accessor])
+                          : null}
+                      </TableCell>
+                    ))}
+                  </RowWrapper>
+                );
+              })
+            )}
+          </TableBody>
+        </Table>
+      </div>
+
+      {pagination && totalItems > 0 && (
+        <div className="mt-4 shrink-0">
+          <TablePagination
+            totalItems={totalItems}
+            itemsPerPage={itemsPerPage}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={handleItemsPerPageChange}
+            itemsPerPageOptions={itemsPerPageOptions}
+          />
+        </div>
+      )}
     </div>
   );
 }

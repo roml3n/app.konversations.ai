@@ -3,6 +3,7 @@ import { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
 import { useFilters } from '../../contexts/FilterContext';
 import { Insight } from '../../lib/mockData';
+import { DataTable, DataTableColumn } from '../ui/DataTable';
 
 const channelConfig = [
     { id: 'Instagram', name: 'Instagram', iconPath: svgPaths.p38dd2e80, iconColor: '#F239CA' },
@@ -33,6 +34,19 @@ function StarIcon() {
       </svg>
     </div>
   );
+}
+
+interface ChannelKPIData {
+  id: string;
+  name: string;
+  iconPath: string | null;
+  iconColor: string;
+  isMultiPath?: boolean;
+  response: number;
+  resolution: number;
+  csat: number;
+  handleTime1: number;
+  handleTime2: number;
 }
 
 function Pagination() {
@@ -100,7 +114,7 @@ export function ChannelKPIs() {
           handleTime1: Math.floor(s.handleTimeSum / s.count),
           handleTime2: Math.floor(s.handleTimeSum / s.count), // Just duplicating for now as per design
         };
-      }).slice(0, 5); // Limit to 5 for display
+      });
 
   }, [filteredInsights]);
 
@@ -109,86 +123,103 @@ export function ChannelKPIs() {
       <h3 className="font-['Instrument_Sans'] text-[#7a7d7d] text-[14px] mb-4">Key performance indicators by channel</h3>
       
       <div className="flex-1 overflow-hidden">
-        <div className="grid grid-cols-[140px_100px_1fr_100px_1fr_1fr] gap-x-1 mb-2">
-          {/* Headers */}
-          {[
-            'Source', 'First response effectiveness', 'Resolution rate', 'CSAT prediction', 'Avg handle time(min)', 'Avg handle time(min)'
-          ].map((h, i) => (
-            <div key={i} className={`bg-[#f4f4f6] h-[42px] flex items-center px-2 ${i===0?'rounded-l-[12px]':''} ${i===5?'rounded-r-[12px]':''}`}>
-              <div className="flex items-center justify-between w-full">
-                <span className="text-[12px] font-semibold text-[#7a7d7d] font-['Instrument_Sans'] leading-[1.2]">{h}</span>
-                <ChevronsUpDown />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex flex-col">
-          {kpiData.map((row, idx) => (
-            <motion.div 
-              key={row.id}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: idx * 0.1 }}
-              className="grid grid-cols-[140px_100px_1fr_100px_1fr_1fr] h-[52px] items-center border-b border-transparent hover:bg-muted/20 transition-colors"
-            >
-              {/* Source */}
-              <div className="px-2 flex items-center gap-2">
-                <div className="w-[24px] h-[24px] bg-[#f2f3f3] rounded-md flex items-center justify-center">
-                   <div className="w-[12px] h-[12px]">
-                     <svg className="w-full h-full" viewBox="0 0 12 12" fill="none">
-                       {row.id === 'Jira' ? (
-                         <g>
-                           <path d={svgPaths.p19805d80} fill={row.iconColor} />
-                           <path d={svgPaths.p1f810300} fill={row.iconColor} />
-                           <path d={svgPaths.p2bfe18d0} fill={row.iconColor} />
-                         </g>
-                       ) : (
-                         <path d={row.iconPath || svgPaths.p160ae880} fill={row.iconColor} />
-                       )}
-                     </svg>
-                   </div>
+        <DataTable<ChannelKPIData>
+          columns={[
+            {
+              header: 'Source',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'name',
+              render: (row) => (
+                <div className="flex items-center gap-2">
+                  <div className="w-[24px] h-[24px] bg-[#f2f3f3] rounded-md flex items-center justify-center">
+                    <div className="w-[12px] h-[12px]">
+                      <svg className="w-full h-full" viewBox="0 0 12 12" fill="none">
+                        {row.id === 'Jira' ? (
+                          <g>
+                            <path d={svgPaths.p19805d80} fill={row.iconColor} />
+                            <path d={svgPaths.p1f810300} fill={row.iconColor} />
+                            <path d={svgPaths.p2bfe18d0} fill={row.iconColor} />
+                          </g>
+                        ) : (
+                          <path d={row.iconPath || svgPaths.p160ae880} fill={row.iconColor} />
+                        )}
+                      </svg>
+                    </div>
+                  </div>
+                  <span className="text-[12px] font-medium text-[#404141] font-['Instrument_Sans']">
+                    {row.name}
+                  </span>
                 </div>
-                <span className="text-[12px] font-medium text-[#404141] font-['Instrument_Sans']">{row.name}</span>
-              </div>
-
-              {/* Response */}
-              <div className="px-2 text-right text-[12px] text-[#7a7d7d] font-['Instrument_Sans']">
-                {row.response}
-              </div>
-
-              {/* Resolution */}
-              <div className="px-2 flex items-center gap-2">
-                <span className="text-[12px] text-[#404141] font-['Instrument_Sans'] w-6">{row.resolution}</span>
-                <div className="h-[19px] rounded-[4px] bg-[#48bb79]" style={{ width: `${row.resolution * 200}px`, maxWidth: '100%' }} />
-              </div>
-
-              {/* CSAT */}
-              <div className="px-2">
+              ),
+            },
+            {
+              header: 'First response effectiveness',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'response',
+              align: 'right',
+              render: (row) => (
+                <p className="text-[12px] text-[#7a7d7d] font-['Instrument_Sans']">
+                  {row.response}
+                </p>
+              ),
+            },
+            {
+              header: 'Resolution rate',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'resolution',
+              render: (row) => (
+                <div className="flex items-center gap-2">
+                  <span className="text-[12px] text-[#404141] font-['Instrument_Sans'] w-6">
+                    {row.resolution}
+                  </span>
+                  <div
+                    className="h-[19px] rounded-[4px] bg-[#48bb79]"
+                    style={{ width: `${row.resolution * 200}px`, maxWidth: '100%' }}
+                  />
+                </div>
+              ),
+            },
+            {
+              header: 'CSAT prediction',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'csat',
+              render: (row) => (
                 <div className="bg-[#fcf6e9] rounded-[6px] px-1 py-0.5 flex items-center gap-1 w-fit">
                   <StarIcon />
-                  <span className="text-[12px] text-[#404141] font-['Instrument_Sans']">{row.csat}</span>
+                  <span className="text-[12px] text-[#404141] font-['Instrument_Sans']">
+                    {row.csat}
+                  </span>
                 </div>
-              </div>
-
-              {/* Handle Time 1 */}
-              <div className="px-2 flex items-center gap-2">
-                <span className="text-[12px] text-[#404141] font-['Instrument_Sans'] w-4">{row.handleTime1}</span>
-                <div className="h-[19px] rounded-[4px] bg-[#9fdbee]" style={{ width: `${Math.min(100, row.handleTime1 * 2)}px` }} />
-              </div>
-
-              {/* Handle Time 2 */}
-              <div className="px-2 flex items-center gap-2">
-                <span className="text-[12px] text-[#404141] font-['Instrument_Sans'] w-4">{row.handleTime2}</span>
-                <div className="h-[19px] rounded-[4px] bg-[#b059e9]" style={{ width: `${Math.min(100, row.handleTime2 * 2)}px` }} />
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-4 flex justify-end">
-        <Pagination />
+              ),
+            },
+            {
+              header: 'Avg handle time(min)',
+              width: '1fr',
+              sortable: true,
+              sortAccessor: 'handleTime1',
+              render: (row) => (
+                <div className="flex items-center gap-2">
+                  <span className="text-[12px] text-[#404141] font-['Instrument_Sans'] w-4">
+                    {row.handleTime1}
+                  </span>
+                  <div
+                    className="h-[19px] rounded-[4px] bg-[#9fdbee]"
+                    style={{ width: `${Math.min(100, row.handleTime1 * 2)}px` }}
+                  />
+                </div>
+              ),
+            },
+          ]}
+          data={kpiData}
+          animateRows={true}
+          animationDelay={0}
+          pagination={true}
+          defaultItemsPerPage={5}
+        />
       </div>
     </div>
   );

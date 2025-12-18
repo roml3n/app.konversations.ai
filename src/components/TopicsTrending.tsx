@@ -3,6 +3,7 @@ import { useFilters } from '../contexts/FilterContext';
 import { MOCK_TOPICS } from '../lib/mockData';
 import { useMemo } from 'react';
 import svgPaths from '../imports/svg-uo2y67rl2s';
+import { DataTable, DataTableColumn } from './ui/DataTable';
 
 function ChevronsUpDown() {
   return (
@@ -49,6 +50,14 @@ function StarIcon() {
       </svg>
     </div>
   );
+}
+
+interface TopicData {
+  name: string;
+  conversations: number;
+  resolution: number;
+  prediction: number;
+  handleTime: number;
 }
 
 export function TopicsTrending() {
@@ -99,75 +108,88 @@ export function TopicsTrending() {
         </p>
         
         <div className="w-full flex flex-col gap-1">
-          {/* Header */}
-          <div className="grid grid-cols-[216px_164px_minmax(0px,_1fr)_127px_minmax(0px,_1fr)] w-full">
-             {['Primary topic', 'Total conversations', 'Resolution rate', 'CSAT prediction', 'Avg handle time(min)'].map((header, idx) => (
-               <div key={header} className={`bg-[#f4f4f6] h-[34px] flex items-center px-[8px] ${idx === 0 ? 'rounded-l-[12px]' : ''} ${idx === 4 ? 'rounded-r-[12px]' : ''}`}>
-                 <div className="flex items-center justify-between w-full">
-                   <p className="font-['Instrument_Sans'] font-semibold text-[#7a7d7d] text-[13px] leading-[18px]">{header}</p>
-                   <ChevronsUpDown />
-                 </div>
-               </div>
-             ))}
-          </div>
-
-          {/* Rows */}
-          <div className="w-full">
-            {topicsData.length === 0 ? (
-               <div className="py-8 text-center text-muted-foreground text-sm">No topics found for the selected filters.</div>
-            ) : (
-              topicsData.map((topic, idx) => (
-                <motion.div
-                  key={idx}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.7 + idx * 0.05 }}
-                  className="grid grid-cols-[216px_164px_minmax(0px,_1fr)_127px_minmax(0px,_1fr)] h-[51px] items-center border-b border-transparent hover:bg-muted/30 transition-colors"
-                >
-                  {/* Primary Topic */}
-                  <div className="px-[8px]">
-                    <p className="font-['Instrument_Sans'] text-[#7a7d7d] text-[12px] truncate">{topic.name}</p>
+          <DataTable<TopicData>
+            columns={[
+              {
+                header: 'Primary topic',
+                width: '216px',
+                sortable: true,
+                sortAccessor: 'name',
+                render: (row) => (
+                  <p className="font-['Instrument_Sans'] text-[#7a7d7d] text-[12px] truncate">
+                    {row.name}
+                  </p>
+                ),
+              },
+              {
+                header: 'Total conversations',
+                width: '164px',
+                sortable: true,
+                sortAccessor: 'conversations',
+                align: 'right',
+                render: (row) => (
+                  <p className="font-['Instrument_Sans'] text-[#7a7d7d] text-[12px]">
+                    {row.conversations}
+                  </p>
+                ),
+              },
+              {
+                header: 'Resolution rate',
+                width: 'minmax(0px, 1fr)',
+                sortable: true,
+                sortAccessor: 'resolution',
+                render: (row) => (
+                  <div className="flex items-center gap-[4px]">
+                    <p className="font-['Instrument_Sans'] text-[#404141] text-[12px] w-[24px]">
+                      {row.resolution}
+                    </p>
+                    <div
+                      className="bg-[#48bb79] h-[19px] rounded-[4px]"
+                      style={{ width: `${Math.max(5, row.resolution * 100)}%` }}
+                    />
                   </div>
-
-                  {/* Total Conversations */}
-                  <div className="px-[8px] flex justify-end">
-                     <p className="font-['Instrument_Sans'] text-[#7a7d7d] text-[12px]">{topic.conversations}</p>
+                ),
+              },
+              {
+                header: 'CSAT prediction',
+                width: '127px',
+                sortable: true,
+                sortAccessor: 'prediction',
+                render: (row) => (
+                  <div className="bg-[#fcf6e9] flex gap-[2px] items-center justify-center px-[4px] py-[2px] rounded-[6px] w-fit">
+                    <StarIcon />
+                    <p className="font-['Instrument_Sans'] text-[#404141] text-[12px]">
+                      {row.prediction}
+                    </p>
                   </div>
-
-                  {/* Resolution Rate */}
-                  <div className="px-[8px] flex items-center gap-[4px]">
-                    <p className="font-['Instrument_Sans'] text-[#404141] text-[12px] w-[24px]">{topic.resolution}</p>
-                    <div className="bg-[#48bb79] h-[19px] rounded-[4px]" style={{ width: `${Math.max(5, topic.resolution * 100)}%` }} />
+                ),
+              },
+              {
+                header: 'Avg handle time(min)',
+                width: 'minmax(0px, 1fr)',
+                sortable: true,
+                sortAccessor: 'handleTime',
+                render: (row) => (
+                  <div className="flex items-center gap-[4px]">
+                    <p className="font-['Instrument_Sans'] text-[#404141] text-[12px] w-[16px]">
+                      {row.handleTime}
+                    </p>
+                    <div
+                      className="bg-[#9fdbee] h-[19px] rounded-[4px]"
+                      style={{ width: `${Math.min(100, row.handleTime * 2)}%` }}
+                    />
                   </div>
-
-                  {/* CSAT Prediction */}
-                  <div className="px-[8px] flex items-center gap-[14px]">
-                    <div className="bg-[#fcf6e9] flex gap-[2px] items-center justify-center px-[4px] py-[2px] rounded-[6px]">
-                       <StarIcon />
-                       <p className="font-['Instrument_Sans'] text-[#404141] text-[12px]">{topic.prediction}</p>
-                    </div>
-                  </div>
-
-                  {/* Avg Handle Time */}
-                  <div className="px-[8px] flex items-center gap-[4px]">
-                    <p className="font-['Instrument_Sans'] text-[#404141] text-[12px] w-[16px]">{topic.handleTime}</p>
-                    <div className="bg-[#9fdbee] h-[19px] rounded-[4px]" style={{ width: `${Math.min(100, topic.handleTime * 2)}%` }} />
-                  </div>
-                </motion.div>
-              ))
-            )}
-          </div>
-
-          {/* Pagination */}
-          <div className="flex justify-end mt-4">
-             <div className="bg-[#f2f3f3] flex gap-[4px] items-center p-[4px] rounded-[8px]">
-               <button className="p-1 hover:bg-white rounded transition-colors"><CaretLeft /></button>
-               <p className="font-['Instrument_Sans'] text-[#7a7d7d] text-[12px]">
-                 1 - {topicsData.length} of {MOCK_TOPICS.length}
-               </p>
-               <button className="p-1 hover:bg-white rounded transition-colors"><CaretRight /></button>
-             </div>
-          </div>
+                ),
+              },
+            ]}
+            data={topicsData}
+            emptyMessage="No topics found for the selected filters."
+            animateRows={true}
+            animationDelay={0.7}
+            pagination={true}
+            defaultItemsPerPage={5}
+            itemsPerPageOptions={[5, 10, 20]}
+          />
         </div>
       </div>
     </div>
