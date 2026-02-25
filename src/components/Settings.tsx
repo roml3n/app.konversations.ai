@@ -5,11 +5,14 @@ import { General } from "./settings/General";
 import { Security } from "./settings/Security";
 import { Notifications } from "./settings/Notifications";
 import { Agents } from "./settings/Agents";
+import { RolesAndPermissions } from "./settings/RolesAndPermissions";
+import { RoleDetails } from "./settings/RoleDetails";
 
 export function Settings() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const view = searchParams.get("view") || "general";
+  const roleId = searchParams.get("roleId");
 
   return (
     <div className="flex h-full w-full bg-white overflow-hidden rounded-lg border border-[#e3e3e4]">
@@ -47,13 +50,8 @@ export function Settings() {
                   <Agents />
                 </div>
               )}
-              {view === "roles" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    Roles and Permissions - Coming Soon
-                  </p>
-                </div>
-              )}
+              {view === "roles" && roleId && <RoleDetails />}
+              {view === "roles" && !roleId && <RolesAndPermissions />}
               {view === "organization" && (
                 <div className="flex h-full items-center justify-center">
                   <p className="text-[#7a8890]">

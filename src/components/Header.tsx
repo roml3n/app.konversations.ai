@@ -6,25 +6,44 @@ import {
   faBell,
 } from "@fortawesome/free-solid-svg-icons";
 import { AvatarPopout } from "./AvatarPopout";
+import { useNavigation } from "../contexts/NavigationContext";
 
 interface HeaderProps {
   title: string;
 }
 
 export function Header({ title }: HeaderProps) {
+  const { canGoBack, canGoForward, goBack, goForward } = useNavigation();
+
   return (
     <div className="flex w-full items-center justify-between border-b border-border bg-card px-6 py-2">
       {/* Left side: Navigation arrows + Title */}
       <div className="flex items-center gap-6">
         {/* Navigation arrows */}
         <div className="flex items-center gap-3">
-          <button className="opacity-30 hover:opacity-50 transition-opacity">
+          <button
+            onClick={goBack}
+            disabled={!canGoBack}
+            className={`transition-opacity ${
+              canGoBack
+                ? "opacity-100 hover:opacity-70 cursor-pointer"
+                : "opacity-30 cursor-not-allowed"
+            }`}
+          >
             <FontAwesomeIcon
               icon={faArrowLeft}
               className="w-5 h-5 text-muted-foreground"
             />
           </button>
-          <button className="opacity-30 hover:opacity-50 transition-opacity">
+          <button
+            onClick={goForward}
+            disabled={!canGoForward}
+            className={`transition-opacity ${
+              canGoForward
+                ? "opacity-100 hover:opacity-70 cursor-pointer"
+                : "opacity-30 cursor-not-allowed"
+            }`}
+          >
             <FontAwesomeIcon
               icon={faArrowRight}
               className="w-5 h-5 text-muted-foreground"

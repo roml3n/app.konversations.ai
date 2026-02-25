@@ -4,6 +4,7 @@
       "version": "0.1.0",
       "private": true,
       "dependencies": {
+          "@fortawesome/free-brands-svg-icons": "*",
           "@fortawesome/free-solid-svg-icons": "*",
           "@fortawesome/react-fontawesome": "*",
           "@fullcalendar/core": "*",

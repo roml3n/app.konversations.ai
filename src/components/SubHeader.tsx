@@ -11,6 +11,7 @@ import { TopicFilterContent } from "./figma/TopicFilterContent";
 import { AgentFilterContent } from "./figma/AgentFilterContent";
 import { MOCK_AGENTS, MOCK_TOPICS } from "../lib/mockData";
 import { useFilters } from "../contexts/FilterContext";
+import { FilterBar } from "./ui/FilterBar";
 
 function SearchIcon() {
   return (
@@ -266,14 +267,10 @@ function ExportButton() {
 
 export function SubHeader() {
   return (
-    <div className="content-stretch flex items-center justify-between relative w-full bg-background px-6 py-3">
-      <div className="basis-0 content-stretch flex gap-[6px] grow items-center min-h-px min-w-px relative shrink-0">
-        <SearchBar />
-        <DateFilter />
-        <TopicsFilter />
-        <AgentFilter />
-      </div>
-      <ExportButton />
-    </div>
+    <FilterBar showSearch={true} showClearButton={true}>
+      <DateFilter />
+      <TopicsFilter />
+      <AgentFilter />
+    </FilterBar>
   );
 }

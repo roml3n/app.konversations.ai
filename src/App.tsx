@@ -13,9 +13,11 @@ import { TabNavigation } from "./components/TabNavigation";
 import { ExecutiveOverview } from "./components/ExecutiveOverview";
 import { ChannelPerformance } from "./components/ChannelPerformance";
 import { FilterProvider } from "./contexts/FilterContext";
+import { NavigationProvider } from "./contexts/NavigationContext";
 import { Inbox } from "./components/Inbox";
 import { Workforce } from "./components/Workforce";
 import { Settings } from "./components/Settings";
+import { Conversations } from "./components/Conversations";
 
 function InsightsModule() {
   const location = useLocation();
@@ -85,10 +87,8 @@ function AppContent() {
         <Route
           path="/conversations"
           element={
-            <div className="flex flex-1 items-center justify-center m-2 rounded-lg bg-white">
-              <p className="text-muted-foreground">
-                Conversations Module - Coming Soon
-              </p>
+            <div className="flex flex-1 flex-col overflow-hidden m-2 rounded-lg bg-white">
+              <Conversations />
             </div>
           }
         />
@@ -118,9 +118,11 @@ function AppContent() {
 export default function App() {
   return (
     <Router>
-      <FilterProvider>
-        <AppContent />
-      </FilterProvider>
+      <NavigationProvider>
+        <FilterProvider>
+          <AppContent />
+        </FilterProvider>
+      </NavigationProvider>
     </Router>
   );
 }

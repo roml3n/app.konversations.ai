@@ -243,6 +243,9 @@
     letter-spacing: inherit;
     color: inherit;
     opacity: 1;
+    --lightningcss-light: initial;
+    --lightningcss-dark: ;
+    color-scheme: light;
     background-color: #0000;
     border-radius: 0;
   }
@@ -254,6 +257,9 @@
     letter-spacing: inherit;
     color: inherit;
     opacity: 1;
+    --lightningcss-light: initial;
+    --lightningcss-dark: ;
+    color-scheme: light;
     background-color: #0000;
     border-radius: 0;
   }
@@ -963,6 +969,10 @@
     height: 16.071px;
   }
 
+  .h-\[16px\] {
+    height: 16px;
+  }
+
   .h-\[18px\] {
     height: 18px;
   }
@@ -1087,6 +1097,10 @@
     min-height: 40px;
   }
 
+  .min-h-\[140px\] {
+    min-height: 140px;
+  }
+
   .min-h-\[200px\] {
     min-height: 200px;
   }
@@ -1197,6 +1211,10 @@
 
   .w-\[24px\] {
     width: 24px;
+  }
+
+  .w-\[32px\] {
+    width: 32px;
   }
 
   .w-\[60\%\] {
@@ -1363,6 +1381,10 @@
     flex: 1;
   }
 
+  .flex-\[1_0_0\] {
+    flex: 1 0 0;
+  }
+
   .flex-shrink-0, .shrink-0 {
     flex-shrink: 0;
   }
@@ -1519,6 +1541,10 @@
 
   .content-center {
     align-content: center;
+  }
+
+  .content-start {
+    align-content: flex-start;
   }
 
   .content-stretch {
@@ -1767,6 +1793,10 @@
     border-radius: 6px;
   }
 
+  .rounded-\[7px\] {
+    border-radius: 7px;
+  }
+
   .rounded-\[8\.5px\] {
     border-radius: 8.5px;
   }
@@ -1937,6 +1967,11 @@
   .border-b-2 {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 2px;
+  }
+
+  .border-dashed {
+    --tw-border-style: dashed;
+    border-style: dashed;
   }
 
   .border-none {
@@ -2455,6 +2490,10 @@
     padding: 8px;
   }
 
+  .p-\[10px\] {
+    padding: 10px;
+  }
+
   .p-\[12px\] {
     padding: 12px;
   }
@@ -2669,6 +2708,10 @@
 
   .pb-16 {
     padding-bottom: calc(var(--spacing) * 16);
+  }
+
+  .pb-\[24px\] {
+    padding-bottom: 24px;
   }
 
   .pb-\[100px\] {
@@ -3007,11 +3050,15 @@
     color: #05f;
   }
 
+  .text-\[\#58AEC6\], .text-\[\#58aec6\] {
+    color: #58aec6;
+  }
+
   .text-\[\#089d44\] {
     color: #089d44;
   }
 
-  .text-\[\#99a1af\] {
+  .text-\[\#99A1AF\], .text-\[\#99a1af\] {
     color: #99a1af;
   }
 
@@ -3059,6 +3106,10 @@
     color: #364153;
   }
 
+  .text-\[\#393939\] {
+    color: #393939;
+  }
+
   .text-\[\#404141\] {
     color: #404141;
   }
@@ -3069,6 +3120,10 @@
 
   .text-\[\#A0A3A4\] {
     color: #a0a3a4;
+  }
+
+  .text-\[\#B1B3B4\] {
+    color: #b1b3b4;
   }
 
   .text-\[\#E2C148\] {
@@ -3103,8 +3158,20 @@
     color: var(--chart-3);
   }
 
+  .text-\[var\(--foreground\)\] {
+    color: var(--foreground);
+  }
+
+  .text-accent {
+    color: var(--accent);
+  }
+
   .text-accent-foreground {
     color: var(--accent-foreground);
+  }
+
+  .text-black {
+    color: var(--color-black);
   }
 
   .text-foreground {
@@ -3233,6 +3300,10 @@
 
   .opacity-80 {
     opacity: .8;
+  }
+
+  .opacity-100 {
+    opacity: 1;
   }
 
   .opacity-\[0\.56\] {
@@ -3517,6 +3588,12 @@
   }
 
   @media (hover: hover) {
+    .hover\:bg-\[\#e8e9e9\]:hover {
+      background-color: #e8e9e9;
+    }
+  }
+
+  @media (hover: hover) {
     .hover\:bg-\[\#e8edf0\]:hover {
       background-color: #e8edf0;
     }
@@ -3747,12 +3824,6 @@
   }
 
   @media (hover: hover) {
-    .hover\:opacity-50:hover {
-      opacity: .5;
-    }
-  }
-
-  @media (hover: hover) {
     .hover\:opacity-60:hover {
       opacity: .6;
     }
@@ -3780,6 +3851,13 @@
     .hover\:shadow-md:hover {
       --tw-shadow: 0 4px 6px -1px var(--tw-shadow-color, #0000001a), 0 2px 4px -2px var(--tw-shadow-color, #0000001a);
       box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:brightness-95:hover {
+      --tw-brightness: brightness(95%);
+      filter: var(--tw-blur, ) var(--tw-brightness, ) var(--tw-contrast, ) var(--tw-grayscale, ) var(--tw-hue-rotate, ) var(--tw-invert, ) var(--tw-saturate, ) var(--tw-sepia, ) var(--tw-drop-shadow, );
     }
   }
 
@@ -4052,6 +4130,12 @@
   @media (width >= 40rem) {
     .sm\:flex-row {
       flex-direction: row;
+    }
+  }
+
+  @media (width >= 48rem) {
+    .md\:grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
