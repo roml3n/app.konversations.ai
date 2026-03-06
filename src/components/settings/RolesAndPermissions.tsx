@@ -122,7 +122,7 @@ function RoleCard({ role }: { role: Role }) {
         </div>
 
         {/* Permissions */}
-        <div className="content-stretch flex gap-[4px] items-start relative shrink-0 flex-wrap">
+        <div className="content-stretch flex gap-[4px] items-start relative shrink-0">
           {visiblePermissions.map((permission) => (
             <div
               key={permission.id}

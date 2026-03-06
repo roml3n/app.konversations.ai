@@ -7,6 +7,9 @@ import { Notifications } from "./settings/Notifications";
 import { Agents } from "./settings/Agents";
 import { RolesAndPermissions } from "./settings/RolesAndPermissions";
 import { RoleDetails } from "./settings/RoleDetails";
+import { OrganizationProfile } from "./settings/OrganizationProfile";
+import { DataRetention } from "./settings/DataRetention";
+import { Billing } from "./settings/Billing";
 
 export function Settings() {
   const location = useLocation();
@@ -53,24 +56,18 @@ export function Settings() {
               {view === "roles" && roleId && <RoleDetails />}
               {view === "roles" && !roleId && <RolesAndPermissions />}
               {view === "organization" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    Organization Profile - Coming Soon
-                  </p>
+                <div className="w-full">
+                  <OrganizationProfile />
                 </div>
               )}
               {view === "data-retention" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    Data Retention - Coming Soon
-                  </p>
+                <div className="w-full">
+                  <DataRetention />
                 </div>
               )}
               {view === "billing" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    Billing and Usage - Coming Soon
-                  </p>
+                <div className="w-full h-full">
+                  <Billing />
                 </div>
               )}
               {view === "system-status" && (
