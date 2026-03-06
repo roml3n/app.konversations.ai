@@ -77,6 +77,15 @@ const mockReceipts: Receipt[] = [
 ];
 
 export function BillingOverview() {
+  // Function to open PDF preview
+  const handleViewReceipt = (receiptId: string, receiptNumber: string) => {
+    // Create a mock PDF URL - in production, this would be an actual PDF endpoint
+    const pdfUrl = `/api/receipts/${receiptId}/pdf`;
+    
+    // Open PDF in a new window/tab
+    window.open(pdfUrl, '_blank', 'noopener,noreferrer');
+  };
+
   const columns: DataTableColumn<Receipt>[] = [
     {
       header: "Receipt",
@@ -99,13 +108,14 @@ export function BillingOverview() {
     {
       header: "Actions",
       width: "120px",
-      render: () => (
+      render: (row) => (
         <button
           className="text-[#7a8890] hover:text-foreground transition-colors flex items-center gap-1.5"
           style={{
             fontSize: "var(--text-xs)",
             fontWeight: "var(--font-weight-normal)",
           }}
+          onClick={() => handleViewReceipt(row.id, row.receiptNumber)}
         >
           View
           <FontAwesomeIcon

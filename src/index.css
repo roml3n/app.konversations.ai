@@ -112,6 +112,7 @@
     --leading-normal: 1.5;
     --leading-relaxed: 1.625;
     --ease-in-out: cubic-bezier(.4, 0, .2, 1);
+    --animate-spin: spin 1s linear infinite;
     --default-transition-duration: .15s;
     --default-transition-timing-function: cubic-bezier(.4, 0, .2, 1);
     --default-font-family: var(--font-sans);
@@ -523,6 +524,10 @@
     top: 50%;
   }
 
+  .top-4 {
+    top: calc(var(--spacing) * 4);
+  }
+
   .top-\[16px\] {
     top: 16px;
   }
@@ -547,6 +552,10 @@
     right: calc(var(--spacing) * 3);
   }
 
+  .right-4 {
+    right: calc(var(--spacing) * 4);
+  }
+
   .right-\[14\.84\%\] {
     right: 14.84%;
   }
@@ -561,6 +570,10 @@
 
   .bottom-0 {
     bottom: calc(var(--spacing) * 0);
+  }
+
+  .bottom-4 {
+    bottom: calc(var(--spacing) * 4);
   }
 
   .bottom-\[-0\.03\%\] {
@@ -868,6 +881,11 @@
     height: 48px;
   }
 
+  .size-\[72px\] {
+    width: 72px;
+    height: 72px;
+  }
+
   .size-\[108px\] {
     width: 108px;
     height: 108px;
@@ -932,6 +950,10 @@
 
   .h-12 {
     height: calc(var(--spacing) * 12);
+  }
+
+  .h-16 {
+    height: calc(var(--spacing) * 16);
   }
 
   .h-32 {
@@ -1036,6 +1058,10 @@
 
   .h-\[150px\] {
     height: 150px;
+  }
+
+  .h-\[158px\] {
+    height: 158px;
   }
 
   .h-\[191px\] {
@@ -1230,6 +1256,10 @@
     width: 20px;
   }
 
+  .w-\[23px\] {
+    width: 23px;
+  }
+
   .w-\[24px\] {
     width: 24px;
   }
@@ -1288,6 +1318,10 @@
 
   .w-\[439px\] {
     width: 439px;
+  }
+
+  .w-\[440px\] {
+    width: 440px;
   }
 
   .w-\[453px\] {
@@ -1366,8 +1400,16 @@
     max-width: var(--container-md);
   }
 
+  .max-w-none {
+    max-width: none;
+  }
+
   .min-w-0 {
     min-width: calc(var(--spacing) * 0);
+  }
+
+  .min-w-6 {
+    min-width: calc(var(--spacing) * 6);
   }
 
   .min-w-\[8rem\] {
@@ -1494,6 +1536,10 @@
 
   .animate-in {
     animation: enter var(--tw-duration, .15s) var(--tw-ease, ease);
+  }
+
+  .animate-spin {
+    animation: var(--animate-spin);
   }
 
   .cursor-default {
@@ -1692,6 +1738,10 @@
     gap: 16px;
   }
 
+  .gap-\[19px\] {
+    gap: 19px;
+  }
+
   .gap-\[24px\] {
     gap: 24px;
   }
@@ -1818,6 +1868,10 @@
     border-radius: 4px;
   }
 
+  .rounded-\[5px\] {
+    border-radius: 5px;
+  }
+
   .rounded-\[6px\] {
     border-radius: 6px;
   }
@@ -1832,6 +1886,10 @@
 
   .rounded-\[8px\] {
     border-radius: 8px;
+  }
+
+  .rounded-\[9px\] {
+    border-radius: 9px;
   }
 
   .rounded-\[12px\] {
@@ -2077,6 +2135,10 @@
     border-color: #e3e8f0;
   }
 
+  .border-\[\#e5e7eb\] {
+    border-color: #e5e7eb;
+  }
+
   .border-\[\#e8edf0\] {
     border-color: #e8edf0;
   }
@@ -2095,6 +2157,10 @@
 
   .border-\[rgba\(0\,0\,0\,0\.1\)\] {
     border-color: #0000001a;
+  }
+
+  .border-\[rgba\(0\,0\,0\,0\.05\)\] {
+    border-color: #0000000d;
   }
 
   .border-\[rgba\(255\,255\,255\,0\.05\)\] {
@@ -2249,6 +2315,14 @@
     background-color: #ebeaee;
   }
 
+  .bg-\[\#ebf7fb\] {
+    background-color: #ebf7fb;
+  }
+
+  .bg-\[\#ededf0\] {
+    background-color: #ededf0;
+  }
+
   .bg-\[\#edf1f4\] {
     background-color: #edf1f4;
   }
@@ -2353,6 +2427,16 @@
 
   .bg-background {
     background-color: var(--background);
+  }
+
+  .bg-black\/40 {
+    background-color: #0006;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-black\/40 {
+      background-color: color-mix(in oklab, var(--color-black) 40%, transparent);
+    }
   }
 
   .bg-black\/60 {
@@ -2477,6 +2561,10 @@
 
   .fill-current {
     fill: currentColor;
+  }
+
+  .object-contain {
+    object-fit: contain;
   }
 
   .object-cover {
@@ -3204,6 +3292,10 @@
     color: #404141;
   }
 
+  .text-\[\#575979\] {
+    color: #575979;
+  }
+
   .text-\[\#777777\] {
     color: #777;
   }
@@ -3214,6 +3306,10 @@
 
   .text-\[\#B1B3B4\] {
     color: #b1b3b4;
+  }
+
+  .text-\[\#CDCECF\] {
+    color: #cdcecf;
   }
 
   .text-\[\#E2C148\] {
@@ -3627,6 +3723,10 @@
     color: var(--foreground);
   }
 
+  .placeholder\:text-\[\#292f32\]::placeholder {
+    color: #292f32;
+  }
+
   .placeholder\:text-\[\#121212\]::placeholder {
     color: #121212;
   }
@@ -3985,6 +4085,12 @@
   @media (hover: hover) {
     .hover\:opacity-70:hover {
       opacity: .7;
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:opacity-80:hover {
+      opacity: .8;
     }
   }
 
@@ -5253,6 +5359,12 @@ html {
 @property --tw-ease {
   syntax: "*";
   inherits: false
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes enter {

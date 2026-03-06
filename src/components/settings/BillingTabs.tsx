@@ -19,7 +19,7 @@ export function BillingTabs() {
   };
 
   return (
-    <div className="flex items-center gap-0 border-b border-border">
+    <div className="flex items-center gap-0">
       {tabs.map((tab) => (
         <button
           key={tab.id}

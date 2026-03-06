@@ -10,6 +10,8 @@ import { RoleDetails } from "./settings/RoleDetails";
 import { OrganizationProfile } from "./settings/OrganizationProfile";
 import { DataRetention } from "./settings/DataRetention";
 import { Billing } from "./settings/Billing";
+import { SystemStatus } from "./settings/SystemStatus";
+import { Integrations } from "./settings/Integrations";
 
 export function Settings() {
   const location = useLocation();
@@ -71,31 +73,13 @@ export function Settings() {
                 </div>
               )}
               {view === "system-status" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    System Status - Coming Soon
-                  </p>
+                <div className="w-full h-full">
+                  <SystemStatus />
                 </div>
               )}
               {view === "integrations" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    Integrations - Coming Soon
-                  </p>
-                </div>
-              )}
-              {view === "webhooks" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    Webhooks - Coming Soon
-                  </p>
-                </div>
-              )}
-              {view === "api-keys" && (
-                <div className="flex h-full items-center justify-center">
-                  <p className="text-[#7a8890]">
-                    API Keys - Coming Soon
-                  </p>
+                <div className="w-full h-full">
+                  <Integrations />
                 </div>
               )}
             </div>
