@@ -61,7 +61,7 @@ export function ConnectDrawer({
             {/* App Info Section */}
             <div className="flex flex-col gap-3">
               {/* App Icons with Link */}
-              <div className="content-stretch flex gap-[8px] items-center relative">
+              <div className="content-stretch flex gap-[-16px] items-center relative !w-fit">
                 {/* App Icon */}
                 <button className="block cursor-pointer relative rounded-[999px] shrink-0 size-[72px]">
                   <img
@@ -87,7 +87,7 @@ export function ConnectDrawer({
                 </button>
 
                 {/* Link Icon */}
-                <div className="-translate-x-1/2 -translate-y-1/2 absolute bg-[#fefefe] content-stretch flex h-[24px] items-center justify-center left-1/2 rounded-[999px] top-1/2 w-[23px]">
+                <div className="-translate-x-1/2 -translate-y-1/2  self-center absolute bg-[#fefefe] content-stretch flex h-[24px] items-center justify-center left-1/2 rounded-[999px] top-1/2 w-[23px] z-10">
                   <div aria-hidden="true" className="absolute border border-[#e3e3e4] border-solid inset-0 pointer-events-none rounded-[999px]" />
                   <FontAwesomeIcon
                     icon={faLink}

@@ -1164,6 +1164,10 @@
     min-height: 1px;
   }
 
+  .\!w-fit {
+    width: fit-content !important;
+  }
+
   .w-2 {
     width: calc(var(--spacing) * 2);
   }
@@ -1702,6 +1706,10 @@
     gap: calc(var(--spacing) * 12);
   }
 
+  .gap-\[-16px\] {
+    gap: -16px;
+  }
+
   .gap-\[2px\] {
     gap: 2px;
   }
@@ -1812,6 +1820,10 @@
 
   .gap-y-\[16px\] {
     row-gap: 16px;
+  }
+
+  .self-center {
+    align-self: center;
   }
 
   .self-end {
