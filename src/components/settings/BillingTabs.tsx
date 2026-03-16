@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router';
 
 const tabs = [
   { id: 'overview' as const, label: 'Overview' },

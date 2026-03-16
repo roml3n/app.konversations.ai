@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 interface WorkforceTabsProps {
   activeTab: 'real-time' | 'forecasting' | 'scheduling' | 'reports';

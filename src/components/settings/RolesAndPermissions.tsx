@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faShieldHalved } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "../ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 interface Permission {
   id: string;

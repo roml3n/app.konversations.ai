@@ -1,11 +1,10 @@
-import { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
   useLocation,
-} from "react-router-dom";
+} from "react-router";
 import { Sidebar } from "./components/Sidebar";
 import { Header } from "./components/Header";
 import { SubHeader } from "./components/SubHeader";
@@ -18,6 +17,7 @@ import { Inbox } from "./components/Inbox";
 import { Workforce } from "./components/Workforce";
 import { Settings } from "./components/Settings";
 import { Conversations } from "./components/Conversations";
+import { CommandPalette, useCommandPalette } from "./components/CommandPalette";
 
 function InsightsModule() {
   const location = useLocation();
@@ -55,10 +55,11 @@ function AppContent() {
   const location = useLocation();
   const activeModule =
     location.pathname.split("/")[1] || "insights";
+  const { isOpen, open, close } = useCommandPalette();
 
   return (
     <div className="flex h-screen w-screen overflow-hidden bg-[#010a78]">
-      <Sidebar activeItem={activeModule} />
+      <Sidebar activeItem={activeModule} onSearchClick={open} />
 
       <Routes>
         <Route
@@ -111,6 +112,9 @@ function AppContent() {
           }
         />
       </Routes>
+
+      {/* Command Palette */}
+      <CommandPalette isOpen={isOpen} onClose={close} />
     </div>
   );
 }

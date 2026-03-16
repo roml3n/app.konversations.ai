@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { BillingTabs } from "./BillingTabs";
 import { BillingOverview } from "./billing/BillingOverview";
 import { BillingUsage } from "./billing/BillingUsage";

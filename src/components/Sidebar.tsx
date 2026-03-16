@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import svgPathsExpanded from '../imports/svg-xwi0g5shfp';
 import svgPathsCollapsed from '../imports/svg-uicivvdl9e';
 
@@ -103,9 +103,10 @@ const menuItems = [
 interface SidebarProps {
   activeItem?: string;
   onItemClick?: (id: string) => void;
+  onSearchClick?: () => void;
 }
 
-export function Sidebar({ activeItem = 'insights', onItemClick }: SidebarProps) {
+export function Sidebar({ activeItem = 'insights', onItemClick, onSearchClick }: SidebarProps) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
@@ -136,7 +137,10 @@ export function Sidebar({ activeItem = 'insights', onItemClick }: SidebarProps) 
             </div>
 
             {/* Search Bar */}
-            <div className={`bg-[rgba(0,0,0,0.3)] box-border content-stretch flex items-center ${isExpanded ? 'justify-between p-[6px]' : 'justify-center p-[6px]'} relative rounded-[8px] shrink-0 w-full`}>
+            <button
+              onClick={onSearchClick}
+              className={`bg-[rgba(0,0,0,0.3)] box-border content-stretch flex items-center ${isExpanded ? 'justify-between p-[6px]' : 'justify-center p-[6px]'} relative rounded-[8px] shrink-0 w-full hover:bg-[rgba(0,0,0,0.4)] transition-colors cursor-pointer`}
+            >
               <div className="content-stretch flex gap-[4px] items-center relative shrink-0">
                 <div className="box-border content-stretch flex flex-col gap-[10px] items-start opacity-[0.56] p-[4px] relative shrink-0">
                   <div className="relative shrink-0 size-[14px]">
@@ -170,7 +174,7 @@ export function Sidebar({ activeItem = 'insights', onItemClick }: SidebarProps) 
                   </div>
                 </div>
               )}
-            </div>
+            </button>
 
             {/* Menu Items */}
             <div className={`content-stretch flex flex-col gap-[8px] ${isExpanded ? 'items-start' : 'items-center'} relative shrink-0 w-full`}>

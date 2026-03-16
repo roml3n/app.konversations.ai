@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router';
 import { InboxSidebar } from './inbox/InboxSidebar';
 import { ConversationList } from './inbox/ConversationList';
 import { ChatArea } from './inbox/ChatArea';

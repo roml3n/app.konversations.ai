@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router";
 import { Header } from "./Header";
 import { SettingsSidebar } from "./SettingsSidebar";
 import { General } from "./settings/General";

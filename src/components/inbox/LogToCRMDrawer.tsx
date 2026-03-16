@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { cn } from "../../lib/utils";
 import svgPaths from "../../imports/svg-k0y6ciezy6";
 import { Conversation } from "./data";
+import { Drawer, DrawerHeader, DrawerContent, DrawerFooter } from "./Drawer";
 
 // Icons for the LogToCRMDrawer
 const CRMIcons = {
@@ -171,26 +172,13 @@ export function LogToCRMDrawer({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60" onClick={onClose}>
-      <div 
-        className="absolute top-[16px] right-[16px] bottom-[16px] w-[400px] bg-white rounded-lg shadow-[0px_8px_16px_0px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden border border-[#e3e3e4]"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-      <div className="h-[64px] shrink-0 border-b border-[#e3e3e4] flex items-center justify-between px-4 bg-white">
-        <p className="font-['Instrument_Sans'] font-semibold text-[#121212] text-[20px] tracking-[0.1px]">
-          Log conversation to CRM
-        </p>
-        <button
-          onClick={onClose}
-          className="p-1 hover:bg-gray-100 rounded-full"
-        >
-          <CRMIcons.Xmark />
-        </button>
-      </div>
+    <Drawer isOpen={isOpen} onClose={onClose} width="400px">
+      <DrawerHeader
+        title="Log conversation to CRM"
+        onClose={onClose}
+      />
 
-      {/* Content */}
-      <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-9">
+      <DrawerContent>
         {/* Conversation Info Card */}
         <div className="w-full bg-gradient-to-l from-[#f4d5cc] to-[#fcf4f2] rounded-[8px] p-4">
           <div className="flex gap-3 items-start">
@@ -285,21 +273,19 @@ export function LogToCRMDrawer({
             ))}
           </div>
         </div>
+      </DrawerContent>
 
-        {/* Footer Buttons */}
-        <div className="flex items-center justify-end gap-2 mt-auto">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-[#f4f7f8] border border-[#e8edf0] rounded-[4px] shadow-sm text-[#0320f5] font-semibold text-[14px] font-['Instrument_Sans'] hover:bg-gray-100"
-          >
-            Cancel
-          </button>
-          <button className="px-4 py-2 bg-[#0320f5] rounded-[4px] text-white font-semibold text-[14px] font-['Instrument_Sans'] shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.25)] hover:bg-blue-700">
-            Log conversation
-          </button>
-        </div>
-      </div>
-      </div>
-    </div>
+      <DrawerFooter>
+        <button
+          onClick={onClose}
+          className="px-4 py-2 bg-[#f4f7f8] border border-[#e8edf0] rounded-[4px] shadow-sm text-[#0320f5] font-semibold text-[14px] font-['Instrument_Sans'] hover:bg-gray-100"
+        >
+          Cancel
+        </button>
+        <button className="px-4 py-2 bg-[#0320f5] rounded-[4px] text-white font-semibold text-[14px] font-['Instrument_Sans'] shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.25)] hover:bg-blue-700">
+          Log conversation
+        </button>
+      </DrawerFooter>
+    </Drawer>
   );
 }
