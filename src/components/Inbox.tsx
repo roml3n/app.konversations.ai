@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
+import { Header } from './Header';
 import { InboxSidebar } from './inbox/InboxSidebar';
 import { ConversationList } from './inbox/ConversationList';
 import { ChatArea } from './inbox/ChatArea';
@@ -36,38 +37,52 @@ export function Inbox() {
   const selectedConversation = conversations.find(c => c.id === selectedConversationId) || conversations[0];
 
   return (
-    <div className="flex h-full w-full bg-white overflow-hidden rounded-lg border border-[#e3e3e4] relative">
-      <InboxSidebar 
-        activeView={currentView} 
-        onViewSelect={handleViewSelect}
-      />
-      
-      {viewMode === 'dashboard' ? (
-        <div className="flex-1 overflow-hidden">
-          <AssignedToMeView 
-            onNavigateToConversation={() => {
-              navigate('/inbox?view=assigned');
-            }} 
-          />
+    <div className="flex h-full w-full bg-white overflow-hidden rounded-lg border border-[#e3e3e4]">
+      <div className="flex w-full h-full">
+        {/* Fixed Sidebar */}
+        <InboxSidebar 
+          activeView={currentView} 
+          onViewSelect={handleViewSelect}
+        />
+        
+        {/* Content Area with Header */}
+        <div className="flex flex-col h-full w-full flex-1 overflow-hidden">
+          {/* Fixed Header */}
+          <div className="shrink-0">
+            <Header title="Inbox" />
+          </div>
+
+          {/* Scrollable/Flexible Content */}
+          <div className="flex-1 overflow-hidden flex">
+            {viewMode === 'dashboard' ? (
+              <div className="flex-1 overflow-hidden">
+                <AssignedToMeView 
+                  onNavigateToConversation={() => {
+                    navigate('/inbox?view=assigned');
+                  }} 
+                />
+              </div>
+            ) : (
+              <>
+                <ConversationList 
+                  currentView={currentView} 
+                  selectedId={selectedConversationId}
+                  onSelect={setSelectedConversationId}
+                />
+                <ChatArea 
+                  conversationId={selectedConversationId} 
+                  onToggleDetails={() => setIsDetailsOpen(!isDetailsOpen)}
+                />
+                <ContactDetailsDrawer 
+                  isOpen={isDetailsOpen} 
+                  onClose={() => setIsDetailsOpen(false)}
+                  conversation={selectedConversation}
+                />
+              </>
+            )}
+          </div>
         </div>
-      ) : (
-        <>
-          <ConversationList 
-            currentView={currentView} 
-            selectedId={selectedConversationId}
-            onSelect={setSelectedConversationId}
-          />
-          <ChatArea 
-            conversationId={selectedConversationId} 
-            onToggleDetails={() => setIsDetailsOpen(!isDetailsOpen)}
-          />
-          <ContactDetailsDrawer 
-            isOpen={isDetailsOpen} 
-            onClose={() => setIsDetailsOpen(false)}
-            conversation={selectedConversation}
-          />
-        </>
-      )}
+      </div>
     </div>
   );
 }

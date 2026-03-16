@@ -20,6 +20,7 @@ import {
   faBox,
 } from '@fortawesome/free-solid-svg-icons';
 import { faWhatsapp, faInstagram } from '@fortawesome/free-brands-svg-icons';
+import { Header } from './Header';
 import { DataTable, DataTableColumn } from './ui/DataTable';
 import { MOCK_CONVERSATIONS, Conversation } from '../lib/mockConversations';
 
@@ -360,161 +361,173 @@ export function Conversations() {
   ];
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex flex-col gap-[24px] px-[30px] py-[24px]">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <h1
-            className="font-['Instrument_Sans'] text-[#121212] text-[20px]"
-            style={{ fontVariationSettings: "'wdth' 100", fontWeight: 600 }}
-          >
-            Conversation Lookup
-          </h1>
+    <div className="flex h-full w-full bg-white overflow-hidden rounded-lg border border-[#e3e3e4]">
+      <div className="flex flex-col h-full w-full overflow-hidden">
+        {/* Fixed Header */}
+        <div className="shrink-0">
+          <Header title="Conversations" />
         </div>
 
-        {/* Filter Bar */}
-        <div className="flex items-center gap-[6px]">
-          {/* Search Bar */}
-          <div
-            className={`bg-[#f1f4f6] flex items-center px-[8px] py-[8px] rounded-[8px] transition-all ${
-              searchExpanded ? 'w-[240px]' : 'w-[32px]'
-            }`}
-            onClick={() => !searchExpanded && setSearchExpanded(true)}
-          >
-            <div className="flex gap-[4px] items-center w-full">
-              <FontAwesomeIcon
-                icon={faMagnifyingGlass}
-                className="w-[16px] h-[16px] text-[#364153] shrink-0"
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="flex flex-col h-full">
+            <div className="flex flex-col gap-[24px] px-[30px] py-[24px]">
+              {/* Page Title */}
+              <div className="flex items-center justify-between">
+                <h1
+                  className="font-['Instrument_Sans'] text-[#121212] text-[20px]"
+                  style={{ fontVariationSettings: "'wdth' 100", fontWeight: 600 }}
+                >
+                  Conversation Lookup
+                </h1>
+              </div>
+
+              {/* Filter Bar */}
+              <div className="flex items-center gap-[6px]">
+                {/* Search Bar */}
+                <div
+                  className={`bg-[#f1f4f6] flex items-center px-[8px] py-[8px] rounded-[8px] transition-all ${
+                    searchExpanded ? 'w-[240px]' : 'w-[32px]'
+                  }`}
+                  onClick={() => !searchExpanded && setSearchExpanded(true)}
+                >
+                  <div className="flex gap-[4px] items-center w-full">
+                    <FontAwesomeIcon
+                      icon={faMagnifyingGlass}
+                      className="w-[16px] h-[16px] text-[#364153] shrink-0"
+                    />
+                    {searchExpanded && (
+                      <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onBlur={() => !searchQuery && setSearchExpanded(false)}
+                        placeholder="Search..."
+                        className="bg-transparent outline-none w-full font-['Instrument_Sans'] text-[#364153] text-[12px]"
+                        style={{ fontVariationSettings: "'wdth' 100" }}
+                        autoFocus
+                      />
+                    )}
+                  </div>
+                </div>
+
+                {/* Filter Icon */}
+                <div className="bg-[#f1f4f6] flex items-center p-[8px] rounded-[8px]">
+                  <FontAwesomeIcon icon={faFilter} className="w-[16px] h-[16px] text-[#6A7282]" />
+                </div>
+
+                {/* Date Filter */}
+                <div className="bg-white border border-[#d1d5dc] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
+                  <div className="flex gap-[4px] items-center">
+                    <FontAwesomeIcon icon={faCalendar} className="w-[16px] h-[16px] text-[#6A7282] opacity-60" />
+                    <p
+                      className="font-['Instrument_Sans'] text-[#364153] text-[12px]"
+                      style={{ fontVariationSettings: "'wdth' 100" }}
+                    >
+                      18/2/2024 to 30/8/2025
+                    </p>
+                  </div>
+                  <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#99A1AF]" />
+                </div>
+
+                {/* Status Filter */}
+                <div className="bg-white border border-[#e3e3e4] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
+                  <div className="flex gap-[4px] items-center opacity-60">
+                    <FontAwesomeIcon icon={faHashtag} className="w-[16px] h-[16px] text-[#7A7D7D]" />
+                    <p
+                      className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
+                      style={{ fontVariationSettings: "'wdth' 100" }}
+                    >
+                      Status
+                    </p>
+                  </div>
+                  <p
+                    className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
+                    style={{ fontVariationSettings: "'wdth' 100" }}
+                  >
+                    {selectedStatus}
+                  </p>
+                  <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#B1B3B4]" />
+                </div>
+
+                {/* Topics Filter */}
+                <div className="bg-white border border-[#e3e3e4] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
+                  <div className="flex gap-[4px] items-center opacity-60">
+                    <FontAwesomeIcon icon={faSquarePollHorizontal} className="w-[16px] h-[16px] text-[#7A7D7D]" />
+                    <p
+                      className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
+                      style={{ fontVariationSettings: "'wdth' 100" }}
+                    >
+                      Topics
+                    </p>
+                  </div>
+                  <p
+                    className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
+                    style={{ fontVariationSettings: "'wdth' 100" }}
+                  >
+                    All
+                  </p>
+                  <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#B1B3B4]" />
+                </div>
+
+                {/* Sentiment Filter */}
+                <div className="bg-white border border-[#e3e3e4] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
+                  <div className="flex gap-[4px] items-center opacity-60">
+                    <FontAwesomeIcon icon={faFaceSmileBeam} className="w-[16px] h-[16px] text-[#7A7D7D]" />
+                    <p
+                      className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
+                      style={{ fontVariationSettings: "'wdth' 100" }}
+                    >
+                      Sentiment
+                    </p>
+                  </div>
+                  <p
+                    className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
+                    style={{ fontVariationSettings: "'wdth' 100" }}
+                  >
+                    {selectedSentiment}
+                  </p>
+                  <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#B1B3B4]" />
+                </div>
+
+                {/* Agent Filter */}
+                <div className="bg-white border border-[#e3e3e4] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
+                  <div className="flex gap-[4px] items-center opacity-60">
+                    <FontAwesomeIcon icon={faUser} className="w-[16px] h-[16px] text-[#7A7D7D]" />
+                    <p
+                      className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
+                      style={{ fontVariationSettings: "'wdth' 100" }}
+                    >
+                      Agent
+                    </p>
+                  </div>
+                  <p
+                    className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
+                    style={{ fontVariationSettings: "'wdth' 100" }}
+                  >
+                    All
+                  </p>
+                  <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#B1B3B4]" />
+                </div>
+              </div>
+            </div>
+
+            {/* Table with Pagination */}
+            <div className="flex-1 overflow-hidden px-[30px] pb-[24px]">
+              <DataTable<Conversation>
+                columns={columns}
+                data={filteredConversations}
+                emptyMessage="No conversations found."
+                animateRows={true}
+                animationDelay={0}
+                noBorders={false}
+                pagination={true}
+                defaultItemsPerPage={10}
+                itemsPerPageOptions={[10, 20, 50, 100]}
               />
-              {searchExpanded && (
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onBlur={() => !searchQuery && setSearchExpanded(false)}
-                  placeholder="Search..."
-                  className="bg-transparent outline-none w-full font-['Instrument_Sans'] text-[#364153] text-[12px]"
-                  style={{ fontVariationSettings: "'wdth' 100" }}
-                  autoFocus
-                />
-              )}
             </div>
-          </div>
-
-          {/* Filter Icon */}
-          <div className="bg-[#f1f4f6] flex items-center p-[8px] rounded-[8px]">
-            <FontAwesomeIcon icon={faFilter} className="w-[16px] h-[16px] text-[#6A7282]" />
-          </div>
-
-          {/* Date Filter */}
-          <div className="bg-white border border-[#d1d5dc] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
-            <div className="flex gap-[4px] items-center">
-              <FontAwesomeIcon icon={faCalendar} className="w-[16px] h-[16px] text-[#6A7282] opacity-60" />
-              <p
-                className="font-['Instrument_Sans'] text-[#364153] text-[12px]"
-                style={{ fontVariationSettings: "'wdth' 100" }}
-              >
-                18/2/2024 to 30/8/2025
-              </p>
-            </div>
-            <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#99A1AF]" />
-          </div>
-
-          {/* Status Filter */}
-          <div className="bg-white border border-[#e3e3e4] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
-            <div className="flex gap-[4px] items-center opacity-60">
-              <FontAwesomeIcon icon={faHashtag} className="w-[16px] h-[16px] text-[#7A7D7D]" />
-              <p
-                className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
-                style={{ fontVariationSettings: "'wdth' 100" }}
-              >
-                Status
-              </p>
-            </div>
-            <p
-              className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
-              style={{ fontVariationSettings: "'wdth' 100" }}
-            >
-              {selectedStatus}
-            </p>
-            <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#B1B3B4]" />
-          </div>
-
-          {/* Topics Filter */}
-          <div className="bg-white border border-[#e3e3e4] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
-            <div className="flex gap-[4px] items-center opacity-60">
-              <FontAwesomeIcon icon={faSquarePollHorizontal} className="w-[16px] h-[16px] text-[#7A7D7D]" />
-              <p
-                className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
-                style={{ fontVariationSettings: "'wdth' 100" }}
-              >
-                Topics
-              </p>
-            </div>
-            <p
-              className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
-              style={{ fontVariationSettings: "'wdth' 100" }}
-            >
-              All
-            </p>
-            <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#B1B3B4]" />
-          </div>
-
-          {/* Sentiment Filter */}
-          <div className="bg-white border border-[#e3e3e4] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
-            <div className="flex gap-[4px] items-center opacity-60">
-              <FontAwesomeIcon icon={faFaceSmileBeam} className="w-[16px] h-[16px] text-[#7A7D7D]" />
-              <p
-                className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
-                style={{ fontVariationSettings: "'wdth' 100" }}
-              >
-                Sentiment
-              </p>
-            </div>
-            <p
-              className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
-              style={{ fontVariationSettings: "'wdth' 100" }}
-            >
-              {selectedSentiment}
-            </p>
-            <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#B1B3B4]" />
-          </div>
-
-          {/* Agent Filter */}
-          <div className="bg-white border border-[#e3e3e4] flex gap-[8px] items-center px-[10px] py-[8px] rounded-[8px]">
-            <div className="flex gap-[4px] items-center opacity-60">
-              <FontAwesomeIcon icon={faUser} className="w-[16px] h-[16px] text-[#7A7D7D]" />
-              <p
-                className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
-                style={{ fontVariationSettings: "'wdth' 100" }}
-              >
-                Agent
-              </p>
-            </div>
-            <p
-              className="font-['Instrument_Sans'] text-[#404141] text-[12px]"
-              style={{ fontVariationSettings: "'wdth' 100" }}
-            >
-              All
-            </p>
-            <FontAwesomeIcon icon={faChevronDown} className="w-[16px] h-[16px] text-[#B1B3B4]" />
           </div>
         </div>
-      </div>
-
-      {/* Table with Pagination */}
-      <div className="flex-1 overflow-hidden px-[30px] pb-[24px]">
-        <DataTable<Conversation>
-          columns={columns}
-          data={filteredConversations}
-          emptyMessage="No conversations found."
-          animateRows={true}
-          animationDelay={0}
-          noBorders={false}
-          pagination={true}
-          defaultItemsPerPage={10}
-          itemsPerPageOptions={[10, 20, 50, 100]}
-        />
       </div>
     </div>
   );
