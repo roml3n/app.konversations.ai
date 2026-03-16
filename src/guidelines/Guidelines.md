@@ -6,6 +6,7 @@
 - For tables, use the DataTable component, and style it to match the imported/attached design
 - For pagination, use our TablePagination component, ensuring data filtering and seeking is nicely implemented
 - For filters, use the FilterBar component and its respective appropriate filters
+- For drawers, always use the Drawer component (/components/inbox/Drawer.tsx) as a base
 
 <!--
 
