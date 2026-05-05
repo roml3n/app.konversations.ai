@@ -67,7 +67,10 @@ export function SentimentDistribution() {
         else entry.negative++;
     });
 
-    const weekData = Array.from(dayMap.values());
+    const weekData = Array.from(dayMap.values()).map((item, index) => ({
+      ...item,
+      id: `week-${index}`
+    }));
     // Shift to start Mon if needed, but Sun-Sat is fine.
     // Let's match the original order Mon-Sat (maybe Sun too).
     const weekDataSorted = [...weekData.slice(1), weekData[0]]; 
@@ -79,7 +82,7 @@ export function SentimentDistribution() {
     
     let trendDays: any[] = [];
     if (dateRange.from && dateRange.to) {
-         trendDays = eachDayOfInterval({ start: dateRange.from, end: dateRange.to }).map(day => {
+         trendDays = eachDayOfInterval({ start: dateRange.from, end: dateRange.to }).map((day, index) => {
              const dayStart = startOfDay(day);
              const dayEnd = endOfDay(day);
              const daily = filteredInsights.filter(i => {
@@ -92,6 +95,7 @@ export function SentimentDistribution() {
              const neg = daily.filter(i => i.sentiment === 'negative').length;
              
              return {
+                 id: `trend-${day.getTime()}-${index}`,
                  day: format(day, 'dd'), // Just date number for compactness
                  positive: pos,
                  neutral: neu,
@@ -163,11 +167,15 @@ export function SentimentDistribution() {
               <BarChart data={weekData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" vertical={false} />
                 <XAxis
-                  dataKey="day"
+                  dataKey="id"
                   stroke="transparent"
                   tick={{ fill: 'rgba(0,0,0,0.7)', fontSize: 12 }}
                   tickLine={false}
                   dy={10}
+                  tickFormatter={(value, index) => {
+                    const item = weekData[index];
+                    return item ? item.day : value;
+                  }}
                 />
                 <YAxis
                   stroke="transparent"
@@ -183,10 +191,14 @@ export function SentimentDistribution() {
                     fontSize: '12px',
                   }}
                   cursor={{ fill: 'rgba(0,0,0,0.04)' }}
+                  labelFormatter={(value) => {
+                    const item = weekData.find(d => d.id === value);
+                    return item ? item.day : value;
+                  }}
                 />
-                <Bar dataKey="positive" stackId="a" fill={CHART_COLORS.positive} barSize={38} />
-                <Bar dataKey="neutral" stackId="a" fill={CHART_COLORS.neutral} barSize={38} />
-                <Bar dataKey="negative" stackId="a" fill={CHART_COLORS.negative} barSize={38} />
+                <Bar dataKey="positive" stackId="a" fill={CHART_COLORS.positive} barSize={38} key="bar-positive" />
+                <Bar dataKey="neutral" stackId="a" fill={CHART_COLORS.neutral} barSize={38} key="bar-neutral" />
+                <Bar dataKey="negative" stackId="a" fill={CHART_COLORS.negative} barSize={38} key="bar-negative" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -221,13 +233,17 @@ export function SentimentDistribution() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F0F0F0" vertical={false} />
                 <XAxis
-                  dataKey="day"
+                  dataKey="id"
                   stroke="transparent"
                   tick={{ fill: 'rgba(0,0,0,0.7)', fontSize: 12 }}
                   tickLine={false}
                   dy={10}
                   interval="preserveStartEnd"
                   minTickGap={20}
+                  tickFormatter={(value, index) => {
+                    const item = trendData[index];
+                    return item ? item.day : value;
+                  }}
                 />
                 <YAxis
                   stroke="transparent"
@@ -242,8 +258,13 @@ export function SentimentDistribution() {
                     borderRadius: '8px',
                     fontSize: '12px',
                   }}
+                  labelFormatter={(value) => {
+                    const item = trendData.find(d => d.id === value);
+                    return item ? item.day : value;
+                  }}
                 />
                 <Area
+                  key="area-positive"
                   type="linear"
                   dataKey="positive"
                   stroke={CHART_COLORS.positive}
@@ -252,6 +273,7 @@ export function SentimentDistribution() {
                   stackId="1"
                 />
                 <Area
+                  key="area-neutral"
                   type="linear"
                   dataKey="neutral"
                   stroke={CHART_COLORS.neutral}
@@ -260,6 +282,7 @@ export function SentimentDistribution() {
                   stackId="1"
                 />
                 <Area
+                  key="area-negative"
                   type="linear"
                   dataKey="negative"
                   stroke={CHART_COLORS.negative}

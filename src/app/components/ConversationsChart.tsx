@@ -18,7 +18,7 @@ export function ConversationsChart() {
 
     const days = eachDayOfInterval({ start: dateRange.from, end: dateRange.to });
 
-    return days.map(day => {
+    return days.map((day, index) => {
       const dayStart = startOfDay(day);
       const dayEnd = endOfDay(day);
       
@@ -28,6 +28,7 @@ export function ConversationsChart() {
       });
 
       return {
+        id: `chart-${day.getTime()}-${index}`,
         date: format(day, 'MMM d'),
         resolved: dayInsights.filter(i => i.sentiment === 'positive').length,
         partial: dayInsights.filter(i => i.sentiment === 'neutral').length,
@@ -63,7 +64,7 @@ export function ConversationsChart() {
           <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} opacity={0.4} />
             <XAxis
-              dataKey="date"
+              dataKey="id"
               stroke="var(--muted-foreground)"
               tick={{ fill: 'var(--muted-foreground)', fontSize: 12, opacity: 0.5 }}
               tickLine={false}
@@ -71,6 +72,10 @@ export function ConversationsChart() {
               dy={10}
               interval="preserveStartEnd"
               minTickGap={30}
+              tickFormatter={(value, index) => {
+                const item = data[index];
+                return item ? item.date : value;
+              }}
             />
             <YAxis
               stroke="var(--muted-foreground)"
@@ -87,8 +92,13 @@ export function ConversationsChart() {
                 fontSize: '12px',
               }}
               cursor={{ stroke: 'var(--muted-foreground)', strokeWidth: 1, strokeDasharray: '4 4' }}
+              labelFormatter={(value) => {
+                const item = data.find(d => d.id === value);
+                return item ? item.date : value;
+              }}
             />
             <Line
+              key="line-resolved"
               type="linear"
               dataKey="resolved"
               stroke="var(--chart-3)"
@@ -97,6 +107,7 @@ export function ConversationsChart() {
               activeDot={{ r: 4, strokeWidth: 0 }}
             />
             <Line
+              key="line-partial"
               type="linear"
               dataKey="partial"
               stroke="var(--chart-2)"
@@ -105,6 +116,7 @@ export function ConversationsChart() {
               activeDot={{ r: 4, strokeWidth: 0 }}
             />
             <Line
+              key="line-unresolved"
               type="linear"
               dataKey="unresolved"
               stroke="var(--destructive)"

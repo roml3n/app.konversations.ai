@@ -3,7 +3,7 @@ import { cn } from '../../lib/utils';
 import svgPaths from '../../imports/svg-o0tf84h1yh';
 import { MOCK_AGENTS } from '../../lib/mockData';
 
-import { ImageWithFallback } from '../../components/figma/ImageWithFallback';
+import { ImageWithFallback } from './ImageWithFallback';
 
 // --- Icons ---
 

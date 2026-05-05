@@ -1,10 +1,3 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from "react-router";
 import { Sidebar } from "./components/Sidebar";
 import { Header } from "./components/Header";
 import { SubHeader } from "./components/SubHeader";
@@ -13,11 +6,13 @@ import { ExecutiveOverview } from "./components/ExecutiveOverview";
 import { ChannelPerformance } from "./components/ChannelPerformance";
 import { FilterProvider } from "./contexts/FilterContext";
 import { NavigationProvider } from "./contexts/NavigationContext";
+import { AskKonversationsProvider } from "./contexts/AskKonversationsContext";
 import { Inbox } from "./components/Inbox";
 import { Workforce } from "./components/Workforce";
 import { Settings } from "./components/Settings";
 import { Conversations } from "./components/Conversations";
 import { CommandPalette, useCommandPalette } from "./components/CommandPalette";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router";
 
 function InsightsModule() {
   const location = useLocation();
@@ -121,12 +116,14 @@ function AppContent() {
 
 export default function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <NavigationProvider>
         <FilterProvider>
-          <AppContent />
+          <AskKonversationsProvider>
+            <AppContent />
+          </AskKonversationsProvider>
         </FilterProvider>
       </NavigationProvider>
-    </Router>
+    </BrowserRouter>
   );
 }

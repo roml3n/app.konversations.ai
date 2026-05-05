@@ -12,6 +12,7 @@ import {
   faArrowTurnDown,
   faStar,
 } from '@fortawesome/free-solid-svg-icons';
+import { useAskKonversations } from '../contexts/AskKonversationsContext';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -81,6 +82,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { openDrawer } = useAskKonversations();
 
   const searchResults = mockSearchResults(searchQuery);
   const hasResults = searchResults.length > 0;
@@ -127,7 +129,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
           e.preventDefault();
           if (selectedIndex === -1 && searchQuery) {
             // Open AI chat experience (future implementation)
-            console.log('Ask Konversations:', searchQuery);
+            openDrawer(searchQuery);
             onClose();
           } else if (selectedIndex >= 0 && selectedIndex < searchResults.length) {
             // Navigate to selected result
@@ -141,7 +143,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, searchQuery, selectedIndex, searchResults, navigate, onClose]);
+  }, [isOpen, searchQuery, selectedIndex, searchResults, navigate, onClose, openDrawer]);
 
   // Handle backdrop click
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -157,7 +159,7 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
   const handleAskKonversationsClick = () => {
     // Future: Open AI chat experience
-    console.log('Ask Konversations:', searchQuery);
+    openDrawer(searchQuery);
     onClose();
   };
 

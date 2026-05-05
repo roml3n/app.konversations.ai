@@ -6,9 +6,10 @@ import {
   faArrowLeft,
   faPen,
   faTrash,
+  faMessage,
+  faChevronDown,
 } from '@fortawesome/free-solid-svg-icons';
 import svgPaths from '../imports/svg-y4b1jaey9x';
-import chatListSvgPaths from '../imports/svg-m3r3p6d3hh';
 
 interface Message {
   id: string;
@@ -28,6 +29,7 @@ interface Chat {
 interface AskKonversationsDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  initialQuery?: string;
 }
 
 // Helper function to format chat timestamps
@@ -66,9 +68,10 @@ function formatChatTimestamp(date: Date): string {
 export function AskKonversationsDrawer({
   isOpen,
   onClose,
+  initialQuery,
 }: AskKonversationsDrawerProps) {
   const drawerRef = useRef<HTMLDivElement>(null);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState(initialQuery || '');
   const [viewMode, setViewMode] = useState<'list' | 'chat'>('chat');
   
   // Create dates for chats
@@ -160,6 +163,73 @@ export function AskKonversationsDrawer({
   const optionsDropdownRef = useRef<HTMLDivElement>(null);
 
   const currentChat = chats.find((c) => c.id === currentChatId);
+
+  // Handle initial query when drawer opens
+  useEffect(() => {
+    if (isOpen && initialQuery && typeof initialQuery === 'string' && initialQuery.trim()) {
+      // Create a new chat with the initial query
+      const newChat: Chat = {
+        id: `chat-${Date.now()}`,
+        name: initialQuery.substring(0, 50) + (initialQuery.length > 50 ? '...' : ''),
+        lastMessage: initialQuery,
+        lastMessageDate: new Date(),
+        messages: [],
+      };
+
+      setChats((prev) => [newChat, ...prev]);
+      setCurrentChatId(newChat.id);
+      setViewMode('chat');
+      setInputValue(initialQuery);
+      
+      // Automatically send the message after a brief delay
+      setTimeout(() => {
+        const userMessage: Message = {
+          id: `m${Date.now()}`,
+          type: 'user',
+          content: initialQuery,
+          timestamp: new Date(),
+        };
+
+        setChats((prev) =>
+          prev.map((chat) =>
+            chat.id === newChat.id
+              ? {
+                  ...chat,
+                  messages: [userMessage],
+                  lastMessage: initialQuery,
+                  lastMessageDate: new Date(),
+                }
+              : chat
+          )
+        );
+
+        setInputValue('');
+
+        // Simulate AI response
+        setTimeout(() => {
+          const aiMessage: Message = {
+            id: `m${Date.now() + 1}`,
+            type: 'ai',
+            content: `I've analyzed your request regarding "${initialQuery}". Based on the data available, here's what I found:\n\nThis is a simulated AI response. In production, this would connect to your actual AI service to provide insights based on your conversation data, customer sentiment, agent performance, and other metrics.`,
+            timestamp: new Date(),
+          };
+
+          setChats((prev) =>
+            prev.map((chat) =>
+              chat.id === newChat.id
+                ? {
+                    ...chat,
+                    messages: [userMessage, aiMessage],
+                    lastMessage: aiMessage.content.substring(0, 50) + '...',
+                    lastMessageDate: new Date(),
+                  }
+                : chat
+            )
+          );
+        }, 1000);
+      }, 100);
+    }
+  }, [isOpen, initialQuery]);
 
   // Handle escape key
   useEffect(() => {
@@ -523,23 +593,9 @@ export function AskKonversationsDrawer({
               {/* New Chat Button */}
               <button
                 onClick={handleNewChat}
-                className="bg-white content-stretch flex gap-[4px] items-center justify-center px-[12px] py-[8px] relative rounded-[88px] shrink-0"
+                className="bg-white content-stretch flex gap-[4px] items-center justify-center px-[12px] py-[8px] relative rounded-[88px] shrink-0 border border-[#d1d5dc] hover:bg-gray-50 transition-colors"
               >
-                <div className="absolute border border-[#d1d5dc] border-solid inset-0 pointer-events-none rounded-[88px]" />
-                <div className="relative shrink-0 size-[16px]">
-                  <div className="absolute inset-0 overflow-clip">
-                    <div className="absolute inset-[10.82%_10.82%_10%_10%]">
-                      <svg
-                        className="absolute block size-full"
-                        fill="none"
-                        preserveAspectRatio="none"
-                        viewBox="0 0 12.6681 12.6681"
-                      >
-                        <path d={chatListSvgPaths.p3c006800} fill="#364153" />
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                <FontAwesomeIcon icon={faPlus} className="w-[14px] h-[14px] text-[#364153]" />
                 <p
                   className="font-['Instrument_Sans'] font-semibold leading-[1.2] relative shrink-0 text-[#364153] text-[12px] tracking-[0.06px] whitespace-nowrap"
                   style={{ fontVariationSettings: "'wdth' 100" }}
@@ -558,25 +614,12 @@ export function AskKonversationsDrawer({
                   >
                     Recent chats
                   </p>
-                  <div className="relative shrink-0 size-[16px]">
-                    <div className="absolute inset-0 overflow-clip">
-                      <div className="absolute inset-[30%_19.99%_35%_19.99%]">
-                        <svg
-                          className="absolute block size-full"
-                          fill="none"
-                          preserveAspectRatio="none"
-                          viewBox="0 0 9.60325 5.59938"
-                        >
-                          <path d={chatListSvgPaths.p3c4e1980} fill="#6A7282" />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
+                  <FontAwesomeIcon icon={faChevronDown} className="w-[14px] h-[14px] text-[#6A7282]" />
                 </div>
 
                 {/* Chat List */}
                 <div className="content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full">
-                  {chats.map((chat, index) => (
+                  {chats.map((chat) => (
                     <button
                       key={chat.id}
                       onClick={() => handleSelectChat(chat.id)}
@@ -584,21 +627,8 @@ export function AskKonversationsDrawer({
                         chat.id === currentChatId ? 'bg-[#f2f3f3]' : 'bg-white'
                       } relative rounded-[8px] shrink-0 w-full hover:bg-[#f2f3f3] transition-colors`}
                     >
-                      <div className="content-stretch flex gap-[4px] items-start p-[8px] relative w-full">
-                        <div className="relative shrink-0 size-[16px]">
-                          <div className="absolute inset-0 overflow-clip">
-                            <div className="absolute inset-[15%_10%_5%_10%]">
-                              <svg
-                                className="absolute block size-full"
-                                fill="none"
-                                preserveAspectRatio="none"
-                                viewBox="0 0 12.8 12.7998"
-                              >
-                                <path d={chatListSvgPaths.pc60cb00} fill="#364153" />
-                              </svg>
-                            </div>
-                          </div>
-                        </div>
+                      <div className="content-stretch flex gap-[8px] items-center p-[8px] relative w-full">
+                        <FontAwesomeIcon icon={faMessage} className="w-[14px] h-[14px] text-[#364153] shrink-0" />
                         <p
                           className="flex-[1_0_0] font-['Instrument_Sans'] font-normal leading-[1.2] min-h-px min-w-px overflow-hidden relative text-[#101828] text-[14px] text-ellipsis tracking-[0.07px] whitespace-nowrap text-left"
                           style={{ fontVariationSettings: "'wdth' 100" }}

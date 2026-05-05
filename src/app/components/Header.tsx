@@ -7,7 +7,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { AvatarPopout } from "./AvatarPopout";
 import { useNavigation } from "../contexts/NavigationContext";
-import { useState } from "react";
+import { useAskKonversations } from "../contexts/AskKonversationsContext";
 import { AskKonversationsDrawer } from "./AskKonversationsDrawer";
 import svgPaths from "../imports/svg-m11qckudhc";
 
@@ -17,7 +17,7 @@ interface HeaderProps {
 
 export function Header({ title }: HeaderProps) {
   const { canGoBack, canGoForward, goBack, goForward } = useNavigation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { isDrawerOpen, initialQuery, openDrawer, closeDrawer } = useAskKonversations();
 
   return (
     <>
@@ -66,7 +66,7 @@ export function Header({ title }: HeaderProps) {
         <div className="flex items-center gap-4">
           {/* Ask Konversations Button */}
           <button
-            onClick={() => setIsDrawerOpen(true)}
+            onClick={openDrawer}
             className="bg-white flex gap-1 items-center justify-center px-3 py-2 rounded-full border border-[#01f1b6] hover:bg-[#f9f9f9] transition-colors shadow-[inset_0px_1px_0px_0px_rgba(255,255,255,0.25)]"
           >
             <p className="font-['Instrument_Sans',sans-serif] font-semibold text-[var(--text-xs)] text-[#364153] leading-[1.2] tracking-[0.06px] whitespace-nowrap">
@@ -124,7 +124,8 @@ export function Header({ title }: HeaderProps) {
       {/* Drawer */}
       <AskKonversationsDrawer
         isOpen={isDrawerOpen}
-        onClose={() => setIsDrawerOpen(false)}
+        onClose={closeDrawer}
+        initialQuery={initialQuery}
       />
     </>
   );
